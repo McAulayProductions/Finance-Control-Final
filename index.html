@@ -1,50 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Finance Control Final</title>
-  <style>
-    body { font-family: Arial; background:#111; color:#fff; padding:20px; }
-    input { margin:5px 0; padding:8px; width:100%; }
-    .card { background:#222; padding:15px; margin-bottom:15px; border-radius:10px; }
-    .good { color:#00ff88; }
-    .bad { color:#ff4d4d; }
-  </style>
+<meta charset="UTF-8">
+<title>Finance Control Final</title>
+
+<style>
+body {
+  font-family: Arial;
+  background:#111;
+  color:#fff;
+  padding:20px;
+}
+
+/* SECTION CARDS */
+.card {
+  background:#1c1c1c;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:12px;
+}
+
+/* INPUT PANEL */
+.input-panel {
+  border:2px solid #00ff88;
+  box-shadow: 0 0 15px rgba(0,255,136,0.2);
+}
+
+/* INPUT GROUP */
+.input-group {
+  margin-bottom:15px;
+}
+
+label {
+  display:block;
+  font-size:14px;
+  margin-bottom:5px;
+  color:#aaa;
+}
+
+input {
+  padding:12px;
+  width:100%;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+}
+
+/* RESULT */
+.good { color:#00ff88; font-weight:bold; }
+.bad { color:#ff4d4d; font-weight:bold; }
+
+.result-box {
+  font-size:18px;
+  line-height:1.6;
+}
+</style>
+
 </head>
 <body>
 
-<h1>Finance Control (Final)</h1>
+<h1>Finance Control</h1>
 
-<div class="card">
-  <h3>Inputs</h3>
-  Offset: <input id="offset" type="number" value="30000">
-  Weekly Spend: <input id="spend" type="number" value="600">
+<!-- INPUT SECTION -->
+<div class="card input-panel">
+  <h2>CONTROL PANEL</h2>
+
+  <div class="input-group">
+    <label>Current Offset Balance ($)</label>
+    <input id="offset" type="number" value="30000">
+  </div>
+
+  <div class="input-group">
+    <label>Total Weekly Spending ($)</label>
+    <input id="spend" type="number" value="600">
+  </div>
+
 </div>
 
+<!-- RESULT -->
 <div class="card">
-  <h3>Result</h3>
-  <p id="result"></p>
+  <h2>WEEKLY POSITION</h2>
+  <div id="result" class="result-box"></div>
 </div>
 
 <script>
 function calculate() {
+
   let offset = parseFloat(document.getElementById("offset").value) || 0;
   let spend = parseFloat(document.getElementById("spend").value) || 0;
 
-  let required = 2738;
-  let diff = offset - (spend * 4);
+  let weeklyRequired = 2738;
+  let projected = offset - (spend * 4);
 
-  let resultText = "";
+  let status = projected > 0 
+    ? "<span class='good'>ON TRACK</span>" 
+    : "<span class='bad'>OFF TRACK</span>";
 
-  if (diff > 0) {
-    resultText = "<span class='good'>ON TRACK</span><br>";
-  } else {
-    resultText = "<span class='bad'>OFF TRACK</span><br>";
-  }
+  let output = `
+    ${status}<br><br>
+    Weekly Required: $${weeklyRequired}<br>
+    Your Spend: $${spend}<br><br>
+    Projected Offset (4 weeks): $${projected.toFixed(0)}
+  `;
 
-  resultText += "Projected offset in 4 weeks: $" + diff.toFixed(0);
-
-  document.getElementById("result").innerHTML = resultText;
+  document.getElementById("result").innerHTML = output;
 }
 
 document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
