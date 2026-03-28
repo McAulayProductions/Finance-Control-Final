@@ -480,6 +480,7 @@
         complete: { ratio: 1, weeksToRent: 0 }
       };
       const stageConfig = stageMap[buildStage];
+      const drawPct = stageConfig.ratio;
       const ipDebt = CONFIG.PLANNED_TOTAL_IP_DEBT;
       $('ipDebtMirror').value = currency(ipDebt);
       const activeBuildDebt = CONFIG.EQUITY_RELEASE + (CONFIG.PROPOSED_LENDING * stageConfig.ratio);
