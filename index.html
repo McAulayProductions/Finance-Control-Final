@@ -15,13 +15,16 @@
       --dark: #0f172a;
       --green-bg: #dcfce7;
       --green-border: #86efac;
+      --green-text: #166534;
       --amber-bg: #fef3c7;
       --amber-border: #fcd34d;
+      --amber-text: #92400e;
       --red-bg: #fee2e2;
       --red-border: #fca5a5;
-      --blue-bg: #eff6ff;
+      --red-text: #991b1b;
+      --blue-bg: #dbeafe;
       --blue-border: #93c5fd;
-      --accent: #0f172a;
+      --blue-text: #1d4ed8;
     }
     * { box-sizing: border-box; }
     body {
@@ -30,7 +33,7 @@
       background: var(--bg);
       color: var(--text);
     }
-    .wrap { max-width: 1450px; margin: 0 auto; padding: 18px; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 18px; }
     .hero, .section, .metric, .signal, .transfer, .band {
       background: var(--card);
       border: 1px solid var(--border);
@@ -54,152 +57,72 @@
     }
     h1 { margin: 10px 0 8px; font-size: clamp(30px, 4vw, 44px); }
     .sub { color: var(--muted); max-width: 900px; line-height: 1.6; }
-    .mode-toggle {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .mode-toggle { display: flex; gap: 10px; flex-wrap: wrap; }
     .mode-toggle button {
-      border-radius: 16px;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      background: white;
-      cursor: pointer;
-      font-weight: 700;
-      color: var(--muted);
+      border-radius: 16px; padding: 12px 16px; border: 1px solid var(--border);
+      background: white; cursor: pointer; font-weight: 700; color: var(--muted);
     }
-    .mode-toggle button.active {
-      background: var(--dark);
-      color: white;
-      border-color: var(--dark);
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 0.98fr 1.02fr;
-      gap: 18px;
-    }
+    .mode-toggle button.active { background: var(--dark); color: white; border-color: var(--dark); }
+    .layout { display: grid; grid-template-columns: 0.98fr 1.02fr; gap: 18px; }
     .stack { display: grid; gap: 18px; }
     .section { padding: 20px; }
-    .section h2 {
-      margin: 0 0 6px;
-      font-size: 20px;
-    }
-    .section-sub {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-    .control-section {
-      border: 2px solid var(--blue-border);
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      box-shadow: 0 0 0 4px rgba(147,197,253,0.15);
-    }
-    .grid-2, .grid-3, .grid-4 {
-      display: grid;
-      gap: 14px;
-    }
+    .section h2 { margin: 0 0 6px; font-size: 19px; }
+    .section-sub { color: var(--muted); font-size: 14px; margin-bottom: 16px; line-height: 1.6; }
+    .grid-2, .grid-3, .grid-4 { display: grid; gap: 14px; }
     .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     label { display: block; }
-    label span {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-    }
+    label span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px; font-weight: 600; }
     input, textarea, select, button.soft {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px 16px;
-      font: inherit;
-      background: white;
-      color: var(--text);
+      width: 100%; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px;
+      font: inherit; background: white; color: var(--text);
     }
+    input[readonly] { background: #f8fafc; color: #334155; }
     textarea { min-height: 110px; resize: vertical; }
     .metrics { display: grid; gap: 14px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .metric, .signal, .transfer, .band { padding: 16px; }
-    .metric .title, .signal .title, .transfer .title, .band .title {
-      color: var(--muted); font-size: 14px; font-weight: 700;
-    }
+    .metric .title, .signal .title, .transfer .title, .band .title { color: var(--muted); font-size: 14px; font-weight: 600; }
     .metric .value, .signal .value, .transfer .value {
-      margin-top: 10px;
-      font-size: clamp(22px, 3vw, 30px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
+      margin-top: 10px; font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -0.03em;
     }
-    .metric .note, .signal .note, .transfer .note, .band .note {
-      margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.5;
-    }
-    .mentor {
-      padding: 20px;
-      border-radius: 24px;
-      border: 1px solid;
-      line-height: 1.7;
-    }
-    .mentor.good { background: var(--green-bg); border-color: var(--green-border); }
-    .mentor.warn { background: var(--amber-bg); border-color: var(--amber-border); }
-    .mentor.bad { background: var(--red-bg); border-color: var(--red-border); }
+    .metric .note, .signal .note, .transfer .note, .band .note { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .status-good { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+    .status-warn { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber-text); }
+    .status-bad { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+    .status-info { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue-text); }
+    .mentor { padding: 20px; border-radius: 24px; border: 1px solid; line-height: 1.7; }
     .mentor h3 { margin: 0 0 8px; font-size: 24px; }
-    .next-move {
-      padding: 16px;
-      border-radius: 18px;
-      background: #f8fafc;
-      line-height: 1.7;
-    }
+    .next-move, .pill-note { padding: 16px; border-radius: 18px; background: #f8fafc; line-height: 1.7; }
     .next-move strong { display: block; margin-bottom: 8px; }
     .stack-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      border-radius: 16px;
-      background: #f8fafc;
-      padding: 13px 15px;
-      margin-bottom: 10px;
-      font-size: 14px;
+      display: flex; justify-content: space-between; gap: 16px; border-radius: 16px; background: #f8fafc;
+      padding: 13px 15px; margin-bottom: 10px; font-size: 14px;
     }
     .stack-row strong { font-size: 15px; }
     .progress-wrap { margin-top: 12px; }
-    .progress-line {
-      height: 12px;
-      border-radius: 999px;
-      background: var(--soft);
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--dark);
-      width: 0%;
-    }
+    .progress-line { height: 12px; border-radius: 999px; background: var(--soft); overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--dark); width: 0%; }
     .hidden { display: none !important; }
-    .pill-note {
-      border-radius: 16px;
-      background: #f8fafc;
-      padding: 14px 16px;
-      line-height: 1.7;
-      color: var(--text);
-    }
     .band-list { margin-top: 10px; display: grid; gap: 8px; }
     .band-list div { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
-    .control-callout {
-      border-radius: 18px;
-      background: var(--blue-bg);
-      border: 1px solid var(--blue-border);
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      line-height: 1.6;
-      font-size: 14px;
+    .upcoming-grid { display: grid; gap: 10px; }
+    .bill-row {
+      display: grid; gap: 10px; grid-template-columns: 1.5fr 1fr 1.1fr auto; align-items: end;
+      padding: 12px; border-radius: 18px; background: #f8fafc; border: 1px solid var(--soft);
     }
-    .control-callout strong { display: block; margin-bottom: 6px; }
-    @media (max-width: 1100px) {
+    .bill-row button {
+      border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; background: white; cursor: pointer;
+    }
+    .row-note { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .small-card-row { display: grid; gap: 14px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 1180px) {
       .layout { grid-template-columns: 1fr; }
-      .metrics, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metrics, .grid-4, .small-card-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .bill-row { grid-template-columns: 1fr 1fr; }
     }
-    @media (max-width: 720px) {
-      .grid-2, .grid-3, .grid-4, .metrics { grid-template-columns: 1fr; }
+    @media (max-width: 760px) {
+      .grid-2, .grid-3, .grid-4, .metrics, .small-card-row, .bill-row { grid-template-columns: 1fr; }
       .wrap { padding: 12px; }
       .hero, .section { padding: 16px; }
     }
@@ -223,38 +146,38 @@
 
     <div class="layout">
       <div class="stack">
-        <div class="section control-section">
+        <div class="section">
           <h2>Control panel</h2>
           <div class="section-sub">This is where you type numbers. The app recalculates instantly after any change.</div>
-          <div class="control-callout">
-            <strong>Use this first</strong>
-            Update your current offset, spending, and upcoming bills here. Everything else flows from these inputs.
-          </div>
           <div class="grid-2">
             <label><span>Current offset</span><input id="offset" value="30000"></label>
-            <label><span>Weeks to one week before 3 August</span><input id="weeksToAugust" value="18"></label>
-            <label><span>Spend input mode</span><button id="toggleSpendMode" type="button" class="soft">Single weekly total enabled</button></label>
+            <label><span>Current savings balance</span><input id="currentSavings" value="2600"></label>
+            <label><span>Weeks remaining to 24 July</span><input id="weeksToJuly24" readonly></label>
             <label><span>View depth</span><button id="toggleDeep" type="button" class="soft">Simple mode visible</button></label>
+            <label><span>Spend input mode</span><button id="toggleSpendMode" type="button" class="soft">Single weekly total enabled</button></label>
           </div>
           <div id="spend-manual-wrap" style="margin-top:14px;">
-            <label><span>Weekly spending total</span><input id="weeklySpend" value="600"></label>
+            <label><span>Total weekly spending</span><input id="weeklySpend" value="600"></label>
           </div>
           <div id="spend-paste-wrap" class="hidden" style="margin-top:14px;">
             <label><span>Paste spending entries</span><textarea id="spendEntries"></textarea></label>
           </div>
-          <div style="margin-top:14px;">
-            <label><span>Upcoming bills (Bill | Amount | Weeks until due)</span><textarea id="upcomingBills">Power bill | 1433 | 3</textarea></label>
-          </div>
+        </div>
+
+        <div class="section">
+          <h2>Upcoming bills</h2>
+          <div class="section-sub">Each bill gets its own row. Weekly pressure is calculated from the due date automatically.</div>
+          <div id="billsContainer" class="upcoming-grid"></div>
+          <div style="margin-top:12px;"><button id="addBill" type="button" class="soft">Add upcoming bill</button></div>
         </div>
 
         <div class="section">
           <h2>August obligations engine</h2>
-          <div class="section-sub">Fence and cruise stay locked until funded.</div>
-          <div class="grid-4">
+          <div class="small-card-row">
             <div class="metric"><div class="title">Fence</div><div class="value" id="fenceValue"></div><div class="note">Locked target</div></div>
             <div class="metric"><div class="title">Cruise remaining</div><div class="value" id="cruiseValue"></div><div class="note">Locked target</div></div>
             <div class="metric"><div class="title">Current savings</div><div class="value" id="currentSavingsValue"></div><div class="note">Starting point</div></div>
-            <div class="metric"><div class="title">Required weekly</div><div class="value" id="augWeeklyValue"></div><div class="note">Until August cutoff</div></div>
+            <div class="metric"><div class="title">Required weekly</div><div class="value" id="augWeeklyValue"></div><div class="note">Until 24 July</div></div>
           </div>
           <div class="progress-wrap">
             <div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--muted);margin-bottom:8px;"><span>Current funding progress</span><span id="augProgressText"></span></div>
@@ -264,23 +187,28 @@
 
         <div class="section">
           <h2>IP build pressure engine</h2>
-          <div class="section-sub">Use this to reflect where the build actually is.</div>
+          <div class="section-sub">Only the stage is manual. The rest is calculated from your stored IP figures.</div>
           <div class="grid-2">
             <label><span>Build stage</span><select id="buildStage"><option value="plate">Plate height</option><option value="roof">Roof cover</option><option value="lockup">Lock up</option><option value="tiling">Tiling</option><option value="practical">Practical completion</option><option value="complete">Complete / rented</option></select></label>
-            <label><span>Total IP debt at completion</span><input id="ipDebt" value="768000"></label>
-            <label><span>Weeks until rent starts</span><input id="weeksToRent" value="16"></label>
-            <label><span>Weekly rent target</span><input id="weeklyRent" value="700"></label>
+          </div>
+          <div class="small-card-row" style="margin-top:14px;">
+            <div class="metric"><div class="title">Total planned IP debt</div><div class="value" id="ipPlannedDebt"></div><div class="note">Auto from stored funding structure</div></div>
+            <div class="metric"><div class="title">Active debt at stage</div><div class="value" id="activeBuildDebt"></div><div class="note" id="activeBuildDebtNote"></div></div>
+            <div class="metric"><div class="title">Build interest / week</div><div class="value" id="weeklyBuildInterest"></div><div class="note">Estimated at 6.14%</div></div>
+            <div class="metric"><div class="title">Weeks until rent</div><div class="value" id="weeksUntilRentValue"></div><div class="note">Auto stage estimate</div></div>
           </div>
         </div>
 
         <div class="section">
           <h2>Valuation engine</h2>
-          <div class="section-sub">Update these manually when you have newer valuation views.</div>
+          <div class="section-sub">Live market reference defaults are prefilled from recent web data. Manual override fields are what the app actually uses for decisions.</div>
           <div class="grid-2">
-            <label><span>PPOR current value</span><input id="pporValue" value="1400000"></label>
+            <label><span>PPOR live market reference</span><input id="pporLiveRef" value="960000"></label>
+            <label><span>PPOR manual override</span><input id="pporValue" value="1400000"></label>
+            <label><span>Wandina live market reference</span><input id="ipLiveRef" value="715000"></label>
+            <label><span>Wandina manual override</span><input id="ipValue" value="620000"></label>
             <label><span>PPOR loan</span><input id="pporLoan" value="560540"></label>
-            <label><span>IP current value</span><input id="ipValue" value="620000"></label>
-            <label><span>Total IP debt</span><input id="ipDebtMirror" value="768000"></label>
+            <label><span>Total IP debt</span><input id="ipDebtMirror" readonly></label>
           </div>
           <div class="grid-3" style="margin-top:14px;">
             <label><span>PPOR low</span><input id="pporLow" value="1350000"></label>
@@ -290,11 +218,11 @@
             <label><span>IP mid</span><input id="ipMid" value="720000"></label>
             <label><span>IP high</span><input id="ipHigh" value="800000"></label>
           </div>
+          <div class="row-note">PPOR suburb reference uses Pimpama median house price. Wandina reference uses Wandina median house price.</div>
         </div>
 
         <div class="section">
           <h2>Net sale and equity extraction assumptions</h2>
-          <div class="section-sub">These affect sell-vs-hold and debt recycling logic.</div>
           <div class="grid-2">
             <label><span>Sell cost %</span><input id="sellCostPct" value="2.5"></label>
             <label><span>Sale legal / discharge costs</span><input id="saleLegalCosts" value="4000"></label>
@@ -305,7 +233,6 @@
 
         <div class="section hidden" id="trsSection">
           <h2>TRS buffer engine</h2>
-          <div class="section-sub">Only active in 2027 mode.</div>
           <div class="grid-2">
             <label><span>TRS days per week</span><input id="futureTRSDays" value="0"></label>
             <label><span>TRS pay per day</span><input id="trsRate" value="450"></label>
@@ -315,10 +242,10 @@
 
       <div class="stack">
         <div class="metrics">
-          <div class="metric"><div class="title">Verdict</div><div class="value" id="verdictValue"></div><div class="note" id="verdictNote"></div></div>
-          <div class="metric"><div class="title">Safe spend limit</div><div class="value" id="safeSpendValue"></div><div class="note">Maximum weekly spending</div></div>
-          <div class="metric"><div class="title">Total pressure</div><div class="value" id="totalPressureValue"></div><div class="note">Weekly non-negotiable load</div></div>
-          <div class="metric"><div class="title">Final position</div><div class="value" id="finalPositionValue"></div><div class="note">After all current settings</div></div>
+          <div class="metric" id="cardVerdict"><div class="title">Verdict</div><div class="value" id="verdictValue"></div><div class="note" id="verdictNote"></div></div>
+          <div class="metric" id="cardSafeSpend"><div class="title">Safe spend limit</div><div class="value" id="safeSpendValue"></div><div class="note">Maximum weekly spending</div></div>
+          <div class="metric" id="cardPressure"><div class="title">Total pressure</div><div class="value" id="totalPressureValue"></div><div class="note">Weekly non-negotiable load</div></div>
+          <div class="metric" id="cardFinal"><div class="title">Final position</div><div class="value" id="finalPositionValue"></div><div class="note">After all current settings</div></div>
         </div>
 
         <div class="mentor" id="mentorBox">
@@ -326,28 +253,27 @@
           <div id="mentorBody"></div>
         </div>
 
-        <div class="section">
+        <div class="section" id="strategySummaryCard">
           <h2>Strategy summary</h2>
-          <div class="section-sub">One-screen summary of where the system stands right now.</div>
           <div class="pill-note" id="strategySummary"></div>
         </div>
 
-        <div class="section">
+        <div class="section" id="nextMoveCard">
           <h2>What changes this week</h2>
           <div class="next-move"><strong id="nextMoveTitle"></strong><div id="nextMoveBody"></div></div>
         </div>
 
-        <div class="section">
+        <div class="section" id="transferCard">
           <h2>Suggested weekly transfers</h2>
           <div class="grid-4">
             <div class="transfer"><div class="title">Living</div><div class="value" id="transferLiving"></div><div class="note">Adjustable control lever</div></div>
             <div class="transfer"><div class="title">Splurge</div><div class="value" id="transferSplurge"></div><div class="note">Keep tight</div></div>
             <div class="transfer"><div class="title">Bills bucket</div><div class="value" id="transferBills"></div><div class="note">Do not starve this</div></div>
-            <div class="transfer"><div class="title">Savings target</div><div class="value" id="transferSavings"></div><div class="note">Locked until August</div></div>
+            <div class="transfer"><div class="title">Savings target</div><div class="value" id="transferSavings"></div><div class="note">Locked until 24 July</div></div>
           </div>
         </div>
 
-        <div class="section">
+        <div class="section" id="signalsCard">
           <h2>Decision signals</h2>
           <div class="grid-4">
             <div class="signal"><div class="title">Refinance readiness</div><div class="value" id="signalRefinance"></div></div>
@@ -358,7 +284,7 @@
           <div class="pill-note" style="margin-top:14px;" id="equityAction"></div>
         </div>
 
-        <div class="section">
+        <div class="section" id="pressureCard">
           <h2>Pressure stack</h2>
           <div class="stack-row"><span>Fixed core</span><strong id="stackFixed"></strong></div>
           <div class="stack-row"><span>Bills bucket</span><strong id="stackBills"></strong></div>
@@ -368,7 +294,7 @@
           <div style="border-top:1px solid var(--soft);padding-top:10px;margin-top:8px;"><div class="stack-row"><span><strong>Total weekly pressure</strong></span><strong id="stackTotal"></strong></div></div>
         </div>
 
-        <div class="section">
+        <div class="section" id="offsetCard">
           <h2>Offset trend</h2>
           <div class="grid-3">
             <div class="metric"><div class="title">Current offset</div><div class="value" id="offsetNow"></div><div class="note">Starting point</div></div>
@@ -416,25 +342,6 @@
           </div>
 
           <div class="section">
-            <h2>IP stage and rent crossover</h2>
-            <div class="grid-4">
-              <div class="metric"><div class="title">Active build debt</div><div class="value" id="activeBuildDebt"></div><div class="note" id="activeBuildDebtNote"></div></div>
-              <div class="metric"><div class="title">Build interest / week</div><div class="value" id="weeklyBuildInterest"></div><div class="note">Estimated at 6.14%</div></div>
-              <div class="metric"><div class="title">Weeks until rent</div><div class="value" id="weeksUntilRentValue"></div><div class="note">Editable assumption</div></div>
-              <div class="metric"><div class="title">Rent target</div><div class="value" id="rentValue"></div><div class="note">Weekly target</div></div>
-            </div>
-          </div>
-
-          <div id="trsDeep" class="section hidden">
-            <h2>TRS buffer analysis</h2>
-            <div class="grid-3">
-              <div class="metric"><div class="title">Base 0.8 income</div><div class="value" id="futureBaseIncome"></div><div class="note">Work + 1 day LSL equivalent</div></div>
-              <div class="metric"><div class="title">TRS added</div><div class="value" id="trsAdded"></div><div class="note">Only active in future mode</div></div>
-              <div class="metric"><div class="title">Total future income</div><div class="value" id="futureIncome"></div><div class="note">0.8 mode plus TRS</div></div>
-            </div>
-          </div>
-
-          <div class="section">
             <h2>Debt recycling trigger</h2>
             <div class="grid-2">
               <div class="metric"><div class="title">Target split</div><div class="value" id="debtTarget"></div><div class="note">Desired investment split</div></div>
@@ -447,6 +354,15 @@
             <div class="grid-2">
               <div class="metric"><div class="title">Rough net sale price needed</div><div class="value" id="wipeNeed"></div><div class="note">Includes rough sale costs and IP debt</div></div>
               <div class="metric"><div class="title">Current gap to that number</div><div class="value" id="wipeGap"></div><div class="note">Based on current IP value input</div></div>
+            </div>
+          </div>
+
+          <div class="section hidden" id="trsDeep">
+            <h2>TRS buffer analysis</h2>
+            <div class="grid-3">
+              <div class="metric"><div class="title">Base 0.8 income</div><div class="value" id="futureBaseIncome"></div><div class="note">Work + 1 day LSL equivalent</div></div>
+              <div class="metric"><div class="title">TRS added</div><div class="value" id="trsAdded"></div><div class="note">Only active in future mode</div></div>
+              <div class="metric"><div class="title">Total future income</div><div class="value" id="futureIncome"></div><div class="note">0.8 mode plus TRS</div></div>
             </div>
           </div>
         </div>
@@ -462,12 +378,20 @@
       BILLS_BUCKET: 150,
       FENCE_COST: 4644,
       CRUISE_REMAINING: 11600,
-      CURRENT_SAVINGS_BALANCE: 2600,
+      DEFAULT_CURRENT_SAVINGS: 2600,
+      EQUITY_RELEASE: 215000,
+      PROPOSED_LENDING: 373000,
+      PLANNED_TOTAL_IP_DEBT: 588000,
+      WEEKLY_RENT_TARGET: 700,
+      LIVE_PPOR_REFERENCE: 960000,
+      LIVE_IP_REFERENCE: 715000,
+      LIVE_REFERENCE_NOTE: 'Defaults refreshed March 2026',
     };
 
     let mode = 'now';
     let showDeep = false;
     let usePasteSpend = false;
+    let billIdCounter = 1;
 
     const $ = (id) => document.getElementById(id);
     const currency = (n) => new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(Number.isFinite(n) ? n : 0);
@@ -475,41 +399,98 @@
       const n = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
       return Number.isFinite(n) ? n : 0;
     };
-    const parseBills = (text) => text.split('\n').map(x => x.trim()).filter(Boolean).map(line => {
-      const [nameRaw, amountRaw, weeksRaw] = line.split('|').map(x => x.trim());
-      const amount = num(amountRaw || 0);
-      const weeks = Math.max(1, Math.round(num(weeksRaw || 1)));
-      return { name: nameRaw || 'Upcoming bill', amount, weeks, weekly: amount / weeks };
-    });
     const parseSpendEntries = (text) => text.split(/\n|,|;/).map(x => x.trim()).filter(Boolean).map(num).filter(n => Number.isFinite(n) && n > 0);
+    const today = () => new Date();
+    const formatDateForInput = (date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
+    const calcWeeksToTarget = () => {
+      const now = today();
+      const year = now.getMonth() > 6 || (now.getMonth() === 6 && now.getDate() > 24) ? now.getFullYear() + 1 : now.getFullYear();
+      const target = new Date(year, 6, 24);
+      const diffDays = Math.max(0, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+      return Math.max(1, Math.ceil(diffDays / 7));
+    };
+    const createDefaultDueDate = (daysAhead) => {
+      const d = today();
+      d.setDate(d.getDate() + daysAhead);
+      return formatDateForInput(d);
+    };
+
+    function addBillRow(name = '', amount = '', dueDate = '') {
+      const container = $('billsContainer');
+      const row = document.createElement('div');
+      row.className = 'bill-row';
+      row.dataset.id = String(billIdCounter++);
+      row.innerHTML = `
+        <label><span>Bill name</span><input class="bill-name" value="${name}"></label>
+        <label><span>Amount</span><input class="bill-amount" value="${amount}"></label>
+        <label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label>
+        <button type="button" class="remove-bill">Remove</button>
+      `;
+      container.appendChild(row);
+      row.querySelectorAll('input').forEach(el => el.addEventListener('input', render));
+      row.querySelector('.remove-bill').addEventListener('click', () => {
+        row.remove();
+        render();
+      });
+    }
+
+    function readBills() {
+      return Array.from(document.querySelectorAll('.bill-row')).map((row) => {
+        const name = row.querySelector('.bill-name').value.trim() || 'Upcoming bill';
+        const amount = num(row.querySelector('.bill-amount').value);
+        const dueDate = row.querySelector('.bill-date').value;
+        const diffDays = dueDate ? Math.max(1, Math.ceil((new Date(dueDate) - today()) / (1000 * 60 * 60 * 24))) : 7;
+        const weeks = Math.max(1, Math.ceil(diffDays / 7));
+        return { name, amount, dueDate, weeks, weekly: amount / weeks };
+      }).filter(b => b.amount > 0);
+    }
+
+    function applyCardStatus(el, status) {
+      el.classList.remove('status-good', 'status-warn', 'status-bad', 'status-info');
+      el.classList.add(status);
+    }
 
     function compute() {
       const offset = num($('offset').value);
+      const currentSavings = num($('currentSavings').value);
       const pastedSpendTotal = parseSpendEntries($('spendEntries').value).reduce((a, b) => a + b, 0);
       const spend = usePasteSpend ? pastedSpendTotal : num($('weeklySpend').value);
-      const weeks = Math.max(1, Math.round(num($('weeksToAugust').value)));
-      const upcomingWeekly = parseBills($('upcomingBills').value).reduce((sum, bill) => sum + bill.weekly, 0);
-      const savingsGap = CONFIG.FENCE_COST + CONFIG.CRUISE_REMAINING - CONFIG.CURRENT_SAVINGS_BALANCE;
-      const augustSavingsTarget = savingsGap / weeks;
+      const weeks = calcWeeksToTarget();
+      $('weeksToJuly24').value = String(weeks);
+      const bills = readBills();
+      const upcomingWeekly = bills.reduce((sum, bill) => sum + bill.weekly, 0);
+      const savingsGap = CONFIG.FENCE_COST + CONFIG.CRUISE_REMAINING - currentSavings;
+      const augustSavingsTarget = Math.max(0, savingsGap / weeks);
       const augustGoalTotal = CONFIG.FENCE_COST + CONFIG.CRUISE_REMAINING;
-      const augustGoalProgress = Math.min((CONFIG.CURRENT_SAVINGS_BALANCE / augustGoalTotal) * 100, 100);
+      const augustGoalProgress = Math.min((currentSavings / augustGoalTotal) * 100, 100);
 
-      const ipDebt = num($('ipDebt').value);
-      $('ipDebtMirror').value = $('ipDebt').value;
-      const drawMap = { plate: 0.45, roof: 0.63, lockup: 0.81, tiling: 0.93, practical: 0.98, complete: 1 };
       const buildStage = $('buildStage').value;
-      const drawPct = drawMap[buildStage];
-      const activeBuildDebt = ipDebt * drawPct;
+      const stageMap = {
+        plate: { ratio: 0.405, weeksToRent: 16 },
+        roof: { ratio: 0.585, weeksToRent: 12 },
+        lockup: { ratio: 0.765, weeksToRent: 8 },
+        tiling: { ratio: 0.925, weeksToRent: 4 },
+        practical: { ratio: 1, weeksToRent: 2 },
+        complete: { ratio: 1, weeksToRent: 0 },
+      };
+      const stageConfig = stageMap[buildStage];
+      const ipDebt = CONFIG.PLANNED_TOTAL_IP_DEBT;
+      $('ipDebtMirror').value = currency(ipDebt);
+      const activeBuildDebt = CONFIG.EQUITY_RELEASE + (CONFIG.PROPOSED_LENDING * stageConfig.ratio);
       const weeklyBuildInterest = (activeBuildDebt * 0.0614) / 52;
-      const currentIPPressureBeforeRent = weeklyBuildInterest + 250;
-      const rent = num($('weeklyRent').value);
+      const currentIPPressureBeforeRent = weeklyBuildInterest;
+      const rent = CONFIG.WEEKLY_RENT_TARGET;
       const currentIPNetPressure = buildStage === 'complete' ? Math.max(currentIPPressureBeforeRent - rent, 0) : currentIPPressureBeforeRent;
-      const weeksUntilRent = Math.max(0, Math.round(num($('weeksToRent').value)));
+      const weeksUntilRent = stageConfig.weeksToRent;
 
       const baseIncome = mode === 'now' ? CONFIG.WEEKLY_INCOME_NOW : CONFIG.WEEKLY_INCOME_08_MODE;
       const trsWeekly = mode === 'future' ? num($('futureTRSDays').value) * num($('trsRate').value) : 0;
       const income = baseIncome + trsWeekly;
-
       const totalPressure = CONFIG.FIXED_CORE + CONFIG.BILLS_BUCKET + augustSavingsTarget + upcomingWeekly + currentIPNetPressure;
       const remainingBeforeSpend = income - totalPressure;
       const finalPosition = remainingBeforeSpend - spend;
@@ -517,9 +498,9 @@
       const next4WeeksOffset = offset + finalPosition * 4;
       const next8WeeksOffset = offset + finalPosition * 8;
 
-      const pporValue = num($('pporValue').value);
+      const pporValue = num($('pporValue').value) || num($('pporLiveRef').value);
       const pporLoan = num($('pporLoan').value);
-      const ipValue = num($('ipValue').value);
+      const ipValue = num($('ipValue').value) || num($('ipLiveRef').value);
       const pporEquity = pporValue - pporLoan;
       const ipEquity = ipValue - ipDebt;
       const pporUsable = Math.max(pporValue * 0.8 - pporLoan, 0);
@@ -608,13 +589,21 @@
 
       let strategySummary = `Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. `;
       strategySummary += verdict === 'OFF TRACK'
-        ? `The system is currently failing and must be tightened before any strategic move.`
+        ? 'The system is currently failing and must be tightened before any strategic move.'
         : verdict === 'TIGHT'
-        ? `The system is functioning, but the buffer is weak and one sloppy week will hurt.`
-        : `The system is currently holding, but discipline still matters more than optimism.`;
+        ? 'The system is functioning, but the buffer is weak and one sloppy week will hurt.'
+        : 'The system is currently holding, but discipline still matters more than optimism.';
       strategySummary += ` Refinance signal: ${refinanceSignal}. Sell signal: ${sellSignal}. Debt recycling: ${debtRecycleReadiness}. 2027 readiness: ${futureModeReadiness}.`;
 
-      return { augustSavingsTarget, augustGoalProgress, activeBuildDebt, drawPct, weeklyBuildInterest, weeksUntilRent, rent, income, baseIncome, trsWeekly, totalPressure, finalPosition, safeSpendLimit, next4WeeksOffset, next8WeeksOffset, verdict, verdictTone, mentorTitle, mentorBody, strategySummary, transferLiving, transferSplurge, pporEquity, ipEquity, pporUsable, ipUsable, pporValue, pporLoan, ipValue, ipDebt, pporBandEquity, ipBandEquity, ipUsableBand, netLow, netMid, netHigh, pporGapAfterLow, pporGapAfterMid, pporGapAfterHigh, requiredSalePriceToClearPPORNet, currentGapToPPORWipe, refinanceSignal, sellSignal, debtRecycleReadiness, futureModeReadiness, equityAction, currentIPNetPressure, nextMoveTitle, nextMoveBody, debtRecycleTarget };
+      return {
+        currentSavings, augustSavingsTarget, augustGoalProgress, activeBuildDebt, drawPct, weeklyBuildInterest, weeksUntilRent, rent,
+        income, baseIncome, trsWeekly, totalPressure, finalPosition, safeSpendLimit, next4WeeksOffset, next8WeeksOffset,
+        verdict, verdictTone, mentorTitle, mentorBody, strategySummary, transferLiving, transferSplurge,
+        pporEquity, ipEquity, pporUsable, ipUsable, pporValue, pporLoan, ipValue, ipDebt,
+        pporBandEquity, ipBandEquity, ipUsableBand, netLow, netMid, netHigh, pporGapAfterLow, pporGapAfterMid, pporGapAfterHigh,
+        requiredSalePriceToClearPPORNet, currentGapToPPORWipe, refinanceSignal, sellSignal, debtRecycleReadiness, futureModeReadiness,
+        equityAction, currentIPNetPressure, nextMoveTitle, nextMoveBody, debtRecycleTarget, upcomingWeekly
+      };
     }
 
     function render() {
@@ -631,10 +620,16 @@
 
       $('fenceValue').textContent = currency(CONFIG.FENCE_COST);
       $('cruiseValue').textContent = currency(CONFIG.CRUISE_REMAINING);
-      $('currentSavingsValue').textContent = currency(CONFIG.CURRENT_SAVINGS_BALANCE);
+      $('currentSavingsValue').textContent = currency(m.currentSavings);
       $('augWeeklyValue').textContent = currency(m.augustSavingsTarget);
       $('augProgressText').textContent = `${Math.round(m.augustGoalProgress)}%`;
       $('augProgressFill').style.width = `${m.augustGoalProgress}%`;
+
+      $('ipPlannedDebt').textContent = currency(CONFIG.PLANNED_TOTAL_IP_DEBT);
+      $('activeBuildDebt').textContent = currency(m.activeBuildDebt);
+      $('activeBuildDebtNote').textContent = `${Math.round(m.drawPct * 100)}% of planned debt modelled`;
+      $('weeklyBuildInterest').textContent = currency(m.weeklyBuildInterest);
+      $('weeksUntilRentValue').textContent = String(m.weeksUntilRent);
 
       $('verdictValue').textContent = m.verdict;
       $('verdictNote').textContent = mode === 'now' ? 'Current phase' : '2027 0.8 mode';
@@ -643,10 +638,9 @@
       $('finalPositionValue').textContent = currency(m.finalPosition);
 
       const mentorBox = $('mentorBox');
-      mentorBox.className = `mentor ${m.verdictTone}`;
+      mentorBox.className = `mentor status-${m.verdictTone}`;
       $('mentorTitle').textContent = m.mentorTitle;
       $('mentorBody').textContent = m.mentorBody;
-
       $('strategySummary').textContent = m.strategySummary;
       $('nextMoveTitle').textContent = m.nextMoveTitle;
       $('nextMoveBody').textContent = m.nextMoveBody;
@@ -665,7 +659,7 @@
       $('stackFixed').textContent = currency(CONFIG.FIXED_CORE);
       $('stackBills').textContent = currency(CONFIG.BILLS_BUCKET);
       $('stackSavings').textContent = currency(m.augustSavingsTarget);
-      $('stackUpcoming').textContent = currency(parseBills($('upcomingBills').value).reduce((sum, bill) => sum + bill.weekly, 0));
+      $('stackUpcoming').textContent = currency(m.upcomingWeekly);
       $('stackIP').textContent = currency(m.currentIPNetPressure);
       $('stackTotal').textContent = currency(m.totalPressure);
 
@@ -696,20 +690,25 @@
       $('gapLow').textContent = currency(m.pporGapAfterLow);
       $('gapMid').textContent = currency(m.pporGapAfterMid);
       $('gapHigh').textContent = currency(m.pporGapAfterHigh);
-
-      $('activeBuildDebt').textContent = currency(m.activeBuildDebt);
-      $('activeBuildDebtNote').textContent = `${Math.round(m.drawPct * 100)}% of total debt modelled`;
-      $('weeklyBuildInterest').textContent = currency(m.weeklyBuildInterest);
-      $('weeksUntilRentValue').textContent = String(m.weeksUntilRent);
-      $('rentValue').textContent = currency(m.rent);
-
+      $('rentValue').textContent = currency(CONFIG.WEEKLY_RENT_TARGET);
       $('futureBaseIncome').textContent = currency(m.baseIncome);
       $('trsAdded').textContent = currency(m.trsWeekly);
-      $('futureIncome').textContent = currency(m.baseIncome + m.trsWeekly);
+      $('futureIncome').textContent = currency(m.income);
       $('debtTarget').textContent = currency(m.debtRecycleTarget);
       $('debtUsable').textContent = currency(m.pporUsable);
       $('wipeNeed').textContent = currency(m.requiredSalePriceToClearPPORNet);
       $('wipeGap').textContent = currency(m.currentGapToPPORWipe);
+
+      applyCardStatus($('cardVerdict'), m.verdictTone === 'good' ? 'status-good' : m.verdictTone === 'warn' ? 'status-warn' : 'status-bad');
+      applyCardStatus($('cardFinal'), m.finalPosition >= 250 ? 'status-good' : m.finalPosition >= 0 ? 'status-warn' : 'status-bad');
+      applyCardStatus($('cardSafeSpend'), 'status-info');
+      applyCardStatus($('cardPressure'), m.totalPressure > m.income ? 'status-bad' : 'status-info');
+      applyCardStatus($('strategySummaryCard'), 'status-info');
+      applyCardStatus($('nextMoveCard'), m.verdict === 'OFF TRACK' ? 'status-bad' : 'status-info');
+      applyCardStatus($('transferCard'), m.verdict === 'OFF TRACK' ? 'status-warn' : 'status-info');
+      applyCardStatus($('signalsCard'), m.sellSignal.includes('wipe') ? 'status-good' : 'status-info');
+      applyCardStatus($('pressureCard'), m.totalPressure > m.income ? 'status-bad' : 'status-info');
+      applyCardStatus($('offsetCard'), m.next8WeeksOffset < num($('offset').value) ? 'status-warn' : 'status-good');
     }
 
     document.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('input', render));
@@ -717,7 +716,13 @@
     $('toggleSpendMode').addEventListener('click', () => { usePasteSpend = !usePasteSpend; render(); });
     $('mode-now').addEventListener('click', () => { mode = 'now'; render(); });
     $('mode-future').addEventListener('click', () => { mode = 'future'; render(); });
+    $('addBill').addEventListener('click', () => { addBillRow('', '', createDefaultDueDate(14)); render(); });
 
+    addBillRow('Power bill', '1433', createDefaultDueDate(21));
+    $('pporLiveRef').value = String(CONFIG.LIVE_PPOR_REFERENCE);
+    $('ipLiveRef').value = String(CONFIG.LIVE_IP_REFERENCE);
+    $('currentSavings').value = String(CONFIG.DEFAULT_CURRENT_SAVINGS);
+    $('weeklyRent').value = String(CONFIG.WEEKLY_RENT_TARGET);
     render();
   </script>
 </body>
