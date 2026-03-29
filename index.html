@@ -195,20 +195,20 @@
       <div class="card" id="transferCard">
         <h2>Suggested weekly transfers</h2>
         <div class="grid-4" style="margin-top:14px;">
-          <div class="metric"><div class="label">Living</div><div class="value" id="livingVal"></div><div class="note">Adjustable control lever</div></div>
-          <div class="metric"><div class="label">Splurge</div><div class="value" id="splurgeVal"></div><div class="note">Keep tight</div></div>
-          <div class="metric"><div class="label">Bills bucket</div><div class="value" id="billsVal"></div><div class="note">Do not starve this</div></div>
-          <div class="metric"><div class="label">Savings target</div><div class="value" id="saveTargetVal"></div><div class="note">Locked until 24 July</div></div>
+          <div class="metric" id="livingCard"><div class="label">Living</div><div class="value" id="livingVal"></div><div class="note">Adjustable control lever</div></div>
+          <div class="metric" id="splurgeCard"><div class="label">Splurge</div><div class="value" id="splurgeVal"></div><div class="note">Keep tight</div></div>
+          <div class="metric" id="billsCard"><div class="label">Bills bucket</div><div class="value" id="billsVal"></div><div class="note">Do not starve this</div></div>
+          <div class="metric" id="saveTargetCard"><div class="label">Savings target</div><div class="value" id="saveTargetVal"></div><div class="note">Locked until 24 July</div></div>
         </div>
       </div>
 
       <div class="card" id="signalCard">
         <h2>Decision signals</h2>
         <div class="grid-4" style="margin-top:14px;">
-          <div class="metric"><div class="label">Refinance readiness</div><div class="value" id="refinanceVal"></div></div>
-          <div class="metric"><div class="label">Sell signal</div><div class="value" id="sellVal"></div></div>
-          <div class="metric"><div class="label">Debt recycle readiness</div><div class="value" id="debtVal"></div></div>
-          <div class="metric"><div class="label">2027 readiness</div><div class="value" id="futureReadyVal"></div></div>
+          <div class="metric" id="refinanceCard"><div class="label">Refinance readiness</div><div class="value" id="refinanceVal"></div></div>
+          <div class="metric" id="sellSignalCard"><div class="label">Sell signal</div><div class="value" id="sellVal"></div></div>
+          <div class="metric" id="debtSignalCard"><div class="label">Debt recycle readiness</div><div class="value" id="debtVal"></div></div>
+          <div class="metric" id="futureSignalCard"><div class="label">2027 readiness</div><div class="value" id="futureReadyVal"></div></div>
         </div>
         <div class="status-box status-info" style="margin-top:14px;" id="equityAction"></div>
       </div>
@@ -226,9 +226,9 @@
       <div class="card" id="offsetCard">
         <h2>Offset trend</h2>
         <div class="grid-3" style="margin-top:14px;">
-          <div class="metric"><div class="label">Current offset</div><div class="value" id="offsetNowVal"></div><div class="note">Starting point</div></div>
-          <div class="metric"><div class="label">4-week projection</div><div class="value" id="offset4Val"></div><div class="note">At current settings</div></div>
-          <div class="metric"><div class="label">8-week projection</div><div class="value" id="offset8Val"></div><div class="note">At current settings</div></div>
+          <div class="metric" id="offsetNowCard"><div class="label">Current offset</div><div class="value" id="offsetNowVal"></div><div class="note">Starting point</div></div>
+          <div class="metric" id="offset4Card"><div class="label">4-week projection</div><div class="value" id="offset4Val"></div><div class="note">At current settings</div></div>
+          <div class="metric" id="offset8Card"><div class="label">8-week projection</div><div class="value" id="offset8Val"></div><div class="note">At current settings</div></div>
         </div>
       </div>
 
@@ -534,6 +534,17 @@
     paint($('signalCard'), m.sell.includes('wipe') ? 'status-good' : 'status-info');
     paint($('pressureCardWrap'), m.totalPressure > m.income ? 'status-bad' : 'status-info');
     paint($('offsetCard'), m.offset8 < num($('offset').value) ? 'status-warn' : 'status-good');
+    paint($('livingCard'), m.living <= 500 ? 'status-good' : 'status-warn');
+    paint($('splurgeCard'), 'status-info');
+    paint($('billsCard'), 'status-info');
+    paint($('saveTargetCard'), m.weeklySavingsTarget > 900 ? 'status-bad' : m.weeklySavingsTarget > 700 ? 'status-warn' : 'status-good');
+    paint($('refinanceCard'), m.refinance === 'Strong' ? 'status-good' : m.refinance === 'Possible' ? 'status-warn' : 'status-info');
+    paint($('sellSignalCard'), m.sell.includes('wipe') ? 'status-good' : m.sell === 'Review numbers' ? 'status-warn' : 'status-info');
+    paint($('debtSignalCard'), m.debtReady === 'Ready' ? 'status-good' : m.debtReady === 'Close' ? 'status-warn' : 'status-info');
+    paint($('futureSignalCard'), m.futureReady === 'Ready' ? 'status-good' : m.futureReady === 'Close' ? 'status-warn' : 'status-info');
+    paint($('offsetNowCard'), 'status-info');
+    paint($('offset4Card'), m.offset4 < num($('offset').value) ? 'status-warn' : 'status-good');
+    paint($('offset8Card'), m.offset8 < num($('offset').value) ? 'status-warn' : 'status-good');
   }
 
   document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', render));
