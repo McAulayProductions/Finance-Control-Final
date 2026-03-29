@@ -732,12 +732,20 @@
     $('mode-future').addEventListener('click', () => { mode = 'future'; render(); });
     $('addBill').addEventListener('click', () => { addBillRow('', '', createDefaultDueDate(14)); render(); });
 
-    addBillRow('Power bill', '1433', createDefaultDueDate(21));
-    $('pporLiveRef').value = String(CONFIG.LIVE_PPOR_REFERENCE);
-    $('ipLiveRef').value = String(CONFIG.LIVE_IP_REFERENCE);
-    $('currentSavings').value = String(CONFIG.DEFAULT_CURRENT_SAVINGS);
-    $('weeklyRent').value = String(CONFIG.WEEKLY_RENT_TARGET);
-    render();
-  </script>
-</body>
-</html>
+addBillRow('Power bill', '1433', createDefaultDueDate(21));
+
+const setIfExists = (id, value) => {
+  const el = $(id);
+  if (el) el.value = String(value);
+};
+
+setIfExists('pporLiveRef', CONFIG.LIVE_PPOR_REFERENCE);
+setIfExists('ipLiveRef', CONFIG.LIVE_IP_REFERENCE);
+setIfExists('currentSavings', CONFIG.DEFAULT_CURRENT_SAVINGS);
+setIfExists('currentWeeklyIncome', CONFIG.DEFAULT_WEEKLY_INCOME_NOW);
+setIfExists('futureWeeklyIncome', CONFIG.DEFAULT_WEEKLY_INCOME_08_MODE);
+setIfExists('pporWeeklyRepayment', CONFIG.DEFAULT_PPOR_WEEKLY_REPAYMENT);
+setIfExists('pporRate', CONFIG.DEFAULT_PPOR_RATE);
+setIfExists('ipRate', CONFIG.DEFAULT_IP_RATE);
+
+render();
