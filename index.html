@@ -59,7 +59,7 @@
 <div class="wrap">
   <div class="hero">
     <h1>Finance Control</h1>
-    <div class="sub">Stable rebuild with command logic. This version includes income and rate overrides, August obligations, IP build logic, valuation strategy, and a weekly command engine that protects offset first.</div>
+    <div class="sub">Stable rebuild. This version restores the working engine and adds the next layers cleanly: income and rate overrides, August obligations, IP build logic, and valuation strategy.</div>
     <div class="mode-toggle">
       <button id="mode-now" class="active" type="button">Current phase</button>
       <button id="mode-future" type="button">2027 0.8 mode</button>
@@ -77,8 +77,8 @@
           <label><span>Current Weekly Household Income</span><input id="incomeNow" value="3250"></label>
           <label><span>2027 Weekly Household Income (0.8 mode)</span><input id="incomeFuture" value="2600"></label>
           <label><span>PPOR Weekly Repayment</span><input id="pporWeekly" value="763"></label>
-          <label><span>PPOR Interest Rate %</span><input id="pporRate" value="5.92">
-          <label><span>IP / Build Interest Rate %</span><input id="ipRate" value="6.390">
+          <label><span>PPOR Interest Rate %</span><input id="pporRate" value="5.67"></label>
+          <label><span>IP / Build Interest Rate %</span><input id="ipRate" value="6.14"></label>
           <label><span>Weeks remaining to 24 July</span><input id="weeksToTarget" readonly></label>
         </div>
         <div class="grid-2" style="margin-top:14px;">
@@ -182,13 +182,6 @@
       <div class="card" id="strategyCard">
         <h2>Strategy summary</h2>
         <div class="sub" id="strategySummary"></div>
-      </div>
-
-      <div class="card" id="commandCard">
-        <h2>Weekly command</h2>
-        <div class="status-box" id="commandBox">
-          <div id="commandOutput"></div>
-        </div>
       </div>
 
       <div class="card" id="nextCard">
@@ -330,34 +323,6 @@
     el.classList.add(type);
   }
 
-  function getWeeklyCommand(m) {
-    let actions = [];
-
-    if (m.offset8 < m.offsetNow) {
-      actions.push("⚠️ Offset declining → cut spending immediately");
-      if (m.living > 500) actions.push(`Reduce living to ${currency(500)}`);
-      if (m.splurge > 0) actions.push("Reduce splurge to $0–$50");
-    }
-
-    if (m.weeklySavingsTarget > 800) {
-      actions.push("Savings target aggressive → monitor weekly");
-    }
-
-    if (m.totalPressure > m.income) {
-      actions.push("Bills exceed income → delay or smooth if possible");
-    }
-
-    if (m.offset8 > m.offsetNow + 1000) {
-      actions.push("✅ Strong position → consider extra PPOR attack");
-    }
-
-    if (actions.length === 0) {
-      actions.push("Stable → stay consistent this week");
-    }
-
-    return actions.join("<br>");
-  }
-
   function compute() {
     const offset = num($('offset').value);
     const savings = num($('savings').value);
@@ -479,11 +444,9 @@
     const strategySummary = `Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. ${verdict === 'OFF TRACK' ? 'The system is currently failing and must be tightened before any strategic move.' : verdict === 'TIGHT' ? 'The system is functioning, but the buffer is weak and one sloppy week will hurt.' : 'The system is currently holding, but discipline still matters more than optimism.'} Refinance: ${refinance}. Sell: ${sell}. Debt recycling: ${debtReady}. 2027 readiness: ${futureReady}.`;
 
     return {
-      offsetNow: offset,
       savings, weeklySavingsTarget, progress, activeDebt, stageRatio: stageCfg.ratio, weeklyIPInterest, weeksToRent: stageCfg.weeksToRent,
-      income, baseIncome: mode === 'now' ? incomeNow : incomeFuture, trsWeekly, totalPressure, safeSpend, finalPosition, offset4, offset8,
-      verdict, tone, mentorTitle, mentorBody, nextTitle, nextBody, living, splurge,
-      pporEquity, ipEquity, pporUsable, ipUsable, pporValue, pporLoan, ipValue,
+      income, trsWeekly, totalPressure, safeSpend, finalPosition, offset4, offset8, verdict, tone, mentorTitle, mentorBody,
+      nextTitle, nextBody, living, splurge, pporEquity, ipEquity, pporUsable, ipUsable, pporValue, pporLoan, ipValue,
       netLow, netMid, netHigh, wipeNeed, refinance, sell, debtReady, futureReady, strategySummary, upcomingWeekly, debtTarget, ipPressure
     };
   }
@@ -524,8 +487,6 @@
     $('nextMoveTitle').textContent = m.nextTitle;
     $('nextMoveBody').textContent = m.nextBody;
 
-    $('commandOutput').innerHTML = getWeeklyCommand(m);
-
     $('livingVal').textContent = currency(m.living);
     $('splurgeVal').textContent = currency(m.splurge);
     $('billsVal').textContent = currency(CONFIG.BILLS_BUCKET);
@@ -544,7 +505,7 @@
     $('stackIP').textContent = currency(m.ipPressure);
     $('stackTotal').textContent = currency(m.totalPressure);
 
-    $('offsetNowVal').textContent = currency(m.offsetNow);
+    $('offsetNowVal').textContent = currency(num($('offset').value));
     $('offset4Val').textContent = currency(m.offset4);
     $('offset8Val').textContent = currency(m.offset8);
 
@@ -572,27 +533,18 @@
     paint($('transferCard'), m.verdict === 'OFF TRACK' ? 'status-warn' : 'status-info');
     paint($('signalCard'), m.sell.includes('wipe') ? 'status-good' : 'status-info');
     paint($('pressureCardWrap'), m.totalPressure > m.income ? 'status-bad' : 'status-info');
-    paint($('offsetCard'), m.offset8 < m.offsetNow ? 'status-warn' : 'status-good');
-
+    paint($('offsetCard'), m.offset8 < num($('offset').value) ? 'status-warn' : 'status-good');
     paint($('livingCard'), m.living <= 500 ? 'status-good' : 'status-warn');
     paint($('splurgeCard'), 'status-info');
     paint($('billsCard'), 'status-info');
     paint($('saveTargetCard'), m.weeklySavingsTarget > 900 ? 'status-bad' : m.weeklySavingsTarget > 700 ? 'status-warn' : 'status-good');
-
     paint($('refinanceCard'), m.refinance === 'Strong' ? 'status-good' : m.refinance === 'Possible' ? 'status-warn' : 'status-info');
     paint($('sellSignalCard'), m.sell.includes('wipe') ? 'status-good' : m.sell === 'Review numbers' ? 'status-warn' : 'status-info');
     paint($('debtSignalCard'), m.debtReady === 'Ready' ? 'status-good' : m.debtReady === 'Close' ? 'status-warn' : 'status-info');
     paint($('futureSignalCard'), m.futureReady === 'Ready' ? 'status-good' : m.futureReady === 'Close' ? 'status-warn' : 'status-info');
-
     paint($('offsetNowCard'), 'status-info');
-    paint($('offset4Card'), m.offset4 < m.offsetNow ? 'status-warn' : 'status-good');
-    paint($('offset8Card'), m.offset8 < m.offsetNow ? 'status-warn' : 'status-good');
-
-    paint($('commandCard'),
-      m.offset8 < m.offsetNow ? 'status-bad' :
-      m.offset8 < m.offsetNow + 500 ? 'status-warn' :
-      'status-good'
-    );
+    paint($('offset4Card'), m.offset4 < num($('offset').value) ? 'status-warn' : 'status-good');
+    paint($('offset8Card'), m.offset8 < num($('offset').value) ? 'status-warn' : 'status-good');
   }
 
   document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', render));
