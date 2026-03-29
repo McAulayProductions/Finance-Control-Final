@@ -152,10 +152,16 @@
           <div class="grid-2">
             <label><span>Current offset</span><input id="offset" value="30000"></label>
             <label><span>Current savings balance</span><input id="currentSavings" value="2600"></label>
+            <label><span>Current weekly household income</span><input id="currentWeeklyIncome" value="3250"></label>
+            <label><span>2027 weekly household income (0.8 mode)</span><input id="futureWeeklyIncome" value="2600"></label>
+            <label><span>PPOR weekly repayment</span><input id="pporWeeklyRepayment" value="763"></label>
+            <label><span>PPOR interest rate %</span><input id="pporRate" value="5.67"></label>
+            <label><span>IP / build interest rate %</span><input id="ipRate" value="6.14"></label>
             <label><span>Weeks remaining to 24 July</span><input id="weeksToJuly24" readonly></label>
             <label><span>View depth</span><button id="toggleDeep" type="button" class="soft">Simple mode visible</button></label>
             <label><span>Spend input mode</span><button id="toggleSpendMode" type="button" class="soft">Single weekly total enabled</button></label>
           </div>
+          <div class="row-note">These income and rate fields are prefilled with your current assumptions so you do not need to re-enter them each time. Change them only if your salary or loan pricing changes.</div>
           <div id="spend-manual-wrap" style="margin-top:14px;">
             <label><span>Total weekly spending</span><input id="weeklySpend" value="600"></label>
           </div>
@@ -372,9 +378,12 @@
 
   <script>
     const CONFIG = {
-      WEEKLY_INCOME_NOW: 3250,
-      WEEKLY_INCOME_08_MODE: 2600,
-      FIXED_CORE: 1100,
+      DEFAULT_WEEKLY_INCOME_NOW: 3250,
+      DEFAULT_WEEKLY_INCOME_08_MODE: 2600,
+      DEFAULT_PPOR_WEEKLY_REPAYMENT: 763,
+      DEFAULT_PPOR_RATE: 5.67,
+      DEFAULT_IP_RATE: 6.14,
+      BILLS_BUCKET: 150,
       BILLS_BUCKET: 150,
       FENCE_COST: 4644,
       CRUISE_REMAINING: 11600,
@@ -384,7 +393,8 @@
       PLANNED_TOTAL_IP_DEBT: 588000,
       WEEKLY_RENT_TARGET: 700,
       LIVE_PPOR_REFERENCE: 960000,
-      LIVE_IP_REFERENCE: 715000
+      LIVE_IP_REFERENCE: 715000,
+      LIVE_REFERENCE_NOTE: 'Defaults refreshed March 2026',
     };
 
     let mode = 'now';
@@ -461,10 +471,8 @@
       const spend = usePasteSpend ? pastedSpendTotal : num($('weeklySpend').value);
       const weeks = calcWeeksToTarget();
       $('weeksToJuly24').value = String(weeks);
-
       const bills = readBills();
       const upcomingWeekly = bills.reduce((sum, bill) => sum + bill.weekly, 0);
-
       const savingsGap = CONFIG.FENCE_COST + CONFIG.CRUISE_REMAINING - currentSavings;
       const augustSavingsTarget = Math.max(0, savingsGap / weeks);
       const augustGoalTotal = CONFIG.FENCE_COST + CONFIG.CRUISE_REMAINING;
@@ -477,23 +485,27 @@
         lockup: { ratio: 0.765, weeksToRent: 8 },
         tiling: { ratio: 0.925, weeksToRent: 4 },
         practical: { ratio: 1, weeksToRent: 2 },
-        complete: { ratio: 1, weeksToRent: 0 }
+        complete: { ratio: 1, weeksToRent: 0 },
       };
       const stageConfig = stageMap[buildStage];
-      const drawPct = stageConfig.ratio;
       const ipDebt = CONFIG.PLANNED_TOTAL_IP_DEBT;
       $('ipDebtMirror').value = currency(ipDebt);
       const activeBuildDebt = CONFIG.EQUITY_RELEASE + (CONFIG.PROPOSED_LENDING * stageConfig.ratio);
-      const weeklyBuildInterest = (activeBuildDebt * 0.0614) / 52;
+      const ipRate = num($('ipRate').value) || CONFIG.DEFAULT_IP_RATE;
+      const weeklyBuildInterest = (activeBuildDebt * (ipRate / 100)) / 52;
       const currentIPPressureBeforeRent = weeklyBuildInterest;
       const rent = CONFIG.WEEKLY_RENT_TARGET;
       const currentIPNetPressure = buildStage === 'complete' ? Math.max(currentIPPressureBeforeRent - rent, 0) : currentIPPressureBeforeRent;
       const weeksUntilRent = stageConfig.weeksToRent;
 
-      const baseIncome = mode === 'now' ? CONFIG.WEEKLY_INCOME_NOW : CONFIG.WEEKLY_INCOME_08_MODE;
+      const currentWeeklyIncome = num($('currentWeeklyIncome').value) || CONFIG.DEFAULT_WEEKLY_INCOME_NOW;
+      const futureWeeklyIncome = num($('futureWeeklyIncome').value) || CONFIG.DEFAULT_WEEKLY_INCOME_08_MODE;
+      const pporWeeklyRepayment = num($('pporWeeklyRepayment').value) || CONFIG.DEFAULT_PPOR_WEEKLY_REPAYMENT;
+      const pporRate = num($('pporRate').value) || CONFIG.DEFAULT_PPOR_RATE;
+      const baseIncome = mode === 'now' ? currentWeeklyIncome : futureWeeklyIncome;
       const trsWeekly = mode === 'future' ? num($('futureTRSDays').value) * num($('trsRate').value) : 0;
       const income = baseIncome + trsWeekly;
-      const totalPressure = CONFIG.FIXED_CORE + CONFIG.BILLS_BUCKET + augustSavingsTarget + upcomingWeekly + currentIPNetPressure;
+      const totalPressure = pporWeeklyRepayment + CONFIG.BILLS_BUCKET + augustSavingsTarget + upcomingWeekly + currentIPNetPressure;
       const remainingBeforeSpend = income - totalPressure;
       const finalPosition = remainingBeforeSpend - spend;
       const safeSpendLimit = remainingBeforeSpend;
@@ -512,11 +524,7 @@
       const ipBand = { low: num($('ipLow').value), mid: num($('ipMid').value), high: num($('ipHigh').value) };
       const pporBandEquity = { low: pporBand.low - pporLoan, mid: pporBand.mid - pporLoan, high: pporBand.high - pporLoan };
       const ipBandEquity = { low: ipBand.low - ipDebt, mid: ipBand.mid - ipDebt, high: ipBand.high - ipDebt };
-      const ipUsableBand = {
-        low: Math.max(ipBand.low * 0.8 - ipDebt, 0),
-        mid: Math.max(ipBand.mid * 0.8 - ipDebt, 0),
-        high: Math.max(ipBand.high * 0.8 - ipDebt, 0)
-      };
+      const ipUsableBand = { low: Math.max(ipBand.low * 0.8 - ipDebt, 0), mid: Math.max(ipBand.mid * 0.8 - ipDebt, 0), high: Math.max(ipBand.high * 0.8 - ipDebt, 0) };
 
       const sellPct = num($('sellCostPct').value) / 100;
       const saleFixedCosts = num($('saleLegalCosts').value) + num($('saleOtherCosts').value);
@@ -662,7 +670,7 @@
       $('signal2027').textContent = m.futureModeReadiness;
       $('equityAction').textContent = m.equityAction;
 
-      $('stackFixed').textContent = currency(CONFIG.FIXED_CORE);
+      $('stackFixed').textContent = currency(num($('pporWeeklyRepayment').value) || CONFIG.DEFAULT_PPOR_WEEKLY_REPAYMENT);
       $('stackBills').textContent = currency(CONFIG.BILLS_BUCKET);
       $('stackSavings').textContent = currency(m.augustSavingsTarget);
       $('stackUpcoming').textContent = currency(m.upcomingWeekly);
@@ -696,8 +704,8 @@
       $('gapLow').textContent = currency(m.pporGapAfterLow);
       $('gapMid').textContent = currency(m.pporGapAfterMid);
       $('gapHigh').textContent = currency(m.pporGapAfterHigh);
-
-      $('futureBaseIncome').textContent = currency(m.baseIncome);
+            $('futureBaseIncome').textContent = currency(m.baseIncome);
+      $('futureBaseIncome').nextElementSibling.textContent = `0.8 mode base income. PPOR rate ${String(num($('pporRate').value) || CONFIG.DEFAULT_PPOR_RATE).replace(/\.0+$/,'')}%. IP rate ${String(num($('ipRate').value) || CONFIG.DEFAULT_IP_RATE).replace(/\.0+$/,'')}%.`;
       $('trsAdded').textContent = currency(m.trsWeekly);
       $('futureIncome').textContent = currency(m.income);
       $('debtTarget').textContent = currency(m.debtRecycleTarget);
@@ -728,6 +736,7 @@
     $('pporLiveRef').value = String(CONFIG.LIVE_PPOR_REFERENCE);
     $('ipLiveRef').value = String(CONFIG.LIVE_IP_REFERENCE);
     $('currentSavings').value = String(CONFIG.DEFAULT_CURRENT_SAVINGS);
+    $('weeklyRent').value = String(CONFIG.WEEKLY_RENT_TARGET);
     render();
   </script>
 </body>
