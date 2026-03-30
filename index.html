@@ -8,15 +8,15 @@
       --bg:#111827; --card:#1f2937; --card2:#111827; --text:#f9fafb; --muted:#9ca3af;
       --green:#10b981; --red:#ef4444; --amber:#f59e0b; --blue:#3b82f6; --border:#374151;
     }
-    body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); padding:20px; margin:0; }
+    body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); padding:16px; margin:0; }
     h1,h2,h3 { margin:0 0 12px 0; }
-    .wrap { max-width: 1350px; margin: 0 auto; }
-    .hero { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:18px; }
-    .layout { display:grid; grid-template-columns: 0.95fr 1.05fr; gap:18px; }
-    .stack { display:grid; gap:18px; }
-    .card { background:var(--card); border:1px solid var(--border); padding:18px; border-radius:16px; }
+    .wrap { max-width: 1380px; margin: 0 auto; }
+    .hero { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:16px; }
+    .layout { display:grid; grid-template-columns: 0.95fr 1.05fr; gap:16px; }
+    .stack { display:grid; gap:16px; }
+    .card { background:var(--card); border:1px solid var(--border); padding:16px; border-radius:16px; }
     .control { border:2px solid var(--green); box-shadow:0 0 0 1px rgba(16,185,129,0.15), 0 0 18px rgba(16,185,129,0.12); }
-    .grid-2,.grid-3,.grid-4 { display:grid; gap:14px; }
+    .grid-2,.grid-3,.grid-4 { display:grid; gap:12px; }
     .grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .grid-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
     .grid-4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
@@ -26,43 +26,61 @@
       width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:#fff; color:#111827; font-size:15px;
       box-sizing:border-box;
     }
+    input[readonly] { background:#e5e7eb; }
     textarea { min-height:90px; resize:vertical; }
     button { cursor:pointer; }
     .soft-btn { background:#fff; }
     .metric { background:var(--card2); border:1px solid var(--border); border-radius:14px; padding:14px; }
     .metric .label { color:var(--muted); font-size:13px; font-weight:700; }
-    .metric .value { font-size:28px; font-weight:800; margin-top:8px; }
-    .metric .note { color:var(--muted); font-size:12px; margin-top:6px; line-height:1.5; }
-    .good { color:var(--green); }
-    .bad { color:var(--red); }
-    .warn { color:var(--amber); }
-    .info { color:var(--blue); }
-    .status-box { border-radius:16px; padding:18px; border:1px solid var(--border); line-height:1.6; }
+    .metric .value { font-size:28px; font-weight:800; margin-top:8px; line-height:1.1; word-break:break-word; }
+    .metric .note { color:var(--muted); font-size:12px; margin-top:6px; line-height:1.45; }
+    .status-box { border-radius:16px; padding:16px; border:1px solid var(--border); line-height:1.6; }
     .status-good-box { background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.5); }
     .status-warn-box { background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.45); }
     .status-bad-box { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.45); }
     .row { display:flex; justify-content:space-between; gap:12px; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
-    .small { color:var(--muted); font-size:12px; }
-    .bill-row { display:grid; grid-template-columns:1.5fr 1fr 1.1fr auto; gap:10px; align-items:end; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:10px; margin-bottom:10px; }
+    .small { color:var(--muted); font-size:12px; line-height:1.5; }
+    .bill-row { display:grid; grid-template-columns:1.4fr 1fr 1.05fr auto; gap:10px; align-items:end; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:10px; margin-bottom:10px; }
     .bill-row button { background:#fff; }
     .progress { height:12px; background:#0b1220; border-radius:999px; overflow:hidden; border:1px solid var(--border); }
     .progress-fill { height:100%; width:0; background:var(--green); }
-    .mode-toggle { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .mode-toggle { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     .mode-toggle button.active { background:var(--green); color:#052e16; border-color:var(--green); font-weight:800; }
     .sub { color:var(--muted); line-height:1.6; }
     .hidden { display:none !important; }
-    @media (max-width:1100px) { .layout { grid-template-columns:1fr; } .grid-4 { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    @media (max-width:720px) { .grid-2,.grid-3,.grid-4,.bill-row { grid-template-columns:1fr; } body { padding:12px; } }
+    .status-good { background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.5); }
+    .status-warn { background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.45); }
+    .status-bad { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.45); }
+    .status-info { background:rgba(59,130,246,0.12); border-color:rgba(59,130,246,0.45); }
+    @media (max-width:1100px) {
+      .layout { grid-template-columns:1fr; }
+      .grid-4 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:720px) {
+      body { padding:10px; }
+      .hero, .card { padding:14px; }
+      .layout, .stack { gap:12px; }
+      .grid-2,.grid-3,.grid-4,.bill-row { grid-template-columns:1fr; }
+      .metric .value { font-size:24px; }
+      .row { flex-direction:column; align-items:flex-start; }
+      .mode-toggle { display:grid; grid-template-columns:1fr; }
+      .mode-toggle button { padding:14px; }
+    }
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hero">
     <h1>Finance Control</h1>
-    <div class="sub">Stable rebuild. This version restores the working engine and adds the next layers cleanly: income and rate overrides, August obligations, IP build logic, and valuation strategy.</div>
+    <div class="sub">Phone-friendly build with survival vs attack logic. Auto mode chooses the safest path from the numbers. Survival protects offset first. Attack only pushes harder when the system is already stable.</div>
     <div class="mode-toggle">
       <button id="mode-now" class="active" type="button">Current phase</button>
       <button id="mode-future" type="button">2027 0.8 mode</button>
+    </div>
+    <div class="mode-toggle">
+      <button id="strategy-auto" class="active" type="button">Auto mode</button>
+      <button id="strategy-survival" type="button">Survival mode</button>
+      <button id="strategy-attack" type="button">Attack mode</button>
     </div>
   </div>
 
@@ -77,8 +95,8 @@
           <label><span>Current Weekly Household Income</span><input id="incomeNow" value="3250"></label>
           <label><span>2027 Weekly Household Income (0.8 mode)</span><input id="incomeFuture" value="2600"></label>
           <label><span>PPOR Weekly Repayment</span><input id="pporWeekly" value="763"></label>
-          <label><span>PPOR Interest Rate %</span><input id="pporRate" value="5.67"></label>
-          <label><span>IP / Build Interest Rate %</span><input id="ipRate" value="6.14"></label>
+          <label><span>PPOR Interest Rate %</span><input id="pporRate" value="5.92"></label>
+          <label><span>IP / Build Interest Rate %</span><input id="ipRate" value="6.390"></label>
           <label><span>Weeks remaining to 24 July</span><input id="weeksToTarget" readonly></label>
         </div>
         <div class="grid-2" style="margin-top:14px;">
@@ -184,6 +202,13 @@
         <div class="sub" id="strategySummary"></div>
       </div>
 
+      <div class="card" id="commandCard">
+        <h2>Weekly command</h2>
+        <div class="status-box status-info" id="commandBox">
+          <div id="commandOutput"></div>
+        </div>
+      </div>
+
       <div class="card" id="nextCard">
         <h2>What changes this week</h2>
         <div class="status-box status-info">
@@ -271,6 +296,7 @@
   };
 
   let mode = 'now';
+  let strategyMode = 'auto';
   let showDeep = false;
   let usePasteSpend = false;
   let billCounter = 1;
@@ -323,13 +349,28 @@
     el.classList.add(type);
   }
 
+  function getWeeklyCommand(m) {
+    const actions = [];
+    if (m.offset8 < m.offsetNow) {
+      actions.push('⚠️ Offset declining → cut spending immediately');
+      if (m.living > 500) actions.push('Reduce living to $500');
+      if (m.splurge > 0) actions.push('Reduce splurge to $0–$50');
+    }
+    if (m.weeklySavingsTarget > 800) actions.push('Savings target aggressive → monitor weekly');
+    if (m.totalPressure > m.income) actions.push('Bills exceed income → delay, smooth, or cut flexible spending');
+    if (m.strategyMode === 'survival') actions.push('Survival mode active → offset protection overrides comfort spending');
+    if (m.strategyMode === 'attack' && m.offset8 > m.offsetNow + 1000) actions.push('✅ Attack mode allowed → direct discipline toward faster PPOR attack');
+    if (actions.length === 0) actions.push('Stable → stay consistent this week');
+    return actions.join('<br>');
+  }
+
   function compute() {
     const offset = num($('offset').value);
     const savings = num($('savings').value);
     const incomeNow = num($('incomeNow').value) || 3250;
     const incomeFuture = num($('incomeFuture').value) || 2600;
     const pporWeekly = num($('pporWeekly').value) || 763;
-    const ipRate = num($('ipRate').value) || 6.14;
+    const ipRate = num($('ipRate').value) || 6.390;
     const spend = usePasteSpend ? parseSpendEntries($('spendEntries').value).reduce((a,b)=>a+b,0) : num($('spend').value);
     const weeks = weeksToJuly24();
     $('weeksToTarget').value = String(weeks);
@@ -428,22 +469,43 @@
       }
     }
 
+    let activeStrategyMode = strategyMode;
+    if (strategyMode === 'auto') activeStrategyMode = (offset8 < offset || verdict !== 'ON TRACK') ? 'survival' : 'attack';
+
+    if (activeStrategyMode === 'survival') {
+      living = Math.min(living, 500);
+      splurge = 0;
+    }
+    if (activeStrategyMode === 'attack' && verdict === 'ON TRACK' && offset8 > offset + 1000) {
+      living = Math.min(living, 500);
+      splurge = 25;
+    }
+
     let nextTitle = 'Maintain course';
     let nextBody = 'Keep transfers as recommended and protect the offset. No aggressive move deserves attention before weekly discipline is stable.';
+    if (activeStrategyMode === 'survival') {
+      nextTitle = 'Survival mode active';
+      nextBody = 'Protect the offset first. Cut flexible spending before you compromise the buffer.';
+    }
     if (verdict === 'OFF TRACK') {
       nextTitle = 'Fix weekly leakage first';
       nextBody = `You are off track. Reduce living to about ${currency(living)} and stop pretending strategy matters more than current cashflow control.`;
     } else if (sell.includes('wipe')) {
       nextTitle = 'Run full hold-vs-sell model';
       nextBody = 'A high-band IP sale could clear the PPOR on rough net numbers. This deserves immediate modelling, not daydreaming.';
+    } else if (activeStrategyMode === 'attack' && debtReady === 'Ready') {
+      nextTitle = 'Attack mode is justified';
+      nextBody = `Buffer is holding. You can think about stronger PPOR attack or a ${currency(debtTarget)} debt-recycling review without pretending the system is fragile.`;
     } else if (debtReady === 'Ready') {
       nextTitle = 'Review debt recycling split';
       nextBody = `PPOR usable equity looks capable of supporting a ${currency(debtTarget)} split. Get the structure right before touching it.`;
     }
 
-    const strategySummary = `Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. ${verdict === 'OFF TRACK' ? 'The system is currently failing and must be tightened before any strategic move.' : verdict === 'TIGHT' ? 'The system is functioning, but the buffer is weak and one sloppy week will hurt.' : 'The system is currently holding, but discipline still matters more than optimism.'} Refinance: ${refinance}. Sell: ${sell}. Debt recycling: ${debtReady}. 2027 readiness: ${futureReady}.`;
+    const strategySummary = `Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. ${verdict === 'OFF TRACK' ? 'The system is currently failing and must be tightened before any strategic move.' : verdict === 'TIGHT' ? 'The system is functioning, but the buffer is weak and one sloppy week will hurt.' : 'The system is currently holding, but discipline still matters more than optimism.'} Active strategy mode: ${activeStrategyMode.toUpperCase()}. Refinance: ${refinance}. Sell: ${sell}. Debt recycling: ${debtReady}. 2027 readiness: ${futureReady}.`;
 
     return {
+      offsetNow: offset,
+      strategyMode: activeStrategyMode,
       savings, weeklySavingsTarget, progress, activeDebt, stageRatio: stageCfg.ratio, weeklyIPInterest, weeksToRent: stageCfg.weeksToRent,
       income, trsWeekly, totalPressure, safeSpend, finalPosition, offset4, offset8, verdict, tone, mentorTitle, mentorBody,
       nextTitle, nextBody, living, splurge, pporEquity, ipEquity, pporUsable, ipUsable, pporValue, pporLoan, ipValue,
@@ -461,6 +523,9 @@
     $('toggleSpendMode').textContent = usePasteSpend ? 'Paste transactions enabled' : 'Single weekly total enabled';
     $('mode-now').classList.toggle('active', mode === 'now');
     $('mode-future').classList.toggle('active', mode === 'future');
+    $('strategy-auto').classList.toggle('active', strategyMode === 'auto');
+    $('strategy-survival').classList.toggle('active', strategyMode === 'survival');
+    $('strategy-attack').classList.toggle('active', strategyMode === 'attack');
 
     $('fenceVal').textContent = currency(CONFIG.FENCE_COST);
     $('cruiseVal').textContent = currency(CONFIG.CRUISE_REMAINING);
@@ -486,6 +551,7 @@
     $('strategySummary').textContent = m.strategySummary;
     $('nextMoveTitle').textContent = m.nextTitle;
     $('nextMoveBody').textContent = m.nextBody;
+    $('commandOutput').innerHTML = getWeeklyCommand(m);
 
     $('livingVal').textContent = currency(m.living);
     $('splurgeVal').textContent = currency(m.splurge);
@@ -505,7 +571,7 @@
     $('stackIP').textContent = currency(m.ipPressure);
     $('stackTotal').textContent = currency(m.totalPressure);
 
-    $('offsetNowVal').textContent = currency(num($('offset').value));
+    $('offsetNowVal').textContent = currency(m.offsetNow);
     $('offset4Val').textContent = currency(m.offset4);
     $('offset8Val').textContent = currency(m.offset8);
 
@@ -529,11 +595,12 @@
     paint($('cardSafe'), 'status-info');
     paint($('cardPressure'), m.totalPressure > m.income ? 'status-bad' : 'status-info');
     paint($('strategyCard'), 'status-info');
+    paint($('commandCard'), m.offset8 < m.offsetNow ? 'status-bad' : m.offset8 < m.offsetNow + 500 ? 'status-warn' : 'status-good');
     paint($('nextCard'), m.verdict === 'OFF TRACK' ? 'status-bad' : 'status-info');
     paint($('transferCard'), m.verdict === 'OFF TRACK' ? 'status-warn' : 'status-info');
     paint($('signalCard'), m.sell.includes('wipe') ? 'status-good' : 'status-info');
     paint($('pressureCardWrap'), m.totalPressure > m.income ? 'status-bad' : 'status-info');
-    paint($('offsetCard'), m.offset8 < num($('offset').value) ? 'status-warn' : 'status-good');
+    paint($('offsetCard'), m.offset8 < m.offsetNow ? 'status-warn' : 'status-good');
     paint($('livingCard'), m.living <= 500 ? 'status-good' : 'status-warn');
     paint($('splurgeCard'), 'status-info');
     paint($('billsCard'), 'status-info');
@@ -543,8 +610,8 @@
     paint($('debtSignalCard'), m.debtReady === 'Ready' ? 'status-good' : m.debtReady === 'Close' ? 'status-warn' : 'status-info');
     paint($('futureSignalCard'), m.futureReady === 'Ready' ? 'status-good' : m.futureReady === 'Close' ? 'status-warn' : 'status-info');
     paint($('offsetNowCard'), 'status-info');
-    paint($('offset4Card'), m.offset4 < num($('offset').value) ? 'status-warn' : 'status-good');
-    paint($('offset8Card'), m.offset8 < num($('offset').value) ? 'status-warn' : 'status-good');
+    paint($('offset4Card'), m.offset4 < m.offsetNow ? 'status-warn' : 'status-good');
+    paint($('offset8Card'), m.offset8 < m.offsetNow ? 'status-warn' : 'status-good');
   }
 
   document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', render));
@@ -552,6 +619,9 @@
   $('toggleDeep').addEventListener('click', () => { showDeep = !showDeep; render(); });
   $('mode-now').addEventListener('click', () => { mode = 'now'; render(); });
   $('mode-future').addEventListener('click', () => { mode = 'future'; render(); });
+  $('strategy-auto').addEventListener('click', () => { strategyMode = 'auto'; render(); });
+  $('strategy-survival').addEventListener('click', () => { strategyMode = 'survival'; render(); });
+  $('strategy-attack').addEventListener('click', () => { strategyMode = 'attack'; render(); });
   $('addBill').addEventListener('click', () => {
     const d = today();
     d.setDate(d.getDate() + 14);
