@@ -94,9 +94,11 @@
           <label><span>Current Savings Balance</span><input id="savings" value="2600"></label>
           <label><span>Current Weekly Household Income</span><input id="incomeNow" value="3250"></label>
           <label><span>2027 Weekly Household Income (0.8 mode)</span><input id="incomeFuture" value="2600"></label>
-          <label><span>PPOR Weekly Repayment</span><input id="pporWeekly" value="763"></label>
+          <label><span>PPOR balance</span><input id="pporBalanceCalc" value="560540"></label>
+          <label><span>PPOR years remaining</span><input id="pporYearsRemaining" value="28.5"></label>
+          <label><span>PPOR calculated weekly repayment</span><input id="pporWeeklyCalc" readonly></label>
           <label><span>PPOR Interest Rate %</span><input id="pporRate" value="5.92"></label>
-          <label><span>IP / Build Interest Rate %</span><input id="ipRate" value="6.390"></label>
+          <label><span>IP / Build Interest Rate %</span><input id="ipRate" value="6.39"></label>
           <label><span>Weeks remaining to 24 July</span><input id="weeksToTarget" readonly></label>
         </div>
         <div class="grid-2" style="margin-top:14px;">
@@ -349,6 +351,13 @@
     el.classList.add(type);
   }
 
+  function computePPORWeekly(balance, annualRatePct, yearsRemaining) {
+    const weeklyRate = (annualRatePct / 100) / 52;
+    const totalWeeks = Math.max(1, Math.round(yearsRemaining * 52));
+    if (weeklyRate <= 0) return balance / totalWeeks;
+    return balance * weeklyRate / (1 - Math.pow(1 + weeklyRate, -totalWeeks));
+  }
+
   function getWeeklyCommand(m) {
     const actions = [];
     if (m.offset8 < m.offsetNow) {
@@ -369,8 +378,11 @@
     const savings = num($('savings').value);
     const incomeNow = num($('incomeNow').value) || 3250;
     const incomeFuture = num($('incomeFuture').value) || 2600;
-    const pporWeekly = num($('pporWeekly').value) || 763;
-    const ipRate = num($('ipRate').value) || 6.390;
+    const pporBalanceCalc = num($('pporBalanceCalc').value) || 560540;
+    const pporYearsRemaining = num($('pporYearsRemaining').value) || 28.5;
+    const pporRate = num($('pporRate').value) || 5.92;
+    const pporWeekly = computePPORWeekly(pporBalanceCalc, pporRate, pporYearsRemaining);
+    const ipRate = num($('ipRate').value) || 6.39;
     const spend = usePasteSpend ? parseSpendEntries($('spendEntries').value).reduce((a,b)=>a+b,0) : num($('spend').value);
     const weeks = weeksToJuly24();
     $('weeksToTarget').value = String(weeks);
@@ -505,6 +517,7 @@
 
     return {
       offsetNow: offset,
+      pporWeeklyCalc: pporWeekly,
       strategyMode: activeStrategyMode,
       savings, weeklySavingsTarget, progress, activeDebt, stageRatio: stageCfg.ratio, weeklyIPInterest, weeksToRent: stageCfg.weeksToRent,
       income, trsWeekly, totalPressure, safeSpend, finalPosition, offset4, offset8, verdict, tone, mentorTitle, mentorBody,
@@ -540,6 +553,7 @@
     $('ipInterestVal').textContent = currency(m.weeklyIPInterest);
     $('weeksRentVal').textContent = String(m.weeksToRent);
 
+    $('pporWeeklyCalc').value = Math.round(m.pporWeeklyCalc).toString();
     $('verdictVal').textContent = m.verdict;
     $('verdictNote').textContent = mode === 'now' ? 'Current phase' : '2027 0.8 mode';
     $('safeSpendVal').textContent = currency(m.safeSpend);
@@ -564,7 +578,7 @@
     $('futureReadyVal').textContent = m.futureReady;
     $('equityAction').textContent = m.sell.includes('wipe') ? 'High-band sale could wipe the PPOR net of rough sale costs. This is no longer theoretical.' : m.debtReady === 'Ready' ? `Debt recycling split of ${currency(m.debtTarget)} looks supportable from PPOR equity.` : 'Hold and build position.';
 
-    $('stackPPOR').textContent = currency(num($('pporWeekly').value) || 763);
+    $('stackPPOR').textContent = currency(m.pporWeeklyCalc);
     $('stackBills').textContent = currency(CONFIG.BILLS_BUCKET);
     $('stackSavings').textContent = currency(m.weeklySavingsTarget);
     $('stackUpcoming').textContent = currency(m.upcomingWeekly);
