@@ -833,6 +833,19 @@ render();
     return Math.floor((b-a)/ms);
   }
 
+  function estimatePporInterest(balance, annualRatePct, weeklyPay, weeks){
+    let bal = Math.max(0, balance);
+    const r = (annualRatePct/100)/52;
+    let totalInterest = 0;
+    const maxWeeks = Math.min(10000, Math.ceil(weeks || 0));
+    for (let i = 0; i < maxWeeks && bal > 0; i++) {
+      const interest = bal * r;
+      totalInterest += interest;
+      bal = Math.max(0, bal + interest - weeklyPay);
+    }
+    return totalInterest;
+  }
+
   function ensureStyles(){
     if ($(STYLE_ID)) return;
     const style = document.createElement('style');
@@ -945,7 +958,8 @@ render();
         font-size:12px;
         font-weight:700;
       }
-      .wandina-inputs input{
+      .wandina-inputs input,
+      .wandina-inputs select{
         width:100%;
         background:#fff;
         color:#111827;
@@ -1003,7 +1017,14 @@ render();
           <label><span>PAYG capture %</span><input id="wd2PaygCapture" value="100"></label>
           <label><span>Annual rates + insurance + mgmt + maintenance</span><input id="wd2HoldingCosts" value="7000"></label>
           <label><span>Meaningful PPOR years-saved threshold</span><input id="wd2YearsSavedThreshold" value="4"></label>
-          <label><span>Sell scenario</span><input id="wd2Scenario" value="mid"></label>
+          <label>
+            <span>Sell scenario</span>
+            <select id="wd2Scenario">
+              <option value="low">Low</option>
+              <option value="mid" selected>Mid</option>
+              <option value="high">High</option>
+            </select>
+          </label>
         </div>
 
         <div class="wandina-grid">
@@ -1068,29 +1089,13 @@ render();
     const guarantee = $('wd2GuaranteeEnd');
     if (guarantee && !guarantee.value) {
       const d = new Date(now);
-      d.setDate(d.getDate() + (365));
+      d.setDate(d.getDate() + 365);
       guarantee.value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
   }
 
   function getSaleScenario(){
-    const raw = String($('wd2Scenario')?.value || 'mid').trim().toLowerCase();
-    if (raw.includes('low')) return 'low';
-    if (raw.includes('high')) return 'high';
-    return 'mid';
-  }
-
-  function estimatePporInterest(balance, annualRatePct, weeklyPay, weeks){
-    let bal = Math.max(0, balance);
-    const r = (annualRatePct/100)/52;
-    let totalInterest = 0;
-    const maxWeeks = Math.min(10000, Math.ceil(weeks || 0));
-    for (let i = 0; i < maxWeeks && bal > 0; i++) {
-      const interest = bal * r;
-      totalInterest += interest;
-      bal = Math.max(0, bal + interest - weeklyPay);
-    }
-    return totalInterest;
+    return $('wd2Scenario')?.value || 'mid';
   }
 
   function updateEngine(){
@@ -1187,14 +1192,14 @@ render();
       decisionCard.classList.add(decision === 'SELL' ? 'wandina-accent-sell' : decision === 'WATCH' ? 'wandina-accent-warn' : 'wandina-accent-good');
     }
 
-    $('wd2DecisionPill').className = `wandina-pill ${pill}`;
-    $('wd2DecisionPill').textContent = `Hybrid mode: ${decision}`;
+    $('wd2DecisionPill').className = \`wandina-pill \${pill}\`;
+    $('wd2DecisionPill').textContent = \`Hybrid mode: \${decision}\`;
     $('wd2DecisionTitle').textContent = decision;
     $('wd2DecisionNote').textContent = note;
 
     $('wd2PporBase').textContent = formatYears(baseWeeks);
     $('wd2PporSell').textContent = formatYears(sellWeeks);
-    $('wd2PporSaved').textContent = Number.isFinite(savedWeeks) ? `${yearsSaved.toFixed(1)} years` : '—';
+    $('wd2PporSaved').textContent = Number.isFinite(savedWeeks) ? \`\${yearsSaved.toFixed(1)} years\` : '—';
     $('wd2InterestSaved').textContent = currency(interestSaved);
 
     $('wd2SalePrice').textContent = currency(salePrice);
@@ -1205,17 +1210,17 @@ render();
     $('wd2GrossWeeklyDrag').textContent = currency(grossWeeklyDrag);
     $('wd2PaygWeekly').textContent = currency(paygWeekly);
     $('wd2AdjWeeklyDrag').textContent = currency(adjustedWeeklyDrag);
-    $('wd2GuaranteeWeeks').textContent = guaranteeWeeks > 0 ? `${guaranteeWeeks} weeks` : 'Expired';
+    $('wd2GuaranteeWeeks').textContent = guaranteeWeeks > 0 ? \`\${guaranteeWeeks} weeks\` : 'Expired';
 
     $('wd2OffsetBase').textContent = currency(current8);
     $('wd2Offset100').textContent = currency(offset100);
     $('wd2Offset300').textContent = currency(offset300);
     $('wd2OffsetSell').textContent = currency(offsetSell);
 
-    $('wd2HeldDays').textContent = contractDate ? `${heldDays} days` : 'Set date';
+    $('wd2HeldDays').textContent = contractDate ? \`\${heldDays} days\` : 'Set date';
     $('wd2DiscountStatus').textContent = discountEligible ? '50% discount eligible' : 'No discount yet';
-    $('wd2DaysToDiscount').textContent = discountEligible ? 'Ready now' : `${daysToDiscount} days`;
-    $('wd2DiscountBar').style.width = `${clamp((heldDays/365)*100, 0, 100)}%`;
+    $('wd2DaysToDiscount').textContent = discountEligible ? 'Ready now' : \`\${daysToDiscount} days\`;
+    $('wd2DiscountBar').style.width = \`\${clamp((heldDays/365)*100, 0, 100)}%\`;
   }
 
   function bindInputs(){
