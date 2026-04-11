@@ -518,5 +518,197 @@ $('addBill').addEventListener('click',()=>{const d=today();d.setDate(d.getDate()
 addBillRow('Power bill','1433',(()=>{const d=today();d.setDate(d.getDate()+21);return formatDate(d);})());
 render();
 </script>
+<script>
+(function () {
+  // ---------- SETTINGS ----------
+  const WANDINA_URL = 'wandina_dashboard.html'; // change if needed
+  const PPOR_DEFAULT = 5.97;
+  const IP_DEFAULT = 6.39;
+  const STEP = 0.25;
+
+  // ---------- HELPERS ----------
+  function findFirst(ids) {
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el) return el;
+    }
+    return null;
+  }
+
+  function safeRecalc() {
+    if (typeof render === 'function') return render();
+    if (typeof recalc === 'function') return recalc();
+    if (typeof updateAll === 'function') return updateAll();
+    if (typeof calculateAll === 'function') return calculateAll();
+    if (typeof calculate === 'function') return calculate();
+
+    // fallback: trigger input/change events
+    document.querySelectorAll('input, select').forEach(el => {
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  }
+
+  function round2(n) {
+    return Math.round(n * 100) / 100;
+  }
+
+  function makeRateControl(labelText, inputEl, fallbackDefault) {
+    if (!inputEl || inputEl.dataset.rateControlAttached === 'true') return;
+    inputEl.dataset.rateControlAttached = 'true';
+
+    if (!inputEl.value || isNaN(parseFloat(inputEl.value))) {
+      inputEl.value = fallbackDefault.toFixed(2);
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.style.margin = '10px 0 14px';
+    wrapper.style.padding = '10px';
+    wrapper.style.borderRadius = '12px';
+    wrapper.style.background = '#f8fafc';
+    wrapper.style.border = '1px solid #e5e7eb';
+
+    const label = document.createElement('div');
+    label.textContent = labelText;
+    label.style.fontSize = '14px';
+    label.style.fontWeight = '700';
+    label.style.marginBottom = '8px';
+    label.style.color = '#111827';
+
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '8px';
+    row.style.alignItems = 'center';
+
+    const minus = document.createElement('button');
+    minus.type = 'button';
+    minus.textContent = '−';
+    styleBtn(minus);
+
+    const plus = document.createElement('button');
+    plus.type = 'button';
+    plus.textContent = '+';
+    styleBtn(plus);
+
+    inputEl.style.flex = '1';
+    inputEl.style.minWidth = '0';
+    inputEl.style.height = '42px';
+    inputEl.style.borderRadius = '10px';
+    inputEl.style.border = '1px solid #d1d5db';
+    inputEl.style.padding = '0 12px';
+    inputEl.style.fontSize = '16px';
+    inputEl.style.fontWeight = '700';
+
+    minus.onclick = function () {
+      let v = parseFloat(inputEl.value);
+      if (isNaN(v)) v = fallbackDefault;
+      v = Math.max(0, round2(v - STEP));
+      inputEl.value = v.toFixed(2);
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+      inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+      safeRecalc();
+    };
+
+    plus.onclick = function () {
+      let v = parseFloat(inputEl.value);
+      if (isNaN(v)) v = fallbackDefault;
+      v = round2(v + STEP);
+      inputEl.value = v.toFixed(2);
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+      inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+      safeRecalc();
+    };
+
+    inputEl.addEventListener('input', safeRecalc);
+    inputEl.addEventListener('change', safeRecalc);
+
+    row.appendChild(minus);
+    row.appendChild(inputEl);
+    row.appendChild(plus);
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(row);
+
+    const parent = inputEl.parentNode;
+    if (parent) {
+      parent.insertBefore(wrapper, inputEl);
+      row.replaceChild(inputEl, inputEl);
+    }
+  }
+
+  function styleBtn(btn) {
+    btn.style.width = '42px';
+    btn.style.height = '42px';
+    btn.style.border = 'none';
+    btn.style.borderRadius = '10px';
+    btn.style.background = '#1f6feb';
+    btn.style.color = '#fff';
+    btn.style.fontSize = '22px';
+    btn.style.fontWeight = '800';
+    btn.style.cursor = 'pointer';
+    btn.style.flex = '0 0 42px';
+  }
+
+  function addTopWandinaButton() {
+    if (document.getElementById('wandinaTopLauncher')) return;
+
+    const bar = document.createElement('div');
+    bar.id = 'wandinaTopLauncher';
+    bar.style.display = 'flex';
+    bar.style.justifyContent = 'flex-end';
+    bar.style.margin = '10px 0 14px';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Open Wandina Dashboard';
+    btn.style.border = 'none';
+    btn.style.borderRadius = '12px';
+    btn.style.padding = '12px 16px';
+    btn.style.background = '#111827';
+    btn.style.color = '#fff';
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = '700';
+    btn.style.cursor = 'pointer';
+    btn.onclick = function () {
+      window.open(WANDINA_URL, '_blank');
+    };
+
+    bar.appendChild(btn);
+
+    const target =
+      document.querySelector('main') ||
+      document.querySelector('.container') ||
+      document.querySelector('.app') ||
+      document.body.firstElementChild ||
+      document.body;
+
+    target.parentNode.insertBefore(bar, target);
+  }
+
+  // ---------- RUN ----------
+  window.addEventListener('DOMContentLoaded', function () {
+    addTopWandinaButton();
+
+    // Change these IDs only if needed
+    const pporInput = findFirst([
+      'pporRate',
+      'pporInterestRate',
+      'pporRateInput'
+    ]);
+
+    const ipInput = findFirst([
+      'ipRate',
+      'buildInterestRate',
+      'ipInterestRate',
+      'ipRateInput'
+    ]);
+
+    if (pporInput) makeRateControl('PPOR P&I Rate (%)', pporInput, PPOR_DEFAULT);
+    if (ipInput) makeRateControl('IP IO Rate (%)', ipInput, IP_DEFAULT);
+
+    safeRecalc();
+  });
+})();
+</script>  
 </body>
 </html>
