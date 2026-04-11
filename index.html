@@ -795,15 +795,14 @@ render();
   });
 })();
 </script>
-  <script>
+<script>
 (function () {
-  const SECTION_ID = 'wandinaDecisionEngine';
-  const STYLE_ID = 'wandinaDecisionStyles';
+  const SECTION_ID = 'wandinaDecisionEngineV2';
+  const STYLE_ID = 'wandinaDecisionStylesV2';
 
   function $(id){ return document.getElementById(id); }
   function num(v){ const n = parseFloat(String(v ?? '').replace(/[^0-9.-]/g,'')); return Number.isFinite(n) ? n : 0; }
   function currency(n){ return new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(n)?n:0); }
-  function pct(n){ return `${(n*100).toFixed(1)}%`; }
   function clamp(n,min,max){ return Math.min(max,Math.max(min,n)); }
 
   function weeklyPayment(balance, annualRatePct, years){
@@ -968,6 +967,9 @@ render();
         width:0%;
         background:linear-gradient(90deg,#22c55e,#60a5fa);
       }
+      .wandina-accent-good{ border-color:rgba(16,185,129,.45); }
+      .wandina-accent-warn{ border-color:rgba(245,158,11,.45); }
+      .wandina-accent-sell{ border-color:rgba(239,68,68,.45); }
       @media (max-width:760px){
         .wandina-grid, .wandina-inputs{ grid-template-columns:1fr; }
         .wandina-big{ font-size:24px; }
@@ -979,112 +981,116 @@ render();
   function ensureSection(){
     if ($(SECTION_ID)) return;
     const anchor = $('strategyCard') || document.querySelector('.stack .card');
-    if (!anchor || !anchor.parentNode) return;
+    if (!anchor) return;
 
     const section = document.createElement('div');
     section.id = SECTION_ID;
     section.className = 'wandina-shell';
     section.innerHTML = `
       <div class="wandina-hero">
-        <div class="wandina-kicker">Hybrid Decision Engine</div>
-        <div class="wandina-title">Wandina Strategy Control</div>
-        <div class="wandina-sub">Sell only when after-tax proceeds are strong <em>and</em> the PPOR payoff meaningfully accelerates.</div>
+        <div class="wandina-kicker">A — Accuracy Layer</div>
+        <div class="wandina-title">Wandina Decision Engine</div>
+        <div class="wandina-sub">Improved hold vs sell logic, rent-guarantee tracking, weekly holding drag after tax, PPOR interest saved, and better trigger thresholds.</div>
       </div>
 
       <div class="wandina-body">
         <div class="wandina-inputs">
-          <label>
-            <span>CGT contract date</span>
-            <input id="wdContractDate" type="date">
-          </label>
-          <label>
-            <span>Cost base for CGT</span>
-            <input id="wdCostBase" value="588000">
-          </label>
-          <label>
-            <span>Tax rate for estimates</span>
-            <input id="wdTaxRate" value="39">
-          </label>
-          <label>
-            <span>Annual depreciation</span>
-            <input id="wdDepreciation" value="10000">
-          </label>
-          <label>
-            <span>PAYG capture %</span>
-            <input id="wdPaygCapture" value="100">
-          </label>
-          <label>
-            <span>Sell scenario</span>
-            <input id="wdScenario" value="mid">
-          </label>
+          <label><span>CGT contract date</span><input id="wd2ContractDate" type="date"></label>
+          <label><span>Rent guarantee end date</span><input id="wd2GuaranteeEnd" type="date"></label>
+          <label><span>CGT cost base</span><input id="wd2CostBase" value="588000"></label>
+          <label><span>Tax rate for estimates</span><input id="wd2TaxRate" value="39"></label>
+          <label><span>Annual depreciation</span><input id="wd2Depreciation" value="10000"></label>
+          <label><span>PAYG capture %</span><input id="wd2PaygCapture" value="100"></label>
+          <label><span>Annual rates + insurance + mgmt + maintenance</span><input id="wd2HoldingCosts" value="7000"></label>
+          <label><span>Meaningful PPOR years-saved threshold</span><input id="wd2YearsSavedThreshold" value="4"></label>
+          <label><span>Sell scenario</span><input id="wd2Scenario" value="mid"></label>
         </div>
 
         <div class="wandina-grid">
-          <div class="wandina-card">
+          <div class="wandina-card" id="wd2DecisionCard">
             <h3>Decision</h3>
-            <div id="wdDecisionPill" class="wandina-pill info">Loading…</div>
-            <div class="wandina-big" id="wdDecisionTitle" style="margin-top:10px;">—</div>
-            <div class="wandina-note" id="wdDecisionNote">—</div>
+            <div id="wd2DecisionPill" class="wandina-pill info">Loading…</div>
+            <div class="wandina-big" id="wd2DecisionTitle" style="margin-top:10px;">—</div>
+            <div class="wandina-note" id="wd2DecisionNote">—</div>
           </div>
 
           <div class="wandina-card">
-            <h3>PPOR payoff comparison</h3>
-            <div class="wandina-row"><span>Current path</span><strong id="wdPporBase">—</strong></div>
-            <div class="wandina-row"><span>With sale (mid)</span><strong id="wdPporSell">—</strong></div>
-            <div class="wandina-row"><span>Years saved</span><strong id="wdPporSaved">—</strong></div>
-            <div class="wandina-note">Uses current PPOR balance, offset, rate and weekly repayment from your live app.</div>
+            <h3>PPOR payoff timeline</h3>
+            <div class="wandina-row"><span>Current path</span><strong id="wd2PporBase">—</strong></div>
+            <div class="wandina-row"><span>With sale</span><strong id="wd2PporSell">—</strong></div>
+            <div class="wandina-row"><span>Years saved</span><strong id="wd2PporSaved">—</strong></div>
+            <div class="wandina-row"><span>PPOR interest saved</span><strong id="wd2InterestSaved">—</strong></div>
           </div>
 
           <div class="wandina-card">
             <h3>After-tax sale outcome</h3>
-            <div class="wandina-row"><span>Sale price used</span><strong id="wdSalePrice">—</strong></div>
-            <div class="wandina-row"><span>Net after costs</span><strong id="wdNetAfterCosts">—</strong></div>
-            <div class="wandina-row"><span>Estimated CGT</span><strong id="wdEstimatedCgt">—</strong></div>
-            <div class="wandina-row"><span>Net to offset</span><strong id="wdNetToOffset">—</strong></div>
+            <div class="wandina-row"><span>Sale price used</span><strong id="wd2SalePrice">—</strong></div>
+            <div class="wandina-row"><span>Net after costs</span><strong id="wd2NetAfterCosts">—</strong></div>
+            <div class="wandina-row"><span>Estimated CGT</span><strong id="wd2EstimatedCgt">—</strong></div>
+            <div class="wandina-row"><span>Net to offset</span><strong id="wd2NetToOffset">—</strong></div>
           </div>
 
           <div class="wandina-card">
-            <h3>Tax + PAYG estimate</h3>
-            <div class="wandina-row"><span>Gross annual property drag</span><strong id="wdPropertyDrag">—</strong></div>
-            <div class="wandina-row"><span>Annual tax benefit</span><strong id="wdTaxBenefit">—</strong></div>
-            <div class="wandina-row"><span>PAYG weekly estimate</span><strong id="wdPaygWeekly">—</strong></div>
-            <div class="wandina-row"><span>Tax-adjusted weekly drag</span><strong id="wdAdjWeeklyDrag">—</strong></div>
+            <h3>Weekly holding reality</h3>
+            <div class="wandina-row"><span>Gross weekly drag</span><strong id="wd2GrossWeeklyDrag">—</strong></div>
+            <div class="wandina-row"><span>PAYG weekly estimate</span><strong id="wd2PaygWeekly">—</strong></div>
+            <div class="wandina-row"><span>Tax-adjusted weekly drag</span><strong id="wd2AdjWeeklyDrag">—</strong></div>
+            <div class="wandina-row"><span>Guaranteed rent weeks left</span><strong id="wd2GuaranteeWeeks">—</strong></div>
           </div>
 
           <div class="wandina-card">
             <h3>Offset acceleration</h3>
-            <div class="wandina-row"><span>Current 8-week path</span><strong id="wdOffsetBase">—</strong></div>
-            <div class="wandina-row"><span>+100/week</span><strong id="wdOffset100">—</strong></div>
-            <div class="wandina-row"><span>+300/week</span><strong id="wdOffset300">—</strong></div>
-            <div class="wandina-row"><span>Sell + park proceeds</span><strong id="wdOffsetSell">—</strong></div>
+            <div class="wandina-row"><span>Current 8-week path</span><strong id="wd2OffsetBase">—</strong></div>
+            <div class="wandina-row"><span>+100/week</span><strong id="wd2Offset100">—</strong></div>
+            <div class="wandina-row"><span>+300/week</span><strong id="wd2Offset300">—</strong></div>
+            <div class="wandina-row"><span>Sell + park proceeds</span><strong id="wd2OffsetSell">—</strong></div>
           </div>
 
           <div class="wandina-card">
             <h3>CGT timing</h3>
-            <div class="wandina-row"><span>Days held</span><strong id="wdHeldDays">—</strong></div>
-            <div class="wandina-row"><span>Discount status</span><strong id="wdDiscountStatus">—</strong></div>
-            <div class="wandina-row"><span>Days to 12 months</span><strong id="wdDaysToDiscount">—</strong></div>
-            <div class="wandina-bar"><div id="wdDiscountBar"></div></div>
+            <div class="wandina-row"><span>Days held</span><strong id="wd2HeldDays">—</strong></div>
+            <div class="wandina-row"><span>Discount status</span><strong id="wd2DiscountStatus">—</strong></div>
+            <div class="wandina-row"><span>Days to 12 months</span><strong id="wd2DaysToDiscount">—</strong></div>
+            <div class="wandina-bar"><div id="wd2DiscountBar"></div></div>
           </div>
         </div>
       </div>
     `;
     anchor.insertAdjacentElement('afterend', section);
 
-    // sensible defaults
-    const contract = $('wdContractDate');
+    const now = new Date();
+    const contract = $('wd2ContractDate');
     if (contract && !contract.value) {
       const d = new Date();
       d.setMonth(d.getMonth() - 5);
       contract.value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
+    const guarantee = $('wd2GuaranteeEnd');
+    if (guarantee && !guarantee.value) {
+      const d = new Date(now);
+      d.setDate(d.getDate() + (365));
+      guarantee.value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
   }
 
   function getSaleScenario(){
-    const raw = (String($('wdScenario')?.value || 'mid')).trim().toLowerCase();
+    const raw = String($('wd2Scenario')?.value || 'mid').trim().toLowerCase();
     if (raw.includes('low')) return 'low';
     if (raw.includes('high')) return 'high';
     return 'mid';
+  }
+
+  function estimatePporInterest(balance, annualRatePct, weeklyPay, weeks){
+    let bal = Math.max(0, balance);
+    const r = (annualRatePct/100)/52;
+    let totalInterest = 0;
+    const maxWeeks = Math.min(10000, Math.ceil(weeks || 0));
+    for (let i = 0; i < maxWeeks && bal > 0; i++) {
+      const interest = bal * r;
+      totalInterest += interest;
+      bal = Math.max(0, bal + interest - weeklyPay);
+    }
+    return totalInterest;
   }
 
   function updateEngine(){
@@ -1107,17 +1113,23 @@ render();
     const scenario = getSaleScenario();
     const salePrice = scenario === 'low' ? low : scenario === 'high' ? high : mid;
 
-    const taxRate = num($('wdTaxRate')?.value) / 100 || 0.39;
-    const depreciation = num($('wdDepreciation')?.value) || 10000;
-    const paygCapture = (num($('wdPaygCapture')?.value) || 100) / 100;
-    const costBase = num($('wdCostBase')?.value) || plannedDebt;
-    const contractDateValue = $('wdContractDate')?.value;
+    const taxRate = num($('wd2TaxRate')?.value) / 100 || 0.39;
+    const depreciation = num($('wd2Depreciation')?.value) || 10000;
+    const paygCapture = (num($('wd2PaygCapture')?.value) || 100) / 100;
+    const costBase = num($('wd2CostBase')?.value) || plannedDebt;
+    const annualHoldingCosts = num($('wd2HoldingCosts')?.value) || 7000;
+    const yearsSavedThreshold = num($('wd2YearsSavedThreshold')?.value) || 4;
+
+    const contractDateValue = $('wd2ContractDate')?.value;
     const contractDate = contractDateValue ? new Date(contractDateValue + 'T00:00:00') : null;
+    const guaranteeDateValue = $('wd2GuaranteeEnd')?.value;
+    const guaranteeDate = guaranteeDateValue ? new Date(guaranteeDateValue + 'T00:00:00') : null;
     const now = new Date();
 
     const heldDays = contractDate ? Math.max(0, daysBetween(contractDate, now)) : 0;
     const discountEligible = heldDays >= 365;
     const daysToDiscount = contractDate ? Math.max(0, 365 - heldDays) : 365;
+    const guaranteeWeeks = guaranteeDate ? Math.max(0, Math.ceil(daysBetween(now, guaranteeDate) / 7)) : 0;
 
     const grossAfterCosts = Math.max(0, salePrice - (salePrice * salePct) - saleFixed);
     const capitalGainRaw = Math.max(0, grossAfterCosts - costBase);
@@ -1131,13 +1143,18 @@ render();
     const baseWeeks = payoffWeeks(baseEffectivePpor, pporRate, pporWeekly);
     const sellWeeks = payoffWeeks(sellEffectivePpor, pporRate, pporWeekly);
     const savedWeeks = (Number.isFinite(baseWeeks) && Number.isFinite(sellWeeks)) ? Math.max(0, baseWeeks - sellWeeks) : 0;
+    const yearsSaved = savedWeeks / 52;
+
+    const baseInterest = estimatePporInterest(baseEffectivePpor, pporRate, pporWeekly, baseWeeks);
+    const sellInterest = estimatePporInterest(sellEffectivePpor, pporRate, pporWeekly, sellWeeks);
+    const interestSaved = Math.max(0, baseInterest - sellInterest);
 
     const fullIpInterestAnnual = plannedDebt * (ipRate / 100);
-    const propertyDragAnnual = Math.max(0, fullIpInterestAnnual - (rentWeekly * 52));
-    const totalDeductionEstimate = propertyDragAnnual + depreciation;
+    const grossWeeklyDrag = (fullIpInterestAnnual + annualHoldingCosts - (rentWeekly * 52)) / 52;
+    const totalDeductionEstimate = Math.max(0, fullIpInterestAnnual + annualHoldingCosts - (rentWeekly * 52) + depreciation);
     const annualTaxBenefit = totalDeductionEstimate * taxRate;
     const paygWeekly = (annualTaxBenefit * paygCapture) / 52;
-    const adjustedWeeklyDrag = (propertyDragAnnual / 52) - paygWeekly;
+    const adjustedWeeklyDrag = grossWeeklyDrag - paygWeekly;
 
     const current8 = offset + (num($('finalVal')?.textContent) || 0) * 8;
     const offset100 = current8 + 100*8;
@@ -1146,62 +1163,71 @@ render();
 
     let decision = 'HOLD';
     let pill = 'hold';
-    let note = 'Continue holding. The sale does not yet clear enough after tax or does not accelerate the PPOR enough.';
-    const yearsSaved = savedWeeks / 52;
+    let note = 'Hold. The after-tax sale outcome is not yet strong enough or does not accelerate the PPOR enough to justify exit.';
 
-    if (netToOffset >= 120000 && yearsSaved >= 4 && discountEligible) {
+    if (netToOffset >= 120000 && yearsSaved >= yearsSavedThreshold && discountEligible) {
       decision = 'SELL';
       pill = 'sell';
-      note = 'After-tax proceeds are strong, the CGT discount is available, and the PPOR payoff meaningfully accelerates.';
-    } else if ((netToOffset >= 80000 && yearsSaved >= 2) || (!discountEligible && daysToDiscount <= 90)) {
+      note = 'Strong after-tax proceeds, strong PPOR acceleration, and the CGT discount is available.';
+    } else if (
+      (netToOffset >= 80000 && yearsSaved >= Math.max(2, yearsSavedThreshold - 1)) ||
+      (!discountEligible && daysToDiscount <= 90) ||
+      (guaranteeWeeks <= 12 && adjustedWeeklyDrag > 150)
+    ) {
       decision = 'WATCH';
       pill = 'watch';
-      note = discountEligible
-        ? 'Close to a meaningful sell zone, but not compelling enough yet.'
-        : 'Close to the 12-month CGT threshold. Waiting may materially improve the after-tax outcome.';
+      note = !discountEligible
+        ? 'Close to the 12-month CGT threshold. Waiting may materially improve the after-tax outcome.'
+        : 'Approaching a meaningful decision zone. Keep tracking valuation, PPOR years saved, and post-tax proceeds.';
     }
 
-    if ($('wdDecisionPill')) {
-      $('wdDecisionPill').className = `wandina-pill ${pill}`;
-      $('wdDecisionPill').textContent = `Hybrid mode: ${decision}`;
+    const decisionCard = $('wd2DecisionCard');
+    if (decisionCard) {
+      decisionCard.classList.remove('wandina-accent-good','wandina-accent-warn','wandina-accent-sell');
+      decisionCard.classList.add(decision === 'SELL' ? 'wandina-accent-sell' : decision === 'WATCH' ? 'wandina-accent-warn' : 'wandina-accent-good');
     }
-    if ($('wdDecisionTitle')) $('wdDecisionTitle').textContent = decision;
-    if ($('wdDecisionNote')) $('wdDecisionNote').textContent = note;
 
-    if ($('wdPporBase')) $('wdPporBase').textContent = formatYears(baseWeeks);
-    if ($('wdPporSell')) $('wdPporSell').textContent = formatYears(sellWeeks);
-    if ($('wdPporSaved')) $('wdPporSaved').textContent = Number.isFinite(savedWeeks) ? `${(savedWeeks/52).toFixed(1)} years` : '—';
+    $('wd2DecisionPill').className = `wandina-pill ${pill}`;
+    $('wd2DecisionPill').textContent = `Hybrid mode: ${decision}`;
+    $('wd2DecisionTitle').textContent = decision;
+    $('wd2DecisionNote').textContent = note;
 
-    if ($('wdSalePrice')) $('wdSalePrice').textContent = currency(salePrice);
-    if ($('wdNetAfterCosts')) $('wdNetAfterCosts').textContent = currency(grossAfterCosts - plannedDebt);
-    if ($('wdEstimatedCgt')) $('wdEstimatedCgt').textContent = currency(estimatedCgt);
-    if ($('wdNetToOffset')) $('wdNetToOffset').textContent = currency(netToOffset);
+    $('wd2PporBase').textContent = formatYears(baseWeeks);
+    $('wd2PporSell').textContent = formatYears(sellWeeks);
+    $('wd2PporSaved').textContent = Number.isFinite(savedWeeks) ? `${yearsSaved.toFixed(1)} years` : '—';
+    $('wd2InterestSaved').textContent = currency(interestSaved);
 
-    if ($('wdPropertyDrag')) $('wdPropertyDrag').textContent = currency(propertyDragAnnual);
-    if ($('wdTaxBenefit')) $('wdTaxBenefit').textContent = currency(annualTaxBenefit);
-    if ($('wdPaygWeekly')) $('wdPaygWeekly').textContent = currency(paygWeekly);
-    if ($('wdAdjWeeklyDrag')) $('wdAdjWeeklyDrag').textContent = currency(adjustedWeeklyDrag);
+    $('wd2SalePrice').textContent = currency(salePrice);
+    $('wd2NetAfterCosts').textContent = currency(grossAfterCosts - plannedDebt);
+    $('wd2EstimatedCgt').textContent = currency(estimatedCgt);
+    $('wd2NetToOffset').textContent = currency(netToOffset);
 
-    if ($('wdOffsetBase')) $('wdOffsetBase').textContent = currency(current8);
-    if ($('wdOffset100')) $('wdOffset100').textContent = currency(offset100);
-    if ($('wdOffset300')) $('wdOffset300').textContent = currency(offset300);
-    if ($('wdOffsetSell')) $('wdOffsetSell').textContent = currency(offsetSell);
+    $('wd2GrossWeeklyDrag').textContent = currency(grossWeeklyDrag);
+    $('wd2PaygWeekly').textContent = currency(paygWeekly);
+    $('wd2AdjWeeklyDrag').textContent = currency(adjustedWeeklyDrag);
+    $('wd2GuaranteeWeeks').textContent = guaranteeWeeks > 0 ? `${guaranteeWeeks} weeks` : 'Expired';
 
-    if ($('wdHeldDays')) $('wdHeldDays').textContent = contractDate ? `${heldDays} days` : 'Set date';
-    if ($('wdDiscountStatus')) $('wdDiscountStatus').textContent = discountEligible ? '50% discount eligible' : 'No discount yet';
-    if ($('wdDaysToDiscount')) $('wdDaysToDiscount').textContent = discountEligible ? 'Ready now' : `${daysToDiscount} days`;
-    if ($('wdDiscountBar')) $('wdDiscountBar').style.width = `${clamp((heldDays/365)*100, 0, 100)}%`;
+    $('wd2OffsetBase').textContent = currency(current8);
+    $('wd2Offset100').textContent = currency(offset100);
+    $('wd2Offset300').textContent = currency(offset300);
+    $('wd2OffsetSell').textContent = currency(offsetSell);
+
+    $('wd2HeldDays').textContent = contractDate ? `${heldDays} days` : 'Set date';
+    $('wd2DiscountStatus').textContent = discountEligible ? '50% discount eligible' : 'No discount yet';
+    $('wd2DaysToDiscount').textContent = discountEligible ? 'Ready now' : `${daysToDiscount} days`;
+    $('wd2DiscountBar').style.width = `${clamp((heldDays/365)*100, 0, 100)}%`;
   }
 
   function bindInputs(){
     [
       'pporRate','pporBalanceCalc','pporWeeklyCalc','offset','ipRate','rentWeekly',
       'ipLow','ipMid','ipHigh','sellCostPct','saleLegalCosts','saleOtherCosts',
-      'wdContractDate','wdCostBase','wdTaxRate','wdDepreciation','wdPaygCapture','wdScenario'
+      'wd2ContractDate','wd2GuaranteeEnd','wd2CostBase','wd2TaxRate','wd2Depreciation',
+      'wd2PaygCapture','wd2HoldingCosts','wd2YearsSavedThreshold','wd2Scenario'
     ].forEach(id => {
       const el = $(id);
-      if (!el || el.dataset.wdBound === '1') return;
-      el.dataset.wdBound = '1';
+      if (!el || el.dataset.wd2Bound === '1') return;
+      el.dataset.wd2Bound = '1';
       el.addEventListener('input', updateEngine);
       el.addEventListener('change', updateEngine);
     });
@@ -1213,7 +1239,7 @@ render();
     bindInputs();
     updateEngine();
 
-    if (typeof render === 'function' && !window.__wandinaWrappedRender) {
+    if (typeof render === 'function' && !window.__wandinaV2WrappedRender) {
       const originalRender = render;
       window.render = function () {
         const result = originalRender.apply(this, arguments);
@@ -1221,7 +1247,7 @@ render();
         updateEngine();
         return result;
       };
-      window.__wandinaWrappedRender = true;
+      window.__wandinaV2WrappedRender = true;
       updateEngine();
     }
   }
