@@ -520,367 +520,6 @@ render();
 </script>
 <script>
 (function () {
-  // ---------- SETTINGS ----------
-  const WANDINA_URL = 'wandina_dashboard.html'; // change if needed
-  const PPOR_DEFAULT = 5.97;
-  const IP_DEFAULT = 6.39;
-  const STEP = 0.25;
-
-  // ---------- HELPERS ----------
-  function findFirst(ids) {
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (el) return el;
-    }
-    return null;
-  }
-
-  function safeRecalc() {
-    if (typeof render === 'function') return render();
-    if (typeof recalc === 'function') return recalc();
-    if (typeof updateAll === 'function') return updateAll();
-    if (typeof calculateAll === 'function') return calculateAll();
-    if (typeof calculate === 'function') return calculate();
-
-    // fallback: trigger input/change events
-    document.querySelectorAll('input, select').forEach(el => {
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-  }
-
-  function round2(n) {
-    return Math.round(n * 100) / 100;
-  }
-
-  function makeRateControl(labelText, inputEl, fallbackDefault) {
-    if (!inputEl || inputEl.dataset.rateControlAttached === 'true') return;
-    inputEl.dataset.rateControlAttached = 'true';
-
-    if (!inputEl.value || isNaN(parseFloat(inputEl.value))) {
-      inputEl.value = fallbackDefault.toFixed(2);
-    }
-
-    const wrapper = document.createElement('div');
-    wrapper.style.margin = '10px 0 14px';
-    wrapper.style.padding = '10px';
-    wrapper.style.borderRadius = '12px';
-    wrapper.style.background = '#f8fafc';
-    wrapper.style.border = '1px solid #e5e7eb';
-
-    const label = document.createElement('div');
-    label.textContent = labelText;
-    label.style.fontSize = '14px';
-    label.style.fontWeight = '700';
-    label.style.marginBottom = '8px';
-    label.style.color = '#111827';
-
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.gap = '8px';
-    row.style.alignItems = 'center';
-
-    const minus = document.createElement('button');
-    minus.type = 'button';
-    minus.textContent = '−';
-    styleBtn(minus);
-
-    const plus = document.createElement('button');
-    plus.type = 'button';
-    plus.textContent = '+';
-    styleBtn(plus);
-
-    inputEl.style.flex = '1';
-    inputEl.style.minWidth = '0';
-    inputEl.style.height = '42px';
-    inputEl.style.borderRadius = '10px';
-    inputEl.style.border = '1px solid #d1d5db';
-    inputEl.style.padding = '0 12px';
-    inputEl.style.fontSize = '16px';
-    inputEl.style.fontWeight = '700';
-
-    minus.onclick = function () {
-      let v = parseFloat(inputEl.value);
-      if (isNaN(v)) v = fallbackDefault;
-      v = Math.max(0, round2(v - STEP));
-      inputEl.value = v.toFixed(2);
-      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
-      inputEl.dispatchEvent(new Event('change', { bubbles: true }));
-      safeRecalc();
-    };
-
-    plus.onclick = function () {
-      let v = parseFloat(inputEl.value);
-      if (isNaN(v)) v = fallbackDefault;
-      v = round2(v + STEP);
-      inputEl.value = v.toFixed(2);
-      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
-      inputEl.dispatchEvent(new Event('change', { bubbles: true }));
-      safeRecalc();
-    };
-
-    inputEl.addEventListener('input', safeRecalc);
-    inputEl.addEventListener('change', safeRecalc);
-
-    row.appendChild(minus);
-    row.appendChild(inputEl);
-    row.appendChild(plus);
-
-    wrapper.appendChild(label);
-    wrapper.appendChild(row);
-
-    const parent = inputEl.parentNode;
-    if (parent) {
-      parent.insertBefore(wrapper, inputEl);
-      row.replaceChild(inputEl, inputEl);
-    }
-  }
-
-  function styleBtn(btn) {
-    btn.style.width = '42px';
-    btn.style.height = '42px';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '10px';
-    btn.style.background = '#1f6feb';
-    btn.style.color = '#fff';
-    btn.style.fontSize = '22px';
-    btn.style.fontWeight = '800';
-    btn.style.cursor = 'pointer';
-    btn.style.flex = '0 0 42px';
-  }
-
-  function addTopWandinaButton() {
-    if (document.getElementById('wandinaTopLauncher')) return;
-
-    const bar = document.createElement('div');
-    bar.id = 'wandinaTopLauncher';
-    bar.style.display = 'flex';
-    bar.style.justifyContent = 'flex-end';
-    bar.style.margin = '10px 0 14px';
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = 'Open Wandina Dashboard';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '12px';
-    btn.style.padding = '12px 16px';
-    btn.style.background = '#111827';
-    btn.style.color = '#fff';
-    btn.style.fontSize = '14px';
-    btn.style.fontWeight = '700';
-    btn.style.cursor = 'pointer';
-    btn.onclick = function () {
-      window.open(WANDINA_URL, '_blank');
-    };
-
-    bar.appendChild(btn);
-
-    const target =
-      document.querySelector('main') ||
-      document.querySelector('.container') ||
-      document.querySelector('.app') ||
-      document.body.firstElementChild ||
-      document.body;
-
-    target.parentNode.insertBefore(bar, target);
-  }
-
-  // ---------- RUN ----------
-  window.addEventListener('DOMContentLoaded', function () {
-    addTopWandinaButton();
-
-    // Change these IDs only if needed
-    const pporInput = findFirst([
-      'pporRate',
-      'pporInterestRate',
-      'pporRateInput'
-    ]);
-
-    const ipInput = findFirst([
-      'ipRate',
-      'buildInterestRate',
-      'ipInterestRate',
-      'ipRateInput'
-    ]);
-
-    if (pporInput) makeRateControl('PPOR P&I Rate (%)', pporInput, PPOR_DEFAULT);
-    if (ipInput) makeRateControl('IP IO Rate (%)', ipInput, IP_DEFAULT);
-
-    safeRecalc();
-  });
-})();
-</script>  
-<script>
-(function () {
-  const WANDINA_URL = 'wandina_dashboard.html';
-  const STEP = 0.25;
-  const PPOR_DEFAULT = 5.97;
-  const IP_DEFAULT = 6.39;
-
-  function round2(n) {
-    return Math.round(n * 100) / 100;
-  }
-
-  function triggerRecalc(el) {
-    if (!el) return;
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    el.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-
-  function findLabelNode(text) {
-    const all = Array.from(document.querySelectorAll('label, div, span, p, strong, b'));
-    return all.find(el => (el.textContent || '').trim() === text) || null;
-  }
-
-  function findNearestInput(labelText) {
-    const labelNode = findLabelNode(labelText);
-    if (!labelNode) return null;
-
-    // 1) inside same parent
-    let parent = labelNode.parentElement;
-    if (parent) {
-      const directInput = parent.querySelector('input');
-      if (directInput) return directInput;
-    }
-
-    // 2) next few siblings
-    let node = labelNode;
-    for (let i = 0; i < 8 && node; i++) {
-      node = node.nextElementSibling;
-      if (!node) break;
-      if (node.matches && node.matches('input')) return node;
-      const nested = node.querySelector ? node.querySelector('input') : null;
-      if (nested) return nested;
-    }
-
-    // 3) nearby container climb
-    parent = labelNode.parentElement;
-    for (let i = 0; i < 4 && parent; i++) {
-      const inputs = parent.querySelectorAll('input');
-      if (inputs.length === 1) return inputs[0];
-      parent = parent.parentElement;
-    }
-
-    return null;
-  }
-
-  function styleBtn(btn) {
-    btn.style.width = '38px';
-    btn.style.height = '38px';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '10px';
-    btn.style.background = '#1f6feb';
-    btn.style.color = '#fff';
-    btn.style.fontSize = '22px';
-    btn.style.fontWeight = '800';
-    btn.style.cursor = 'pointer';
-    btn.style.flex = '0 0 38px';
-  }
-
-  function attachStepper(labelText, defaultValue) {
-    const input = findNearestInput(labelText);
-    if (!input || input.dataset.stepperAttached === 'true') return;
-
-    input.dataset.stepperAttached = 'true';
-    input.type = 'number';
-    input.step = '0.01';
-
-    if (!input.value || isNaN(parseFloat(input.value))) {
-      input.value = defaultValue.toFixed(2);
-      triggerRecalc(input);
-    }
-
-    const wrapper = document.createElement('div');
-    wrapper.style.marginTop = '8px';
-    wrapper.style.display = 'flex';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.gap = '8px';
-
-    const minus = document.createElement('button');
-    minus.type = 'button';
-    minus.textContent = '−';
-    styleBtn(minus);
-
-    const plus = document.createElement('button');
-    plus.type = 'button';
-    plus.textContent = '+';
-    styleBtn(plus);
-
-    input.style.flex = '1';
-    input.style.minWidth = '0';
-    input.style.height = '38px';
-    input.style.border = '1px solid #d1d5db';
-    input.style.borderRadius = '10px';
-    input.style.padding = '0 10px';
-    input.style.fontSize = '16px';
-    input.style.fontWeight = '700';
-    input.style.background = '#fff';
-
-    minus.addEventListener('click', function () {
-      let v = parseFloat(input.value);
-      if (isNaN(v)) v = defaultValue;
-      v = Math.max(0, round2(v - STEP));
-      input.value = v.toFixed(2);
-      triggerRecalc(input);
-    });
-
-    plus.addEventListener('click', function () {
-      let v = parseFloat(input.value);
-      if (isNaN(v)) v = defaultValue;
-      v = round2(v + STEP);
-      input.value = v.toFixed(2);
-      triggerRecalc(input);
-    });
-
-    const parent = input.parentNode;
-    parent.insertBefore(wrapper, input);
-    wrapper.appendChild(minus);
-    wrapper.appendChild(input);
-    wrapper.appendChild(plus);
-  }
-
-  function addFloatingWandinaButton() {
-    if (document.getElementById('wandinaFloatingBtn')) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'wandinaFloatingBtn';
-    btn.type = 'button';
-    btn.textContent = 'Wandina Dashboard';
-    btn.style.position = 'fixed';
-    btn.style.right = '14px';
-    btn.style.bottom = '14px';
-    btn.style.zIndex = '9999';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '14px';
-    btn.style.padding = '12px 14px';
-    btn.style.background = '#111827';
-    btn.style.color = '#fff';
-    btn.style.fontSize = '14px';
-    btn.style.fontWeight = '800';
-    btn.style.boxShadow = '0 10px 25px rgba(0,0,0,0.20)';
-    btn.style.cursor = 'pointer';
-
-    btn.addEventListener('click', function () {
-      window.open(WANDINA_URL, '_blank');
-    });
-
-    document.body.appendChild(btn);
-  }
-
-  function init() {
-    attachStepper('PPOR interest rate %', PPOR_DEFAULT);
-    attachStepper('Build interest rate %', IP_DEFAULT);
-    addFloatingWandinaButton();
-  }
-
-  window.addEventListener('load', function () {
-    init();
-    setTimeout(init, 800); // catches late-rendered content
-  });
-})();
-</script>
-<script>
-(function () {
   const STEP = 0.25;
   const PPOR_DEFAULT = 5.97;
   const IP_DEFAULT = 6.39;
@@ -894,56 +533,36 @@ render();
     if (!el) return;
     el.dispatchEvent(new Event('input', { bubbles: true }));
     el.dispatchEvent(new Event('change', { bubbles: true }));
+    if (typeof render === 'function') render();
   }
 
-  function findTextNode(text) {
-    const nodes = Array.from(document.querySelectorAll('label, div, span, p, strong, b'));
-    return nodes.find(el => (el.textContent || '').trim() === text) || null;
-  }
-
-  function findInputAfterText(text) {
-    const node = findTextNode(text);
-    if (!node) return null;
-
-    let parent = node.parentElement;
-    if (parent) {
-      const direct = parent.querySelector('input');
-      if (direct) return direct;
-    }
-
-    let next = node.nextElementSibling;
-    for (let i = 0; i < 8 && next; i++) {
-      if (next.tagName === 'INPUT') return next;
-      const nested = next.querySelector ? next.querySelector('input') : null;
-      if (nested) return nested;
-      next = next.nextElementSibling;
-    }
-
-    parent = node.parentElement;
-    for (let i = 0; i < 4 && parent; i++) {
-      const inputs = parent.querySelectorAll('input');
-      if (inputs.length === 1) return inputs[0];
-      parent = parent.parentElement;
-    }
-
-    return null;
-  }
-
-  function styleButton(btn) {
-    btn.style.width = '38px';
-    btn.style.height = '38px';
+  function styleSmallButton(btn, bg) {
+    btn.style.width = '42px';
+    btn.style.height = '42px';
     btn.style.border = 'none';
     btn.style.borderRadius = '10px';
-    btn.style.background = '#1f6feb';
+    btn.style.background = bg;
     btn.style.color = '#fff';
     btn.style.fontSize = '22px';
     btn.style.fontWeight = '800';
     btn.style.cursor = 'pointer';
-    btn.style.flex = '0 0 38px';
+    btn.style.flex = '0 0 42px';
   }
 
-  function attachStepper(labelText, defaultValue) {
-    const input = findInputAfterText(labelText);
+  function styleFloatingButton(btn, bg) {
+    btn.style.border = 'none';
+    btn.style.borderRadius = '14px';
+    btn.style.padding = '12px 14px';
+    btn.style.background = bg;
+    btn.style.color = '#fff';
+    btn.style.fontSize = '14px';
+    btn.style.fontWeight = '800';
+    btn.style.boxShadow = '0 10px 25px rgba(0,0,0,0.20)';
+    btn.style.cursor = 'pointer';
+  }
+
+  function attachStepperToInput(inputId, defaultValue) {
+    const input = document.getElementById(inputId);
     if (!input || input.dataset.stepperAttached === 'true') return;
 
     input.dataset.stepperAttached = 'true';
@@ -952,34 +571,34 @@ render();
 
     if (!input.value || isNaN(parseFloat(input.value))) {
       input.value = defaultValue.toFixed(2);
-      fireEvents(input);
     }
 
-    const wrap = document.createElement('div');
-    wrap.style.display = 'flex';
-    wrap.style.alignItems = 'center';
-    wrap.style.gap = '8px';
-    wrap.style.marginTop = '8px';
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.alignItems = 'center';
+    row.style.gap = '8px';
+    row.style.marginTop = '8px';
 
     const minus = document.createElement('button');
     minus.type = 'button';
     minus.textContent = '−';
-    styleButton(minus);
+    styleSmallButton(minus, '#1f6feb');
 
     const plus = document.createElement('button');
     plus.type = 'button';
     plus.textContent = '+';
-    styleButton(plus);
+    styleSmallButton(plus, '#1f6feb');
 
     input.style.flex = '1';
     input.style.minWidth = '0';
-    input.style.height = '38px';
+    input.style.height = '42px';
     input.style.border = '1px solid #d1d5db';
     input.style.borderRadius = '10px';
-    input.style.padding = '0 10px';
+    input.style.padding = '0 12px';
     input.style.fontSize = '16px';
     input.style.fontWeight = '700';
     input.style.background = '#fff';
+    input.style.color = '#111827';
 
     minus.onclick = function () {
       let v = parseFloat(input.value);
@@ -998,51 +617,60 @@ render();
     };
 
     const parent = input.parentNode;
-    parent.insertBefore(wrap, input);
-    wrap.appendChild(minus);
-    wrap.appendChild(input);
-    wrap.appendChild(plus);
+    if (!parent) return;
+
+    parent.insertBefore(row, input);
+    row.appendChild(minus);
+    row.appendChild(input);
+    row.appendChild(plus);
   }
 
-  function addWandinaButton() {
-    if (document.getElementById('wandinaFloatingBtn')) return;
+  function addFloatingButtons() {
+    if (document.getElementById('financeFloatingTools')) return;
 
-    const btn = document.createElement('button');
-    btn.id = 'wandinaFloatingBtn';
-    btn.type = 'button';
-    btn.textContent = 'Wandina Dashboard';
-    btn.style.position = 'fixed';
-    btn.style.right = '14px';
-    btn.style.bottom = '14px';
-    btn.style.zIndex = '9999';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '14px';
-    btn.style.padding = '12px 14px';
-    btn.style.background = '#111827';
-    btn.style.color = '#fff';
-    btn.style.fontSize = '14px';
-    btn.style.fontWeight = '800';
-    btn.style.boxShadow = '0 10px 25px rgba(0,0,0,0.20)';
-    btn.style.cursor = 'pointer';
+    const wrap = document.createElement('div');
+    wrap.id = 'financeFloatingTools';
+    wrap.style.position = 'fixed';
+    wrap.style.right = '14px';
+    wrap.style.bottom = '14px';
+    wrap.style.zIndex = '9999';
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.gap = '10px';
 
-    btn.onclick = function () {
+    const wandinaBtn = document.createElement('button');
+    wandinaBtn.type = 'button';
+    wandinaBtn.textContent = 'Wandina';
+    styleFloatingButton(wandinaBtn, '#111827');
+    wandinaBtn.onclick = function () {
       window.open(WANDINA_URL, '_blank');
     };
 
-    document.body.appendChild(btn);
+    const topBtn = document.createElement('button');
+    topBtn.type = 'button';
+    topBtn.textContent = 'Top';
+    styleFloatingButton(topBtn, '#334155');
+    topBtn.onclick = function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    wrap.appendChild(wandinaBtn);
+    wrap.appendChild(topBtn);
+    document.body.appendChild(wrap);
   }
 
   function init() {
-    attachStepper('PPOR interest rate %', PPOR_DEFAULT);
-    attachStepper('Build interest rate %', IP_DEFAULT);
-    addWandinaButton();
+    attachStepperToInput('pporRate', PPOR_DEFAULT);
+    attachStepperToInput('ipRate', IP_DEFAULT);
+    addFloatingButtons();
+    if (typeof render === 'function') render();
   }
 
   window.addEventListener('load', function () {
     init();
-    setTimeout(init, 800);
+    setTimeout(init, 600);
   });
 })();
-</script>  
+</script>
 </body>
 </html>
