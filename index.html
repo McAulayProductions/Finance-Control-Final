@@ -227,6 +227,73 @@ button{
     transform:translateY(-1px);
     box-shadow:0 8px 18px rgba(0,0,0,.18);
   }
+    /* --- visual lift patch --- */
+body{
+  background:#0b1220 !important;
+}
+
+.hero{
+  background:#1e293b !important;
+  border:1px solid #475569 !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.25) !important;
+}
+
+.sticky-mobile .mini{
+  background:#ffffff !important;
+  color:#111827 !important;
+  border:1px solid #cbd5e1 !important;
+  font-weight:700 !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.12) !important;
+}
+
+.mode-row{
+  gap:12px !important;
+}
+
+.mode-btn,
+.soft-btn{
+  background:#f8fafc !important;
+  color:#111827 !important;
+  border:1px solid #cbd5e1 !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.10) !important;
+}
+
+.mode-btn.active{
+  background:#22c55e !important;
+  color:#052e16 !important;
+  border-color:#22c55e !important;
+  box-shadow:0 8px 20px rgba(34,197,94,.28) !important;
+}
+
+details > summary{
+  background:#1e293b !important;
+  color:#f8fafc !important;
+}
+
+.card{
+  box-shadow:0 10px 24px rgba(0,0,0,.18) !important;
+}
+
+.metric{
+  background:#273449 !important;
+  border-color:#475569 !important;
+}
+
+#cardVerdict{
+  border:2px solid #60a5fa !important;
+}
+
+#cardFinal{
+  border:2px solid #34d399 !important;
+}
+
+#commandCard{
+  border:2px solid #34d399 !important;
+}
+
+#nextCard{
+  border:2px solid #60a5fa !important;
+}
 </style>
 const CONFIG={FENCE_COST:4644,CRUISE_REMAINING:11600,EQUITY_RELEASE:215000,PROPOSED_LENDING:373000,PLANNED_TOTAL_IP_DEBT:588000,BILLS_BUCKET:150,LIVE_PPOR_REFERENCE:960000,LIVE_IP_REFERENCE:715000};
 let mode='now',strategyMode='auto',showDeep=false,usePasteSpend=false,billCounter=1;
