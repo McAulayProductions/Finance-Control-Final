@@ -6,605 +6,189 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Finance Control Mobile</title>
   <style>
-<style>
-:root{
-  --bg:#0b1220;
-  --card:#111827;
-  --card2:#1f2937;
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --border:#334155;
-  --green:#22c55e;
-  --amber:#f59e0b;
-  --red:#ef4444;
-  --blue:#3b82f6;
-  --white:#ffffff;
-}
-
-body{
-  margin:0;
-  padding:10px;
-  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
-  background:linear-gradient(180deg,#0b1220,#020617);
-  color:var(--text);
-}
-
-.hero{
-  background:linear-gradient(135deg,#1e293b,#020617);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.4);
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.25);
-  transition:0.2s;
-}
-
-.card:hover{
-  transform:translateY(-2px);
-}
-
-.metric{
-  padding:16px;
-  background:linear-gradient(145deg,#1f2937,#020617);
-  border-radius:14px;
-  border:1px solid var(--border);
-}
-
-.metric .value{
-  font-size:26px;
-  font-weight:900;
-}
-
-#cardVerdict{
-  border:2px solid var(--blue);
-  box-shadow:0 0 20px rgba(59,130,246,0.3);
-}
-
-#cardFinal{
-  border:2px solid var(--green);
-  box-shadow:0 0 20px rgba(34,197,94,0.3);
-}
-
-.status-good{
-  border-color:var(--green);
-}
-
-.status-warn{
-  border-color:var(--amber);
-}
-
-.status-bad{
-  border-color:var(--red);
-}
-
-.status-box{
-  border-radius:14px;
-  padding:14px;
-  line-height:1.6;
-}
-
-button{
-  font-weight:800;
-}
-
-.mode-btn.active{
-  background:var(--green);
-  color:#022c22;
-}
-
-.sticky-mobile{
-  position:sticky;
-  top:8px;
-  z-index:20;
-}
-
-.progress-fill{
-  background:linear-gradient(90deg,#22c55e,#4ade80);
-}
-<style>
-  :root{
-    --bg:#0f172a;
-    --card:#111827;
-    --card2:#1f2937;
-    --text:#f8fafc;
-    --muted:#94a3b8;
-    --border:#334155;
-    --green:#10b981;
-    --amber:#f59e0b;
-    --red:#ef4444;
-    --blue:#3b82f6;
-    --white:#ffffff;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;padding:10px;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-  .wrap{max-width:1200px;margin:0 auto}
-  .hero,.card,.metric,.status-box,details{background:var(--card);border:1px solid var(--border);border-radius:16px}
-  .hero,.card,.status-box{padding:14px}
-  h1,h2,h3{margin:0 0 10px 0}
-  .sub,.small{color:var(--muted);line-height:1.5}
-  .sub{font-size:14px}
-  .small{font-size:12px}
-  .layout{display:grid;grid-template-columns:1fr;gap:12px}
-  .stack{display:grid;gap:12px}
-  .grid-2,.grid-3,.grid-4,.grid-5{display:grid;gap:10px}
-  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
-  label{display:block}
-  label span{display:block;margin-bottom:6px;color:var(--muted);font-size:13px;font-weight:700}
-  input,select,textarea,button{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:#111827;font-size:15px}
-  input[readonly]{background:#e5e7eb}
-  textarea{min-height:90px;resize:vertical}
-  .mode-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
-  .mode-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .mode-btn,.soft-btn{background:var(--white);font-weight:700;cursor:pointer}
-  .mode-btn.active{background:var(--green);border-color:var(--green);color:#052e16}
-  .metric{padding:14px;background:var(--card2)}
-  .metric .label{color:var(--muted);font-size:12px;font-weight:700}
-  .metric .value{margin-top:8px;font-size:24px;font-weight:800;line-height:1.08;word-break:break-word}
-  .metric .note{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.4}
-  .status-box{line-height:1.6}
-  .status-good-box{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.5)}
-  .status-warn-box{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
-  .status-bad-box{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
-  .status-info-box{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
-  .status-good{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.5)}
-  .status-warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
-  .status-bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
-  .status-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
-  .row{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--card2);border:1px solid var(--border);margin-bottom:10px}
-  .progress{height:12px;background:#020617;border:1px solid var(--border);border-radius:999px;overflow:hidden;margin-top:8px}
-  .progress-fill{height:100%;width:0%;background:var(--green)}
-  .bill-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;align-items:end;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
-  details{padding:0;overflow:hidden}
-  details > summary{list-style:none;cursor:pointer;padding:16px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
-  details > summary::-webkit-details-marker{display:none}
-  details .detail-body{padding:0 14px 14px 14px;border-top:1px solid var(--border)}
-  .sticky-mobile{position:sticky;top:8px;z-index:20;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
-  .sticky-mobile .mini{padding:10px 12px;background:rgba(15,23,42,.97);border:1px solid var(--border);border-radius:12px;font-size:12px}
-  .pill-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-  @media (min-width:950px){
-    .layout{grid-template-columns:.95fr 1.05fr}
-    .metric .value{font-size:28px}
-    .sticky-mobile{grid-template-columns:repeat(3,minmax(0,1fr))}
-  }
-  @media (max-width:760px){
-    .grid-2,.grid-3,.grid-4,.grid-5,.bill-row,.mode-row,.mode-row.three,.pill-row,.sticky-mobile{grid-template-columns:1fr}
-    .row{flex-direction:column;align-items:flex-start}
-    body{padding:8px}
-  }
-      body{
-    background:linear-gradient(180deg,#0f172a 0%, #020617 100%);
-  }
-
-  .hero{
-    box-shadow:0 14px 34px rgba(0,0,0,0.28);
-  }
-
-  .card,.metric,.status-box,details{
-    box-shadow:0 8px 22px rgba(0,0,0,0.18);
-  }
-
-  #cardVerdict{
-    border-color:rgba(59,130,246,.7);
-    box-shadow:0 0 0 1px rgba(59,130,246,.35), 0 10px 26px rgba(59,130,246,.18);
-  }
-
-  #cardFinal{
-    border-color:rgba(16,185,129,.7);
-    box-shadow:0 0 0 1px rgba(16,185,129,.35), 0 10px 26px rgba(16,185,129,.18);
-  }
-
-  #commandCard{
-    border-color:rgba(16,185,129,.55);
-  }
-
-  #nextCard{
-    border-color:rgba(59,130,246,.55);
-  }
-
-  .metric{
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-  }
-
-  .metric:hover,.card:hover,details:hover{
-    transform:translateY(-1px);
-  }
-
-  .mode-btn,.soft-btn{
-    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
-  }
-
-  .mode-btn:hover,.soft-btn:hover{
-    transform:translateY(-1px);
-    box-shadow:0 8px 18px rgba(0,0,0,.18);
-  }
-    /* --- visual lift patch --- */
-body{
-  background:#0b1220 !important;
-}
-
-.hero{
-  background:#1e293b !important;
-  border:1px solid #475569 !important;
-  box-shadow:0 12px 28px rgba(0,0,0,.25) !important;
-}
-
-.sticky-mobile .mini{
-  background:#ffffff !important;
-  color:#111827 !important;
-  border:1px solid #cbd5e1 !important;
-  font-weight:700 !important;
-  box-shadow:0 6px 16px rgba(0,0,0,.12) !important;
-}
-
-.mode-row{
-  gap:12px !important;
-}
-
-.mode-btn,
-.soft-btn{
-  background:#f8fafc !important;
-  color:#111827 !important;
-  border:1px solid #cbd5e1 !important;
-  box-shadow:0 6px 16px rgba(0,0,0,.10) !important;
-}
-
-.mode-btn.active{
-  background:#22c55e !important;
-  color:#052e16 !important;
-  border-color:#22c55e !important;
-  box-shadow:0 8px 20px rgba(34,197,94,.28) !important;
-}
-
-details > summary{
-  background:#1e293b !important;
-  color:#f8fafc !important;
-}
-
-.card{
-  box-shadow:0 10px 24px rgba(0,0,0,.18) !important;
-}
-
-.metric{
-  background:#273449 !important;
-  border-color:#475569 !important;
-}
-
-#cardVerdict{
-  border:2px solid #60a5fa !important;
-}
-
-#cardFinal{
-  border:2px solid #34d399 !important;
-}
-
-#commandCard{
-  border:2px solid #34d399 !important;
-}
-
-#nextCard{
-  border:2px solid #60a5fa !important;
-}
-</style>
-const CONFIG={FENCE_COST:4644,CRUISE_REMAINING:11600,EQUITY_RELEASE:215000,PROPOSED_LENDING:373000,PLANNED_TOTAL_IP_DEBT:588000,BILLS_BUCKET:150,LIVE_PPOR_REFERENCE:960000,LIVE_IP_REFERENCE:715000};
-let mode='now',strategyMode='auto',showDeep=false,usePasteSpend=false,billCounter=1;
-const $=id=>document.getElementById(id);
-const currency=n=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(n)?n:0);
-const num=v=>{const n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return Number.isFinite(n)?n:0;};
-const parseSpendEntries=text=>text.split(/\n|,|;/).map(x=>x.trim()).filter(Boolean).map(num).filter(n=>n>0);
-const today=()=>new Date();
-const formatDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-function weeksToJuly24(){const now=today();const year=(now.getMonth()>6||(now.getMonth()===6&&now.getDate()>24))?now.getFullYear()+1:now.getFullYear();const target=new Date(year,6,24);const diff=Math.max(0,Math.ceil((target-now)/(1000*60*60*24)));return Math.max(1,Math.ceil(diff/7));}
-function computePPORWeekly(balance,annualRatePct,yearsRemaining){const weeklyRate=(annualRatePct/100)/52;const totalWeeks=Math.max(1,Math.round(yearsRemaining*52));if(weeklyRate<=0)return balance/totalWeeks;return balance*weeklyRate/(1-Math.pow(1+weeklyRate,-totalWeeks));}
-function addBillRow(name='',amount='',dueDate=''){const row=document.createElement('div');row.className='bill-row';row.dataset.id=String(billCounter++);row.innerHTML=`<label><span>Bill name</span><input class="bill-name" value="${name}"></label><label><span>Amount</span><input class="bill-amount" value="${amount}"></label><label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label><button type="button" class="soft-btn remove-bill">Remove</button>`;$('billsContainer').appendChild(row);row.querySelectorAll('input').forEach(el=>el.addEventListener('input',render));row.querySelector('.remove-bill').addEventListener('click',()=>{row.remove();render();});}
-function readBills(){return Array.from(document.querySelectorAll('.bill-row')).map(row=>{const name=row.querySelector('.bill-name').value.trim()||'Upcoming bill';const amount=num(row.querySelector('.bill-amount').value);const dueDate=row.querySelector('.bill-date').value;const diffDays=dueDate?Math.max(1,Math.ceil((new Date(dueDate)-today())/(1000*60*60*24))):7;const weeks=Math.max(1,Math.ceil(diffDays/7));return{name,amount,dueDate,weeks,weekly:amount/weeks};}).filter(b=>b.amount>0);}
-function paint(el,type){if(!el)return;el.classList.remove('status-good','status-warn','status-bad','status-info');el.classList.add(type);}
-function getWeeklyCommand(m){
-  const actions=[];
-  if(m.floorGap8<0){actions.push('🛑 Offset projected below floor → emergency tightening required');actions.push('Cut flexible spending immediately and protect the buffer first');}
-  else if(m.floorGap8<3000){actions.push('⚠️ Offset projected near floor → tighten now before it becomes a problem');}
-  if(m.offset8<m.offsetNow)actions.push('Offset is drifting down → do not ignore the slope');
-  if(m.living>500)actions.push('Reduce living to $500 or lower');
-  if(m.splurge>0&&m.strategyMode==='survival')actions.push('Reduce splurge to $0 in survival mode');
-  if(m.weeklySavingsTarget>800)actions.push('Savings target is aggressive → review weekly, not emotionally');
-  if(m.totalPressure>m.income)actions.push('Pressure exceeds income → smooth bills or cut flexible spend');
-  if(m.strategyMode==='attack'&&m.floorGap8>5000)actions.push('✅ Offset sits well above floor → attack mode has room');
-  if(!actions.length)actions.push('Stable → stay consistent this week');
-  return actions.join('<br>');
-}
-function compute(){
-  const offset=num($('offset').value),savings=num($('savings').value),offsetFloor=num($('offsetFloor').value)||30000;
-  const incomeNow=num($('incomeNow').value)||3250,incomeFuture=num($('incomeFuture').value)||2600;
-  const pporBalanceCalc=num($('pporBalanceCalc').value)||560540,pporYearsRemaining=num($('pporYearsRemaining').value)||28.5,pporRate=num($('pporRate').value)||5.92;
-  const pporWeeklyCalc=computePPORWeekly(pporBalanceCalc,pporRate,pporYearsRemaining);
-  const ipRate=num($('ipRate').value)||6.39,rentWeekly=num($('rentWeekly').value)||700;
-  const spend=usePasteSpend?parseSpendEntries($('spendEntries').value).reduce((a,b)=>a+b,0):num($('spend').value);
-  const weeks=weeksToJuly24();$('weeksToTarget').value=String(weeks);
-  const bills=readBills(),upcomingWeekly=bills.reduce((a,b)=>a+b.weekly,0);
-  const savingsGap=CONFIG.FENCE_COST+CONFIG.CRUISE_REMAINING-savings,weeklySavingsTarget=Math.max(0,savingsGap/weeks),progress=Math.min((savings/(CONFIG.FENCE_COST+CONFIG.CRUISE_REMAINING))*100,100);
-  const buildStage=$('buildStage').value,stageMap={plate:{ratio:.405,weeksToRent:16},roof:{ratio:.585,weeksToRent:12},lockup:{ratio:.765,weeksToRent:8},tiling:{ratio:.925,weeksToRent:4},practical:{ratio:1,weeksToRent:2},complete:{ratio:1,weeksToRent:0}},stageCfg=stageMap[buildStage];
-  const activeDebt=CONFIG.EQUITY_RELEASE+(CONFIG.PROPOSED_LENDING*stageCfg.ratio),weeklyIPInterest=(activeDebt*(ipRate/100))/52,fullIPInterest=(CONFIG.PLANNED_TOTAL_IP_DEBT*(ipRate/100))/52,ipPostNet=fullIPInterest-rentWeekly,ipPressure=buildStage==='complete'?Math.max(ipPostNet,0):weeklyIPInterest;
-  const trsWeekly=mode==='future'?(num($('futureTRSDays').value)*(num($('trsRate').value)||450)):0,income=(mode==='now'?incomeNow:incomeFuture)+trsWeekly,totalPressure=pporWeeklyCalc+CONFIG.BILLS_BUCKET+weeklySavingsTarget+upcomingWeekly+ipPressure,safeSpend=income-totalPressure,finalPosition=safeSpend-spend;
-  const offset4=offset+finalPosition*4,offset8=offset+finalPosition*8,floorGapNow=offset-offsetFloor,floorGap4=offset4-offsetFloor,floorGap8=offset8-offsetFloor;
-  const pporValue=num($('pporValue').value)||num($('pporLiveRef').value),ipValue=num($('ipValue').value)||num($('ipLiveRef').value),pporLoan=num($('pporLoan').value),ipDebt=CONFIG.PLANNED_TOTAL_IP_DEBT;
-  const pporEquity=pporValue-pporLoan,ipEquity=ipValue-ipDebt,pporUsable=Math.max(pporValue*.8-pporLoan,0),ipUsable=Math.max(ipValue*.8-ipDebt,0);
-  const sellPct=num($('sellCostPct').value)/100,saleFixed=num($('saleLegalCosts').value)+num($('saleOtherCosts').value),ipLow=num($('ipLow').value),ipMid=num($('ipMid').value),ipHigh=num($('ipHigh').value);
-  const netSale=price=>Math.max(price-(price*sellPct)-saleFixed-ipDebt,0),netLow=netSale(ipLow),netMid=netSale(ipMid),netHigh=netSale(ipHigh),wipeNeed=(pporLoan+ipDebt+saleFixed)/Math.max(.0001,1-sellPct);
-  const debtTarget=num($('debtRecycleTarget').value),debtReady=pporUsable>=debtTarget?'Ready':pporUsable>=debtTarget*.5?'Close':'Not ready',futureReady=offset8>=80000&&finalPosition>=0?'Ready':offset8>=50000&&finalPosition>=0?'Close':'Not ready',refinance=(pporUsable>200000||ipUsable>120000)?'Strong':(pporUsable>100000||ipUsable>50000)?'Possible':'Not ready',sell=netHigh>=pporLoan?'Net PPOR wipe possible in high band':ipValue>=ipMid?'Review numbers':'Too early';
-  let verdict='ON TRACK',tone='good';if(finalPosition<0){verdict='OFF TRACK';tone='bad';}else if(finalPosition<100){verdict='TIGHT';tone='warn';}
-  let activeStrategyMode=strategyMode;if(strategyMode==='auto')activeStrategyMode=(floorGap8<3000||verdict!=='ON TRACK')?'survival':'attack';
-  let living=550,splurge=50;if(activeStrategyMode==='survival'){living=500;splurge=0;}else if(activeStrategyMode==='attack'){living=500;splurge=floorGap8>5000?25:50;}
-  let mentorTitle='Hold the line.',mentorBody='Maintain current transfers. You are not in danger this week, but you still do not have room to get sloppy.';
-  if(floorGap8<0){mentorTitle='You are projected below the floor.';mentorBody='This is not a comfort phase. Protect offset immediately, cut flexible spending, and stop pretending the buffer is optional.';tone='bad';}
-  else if(floorGap8<3000){mentorTitle='You are close to the danger line.';mentorBody='One sloppy week can push you into a weaker position. Tighten now before the floor gets tested.';tone='warn';}
-  else if(verdict==='OFF TRACK'){mentorTitle='You are bleeding cash this week.';mentorBody='Even if the floor is not broken yet, the direction is wrong. Fix leakage before you talk strategy.';tone='bad';}
-  else if(activeStrategyMode==='attack'){mentorTitle='Attack mode is justified.';mentorBody='The system is holding above the floor. You have earned the right to think more aggressively, not emotionally.';tone='good';}
-  let nextTitle='Maintain course',nextBody='Keep transfers as recommended and protect the offset.';
-  if(floorGap8<0){nextTitle='Emergency protection mode';nextBody='Protect offset first. Cut flexible spending now, keep the bills bucket alive, and do not let the floor break further.';}
-  else if(activeStrategyMode==='survival'){nextTitle='Survival mode active';nextBody='Protect the offset first. Comfort spending loses before the buffer does.';}
-  else if(sell.includes('wipe')){nextTitle='Run full hold-vs-sell model';nextBody='High-band sale pressure is now meaningful. Model it carefully before making any move.';}
-  else if(activeStrategyMode==='attack'&&debtReady==='Ready'){nextTitle='Attack mode is supported';nextBody=`Buffer is holding. You can review stronger PPOR attack or a ${currency(debtTarget)} debt-recycling structure without fantasy.`;}
-  const floorStatus=floorGap8<0?'BELOW':floorGap8<3000?'NEAR':'SAFE';
-  const strategySummary=`Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. ${verdict==='OFF TRACK'?'The system is currently failing and must be tightened before any strategic move.':verdict==='TIGHT'?'The system is functioning, but the buffer is weak and one sloppy week will hurt.':'The system is currently holding, but discipline still matters more than optimism.'} Active strategy mode: ${activeStrategyMode.toUpperCase()}. Offset floor status: ${floorStatus}. Refinance: ${refinance}. Sell: ${sell}. Debt recycling: ${debtReady}. 2027 readiness: ${futureReady}.`;
-  return{offsetNow:offset,offset4,offset8,offsetFloor,floorGapNow,floorGap4,floorGap8,floorStatus,strategyMode:activeStrategyMode,savings,weeklySavingsTarget,progress,pporWeeklyCalc,income,trsWeekly,totalPressure,safeSpend,finalPosition,activeDebt,stageRatio:stageCfg.ratio,weeklyIPInterest,ipPostNet,weeksToRent:stageCfg.weeksToRent,ipPressure,verdict,tone,mentorTitle,mentorBody,nextTitle,nextBody,living,splurge,pporEquity,ipEquity,pporUsable,ipUsable,pporValue,pporLoan,ipValue,netLow,netMid,netHigh,wipeNeed,refinance,sell,debtReady,futureReady,strategySummary,upcomingWeekly,debtTarget};
-}
-function render(){
-  const m=compute();
-  $('deepArea').classList.toggle('hidden',!showDeep);
-  $('spendManualWrap').classList.toggle('hidden',usePasteSpend);
-  $('spendPasteWrap').classList.toggle('hidden',!usePasteSpend);
-  $('toggleDeep').textContent=showDeep?'Deep layers visible':'Simple mode visible';
-  $('toggleSpendMode').textContent=usePasteSpend?'Paste transactions enabled':'Single weekly total enabled';
-  $('mode-now').classList.toggle('active',mode==='now');
-  $('mode-future').classList.toggle('active',mode==='future');
-  $('strategy-auto').classList.toggle('active',strategyMode==='auto');
-  $('strategy-survival').classList.toggle('active',strategyMode==='survival');
-  $('strategy-attack').classList.toggle('active',strategyMode==='attack');
-  $('pporWeeklyCalc').value=Math.round(m.pporWeeklyCalc).toString();
-  $('fenceVal').textContent=currency(CONFIG.FENCE_COST);
-  $('cruiseVal').textContent=currency(CONFIG.CRUISE_REMAINING);
-  $('savingsVal').textContent=currency(m.savings);
-  $('weeklyReqVal').textContent=currency(m.weeklySavingsTarget);
-  $('progressFill').style.width=`${m.progress}%`;
-  $('progressText').textContent=`${Math.round(m.progress)}% funded`;
-  $('ipDebtTotalVal').textContent=currency(CONFIG.PLANNED_TOTAL_IP_DEBT);
-  $('activeDebtVal').textContent=currency(m.activeDebt);
-  $('activeDebtNote').textContent=`${Math.round(m.stageRatio*100)}% of variable lending plus equity release`;
-  $('ipInterestVal').textContent=currency(m.weeklyIPInterest);
-  $('ipPostNetVal').textContent=currency(m.ipPostNet);
-  $('verdictVal').textContent=m.verdict;
-  $('verdictNote').textContent=mode==='now'?'Current phase':'2027 0.8 mode';
-  $('safeSpendVal').textContent=currency(m.safeSpend);
-  $('pressureVal').textContent=currency(m.totalPressure);
-  $('finalVal').textContent=currency(m.finalPosition);
-  $('floorNowVal').textContent=currency(m.floorGapNow);
-  $('floor4Val').textContent=currency(m.floorGap4);
-  $('floor8Val').textContent=currency(m.floorGap8);
-  $('floorStatusVal').textContent=m.floorStatus;
-  $('mentorTitle').textContent=m.mentorTitle;
-  $('mentorBody').textContent=m.mentorBody;
-  $('strategySummary').textContent=m.strategySummary;
-  $('nextMoveTitle').textContent=m.nextTitle;
-  $('nextMoveBody').textContent=m.nextBody;
-  $('commandOutput').innerHTML=getWeeklyCommand(m);
-  $('livingVal').textContent=currency(m.living);
-  $('splurgeVal').textContent=currency(m.splurge);
-  $('billsVal').textContent=currency(CONFIG.BILLS_BUCKET);
-  $('saveTargetVal').textContent=currency(m.weeklySavingsTarget);
-  $('refinanceVal').textContent=m.refinance;
-  $('sellVal').textContent=m.sell;
-  $('debtVal').textContent=m.debtReady;
-  $('futureReadyVal').textContent=m.futureReady;
-  $('equityAction').textContent=m.sell.includes('wipe')?'High-band sale could wipe the PPOR net of rough sale costs. This is no longer theoretical.':m.debtReady==='Ready'?`Debt recycling split of ${currency(m.debtTarget)} looks supportable from PPOR equity.`:'Hold and build position.';
-  $('stackPPOR').textContent=currency(m.pporWeeklyCalc);
-  $('stackBills').textContent=currency(CONFIG.BILLS_BUCKET);
-  $('stackSavings').textContent=currency(m.weeklySavingsTarget);
-  $('stackUpcoming').textContent=currency(m.upcomingWeekly);
-  $('stackIP').textContent=currency(m.ipPressure);
-  $('stackFloor').textContent=currency(m.offsetFloor);
-  $('stackTotal').textContent=currency(m.totalPressure);
-  $('offsetNowVal').textContent=currency(m.offsetNow);
-  $('offset4Val').textContent=currency(m.offset4);
-  $('offset8Val').textContent=currency(m.offset8);
-  $('pporEquityVal').textContent=currency(m.pporEquity);
-  $('pporEquityNote').textContent=`Value ${currency(m.pporValue)} less loan ${currency(m.pporLoan)}.`;
-  $('pporUsableVal').textContent=currency(m.pporUsable);
-  $('ipEquityVal').textContent=currency(m.ipEquity);
-  $('ipEquityNote').textContent=`Value ${currency(m.ipValue)} less debt ${currency(CONFIG.PLANNED_TOTAL_IP_DEBT)}.`;
-  $('ipUsableVal').textContent=currency(m.ipUsable);
-  $('netLowVal').textContent=currency(m.netLow);
-  $('netMidVal').textContent=currency(m.netMid);
-  $('netHighVal').textContent=currency(m.netHigh);
-  $('wipeNeedVal').textContent=currency(m.wipeNeed);
-  $('sideModeVal').textContent=m.strategyMode.toUpperCase();
-  $('trsWeeklyVal').textContent=currency(m.trsWeekly);
-  $('incomeUsedVal').textContent=currency(m.income);
-  $('upcomingWeeklyVal').textContent=currency(m.upcomingWeekly);
-  $('stickyVerdict').textContent=`Verdict: ${m.verdict}`;
-  $('stickyFloor').textContent=`Floor: ${m.floorStatus} (${currency(m.floorGap8)})`;
-  $('stickyFinal').textContent=`Final: ${currency(m.finalPosition)}`;
-  const mentor=$('mentorBox');
-  mentor.classList.remove('status-good-box','status-warn-box','status-bad-box','status-info-box');
-  mentor.classList.add(m.tone==='good'?'status-good-box':m.tone==='warn'?'status-warn-box':'status-bad-box');
-  paint($('cardVerdict'),m.tone==='good'?'status-good':m.tone==='warn'?'status-warn':'status-bad');
-  paint($('cardSafe'),'status-info');
-  paint($('cardPressure'),m.totalPressure>m.income?'status-bad':'status-info');
-  paint($('cardFinal'),m.finalPosition>=250?'status-good':m.finalPosition>=0?'status-warn':'status-bad');
-  paint($('cardFloorNow'),m.floorGapNow<0?'status-bad':m.floorGapNow<3000?'status-warn':'status-good');
-  paint($('cardFloor4'),m.floorGap4<0?'status-bad':m.floorGap4<3000?'status-warn':'status-good');
-  paint($('cardFloor8'),m.floorGap8<0?'status-bad':m.floorGap8<3000?'status-warn':'status-good');
-  paint($('cardFloorStatus'),m.floorStatus==='BELOW'?'status-bad':m.floorStatus==='NEAR'?'status-warn':'status-good');
-  paint($('commandCard'),m.floorGap8<0?'status-bad':m.floorGap8<3000?'status-warn':'status-good');
-  paint($('nextCard'),m.floorGap8<0?'status-bad':m.strategyMode==='survival'?'status-warn':'status-info');
-  paint($('livingCard'),m.living<=500?'status-good':'status-warn');
-  paint($('splurgeCard'),m.splurge===0?'status-good':'status-info');
-  paint($('billsCard'),'status-info');
-  paint($('saveTargetCard'),m.weeklySavingsTarget>900?'status-bad':m.weeklySavingsTarget>700?'status-warn':'status-good');
-  paint($('refinanceCard'),m.refinance==='Strong'?'status-good':m.refinance==='Possible'?'status-warn':'status-info');
-  paint($('sellSignalCard'),m.sell.includes('wipe')?'status-good':m.sell==='Review numbers'?'status-warn':'status-info');
-  paint($('debtSignalCard'),m.debtReady==='Ready'?'status-good':m.debtReady==='Close'?'status-warn':'status-info');
-  paint($('futureSignalCard'),m.futureReady==='Ready'?'status-good':m.futureReady==='Close'?'status-warn':'status-info');
-  paint($('offsetNowCard'),'status-info');
-  paint($('offset4Card'),m.floorGap4<0?'status-bad':m.floorGap4<3000?'status-warn':'status-good');
-  paint($('offset8Card'),m.floorGap8<0?'status-bad':m.floorGap8<3000?'status-warn':'status-good');
-}
-document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',render));
-$('toggleSpendMode').addEventListener('click',()=>{usePasteSpend=!usePasteSpend;render();});
-$('toggleDeep').addEventListener('click',()=>{showDeep=!showDeep;render();});
-$('mode-now').addEventListener('click',()=>{mode='now';render();});
-$('mode-future').addEventListener('click',()=>{mode='future';render();});
-$('strategy-auto').addEventListener('click',()=>{strategyMode='auto';render();});
-$('strategy-survival').addEventListener('click',()=>{strategyMode='survival';render();});
-$('strategy-attack').addEventListener('click',()=>{strategyMode='attack';render();});
-$('addBill').addEventListener('click',()=>{const d=today();d.setDate(d.getDate()+14);addBillRow('', '', formatDate(d));render();});
-addBillRow('Power bill','1433',(()=>{const d=today();d.setDate(d.getDate()+21);return formatDate(d);})());
-render();
-</script>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --card2:#1f2937;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --border:#334155;
+      --green:#10b981;
+      --amber:#f59e0b;
+      --red:#ef4444;
+      --blue:#3b82f6;
+      --white:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:10px;
+      font-family:Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,#0f172a 0%, #111827 100%);
+      color:var(--text);
+    }
+    .wrap{max-width:1200px;margin:0 auto}
+    .hero,.card,.metric,.status-box,details{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+    }
+    .hero,.card,.status-box{padding:14px}
+    .hero{
+      background:linear-gradient(135deg,#1e293b 0%, #0f172a 100%);
+      border-color:#475569;
+      box-shadow:0 14px 34px rgba(0,0,0,.28);
+    }
+    h1,h2,h3{margin:0 0 10px 0}
+    .sub,.small{color:var(--muted);line-height:1.5}
+    .sub{font-size:14px}
+    .small{font-size:12px}
+    .layout{display:grid;grid-template-columns:1fr;gap:12px}
+    .stack{display:grid;gap:12px}
+    .grid-2,.grid-3,.grid-4,.grid-5{display:grid;gap:10px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+    label{display:block}
+    label span{display:block;margin-bottom:6px;color:var(--muted);font-size:13px;font-weight:700}
+    input,select,textarea,button{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:#111827;
+      font-size:15px;
+    }
+    input[readonly]{background:#e5e7eb}
+    textarea{min-height:90px;resize:vertical}
+    .mode-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
+    .mode-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .mode-btn,.soft-btn{
+      background:#f8fafc;
+      color:#111827;
+      border:1px solid #cbd5e1;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 6px 16px rgba(0,0,0,.10);
+      transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .mode-btn:hover,.soft-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(0,0,0,.18);
+    }
+    .mode-btn.active{
+      background:#22c55e;
+      border-color:#22c55e;
+      color:#052e16;
+      box-shadow:0 8px 20px rgba(34,197,94,.28);
+    }
+    .metric{
+      padding:14px;
+      background:#243244;
+      border-color:#475569;
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .metric:hover,.card:hover,details:hover{transform:translateY(-1px)}
+    .metric .label{color:var(--muted);font-size:12px;font-weight:700}
+    .metric .value{margin-top:8px;font-size:24px;font-weight:800;line-height:1.08;word-break:break-word}
+    .metric .note{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.4}
+    .status-box{line-height:1.6}
+    .status-good-box{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.5)}
+    .status-warn-box{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
+    .status-bad-box{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+    .status-info-box{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
+    .status-good{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.5)}
+    .status-warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
+    .status-bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+    .status-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:12px;
+      background:var(--card2);
+      border:1px solid var(--border);
+      margin-bottom:10px
+    }
+    .progress{height:12px;background:#020617;border:1px solid var(--border);border-radius:999px;overflow:hidden;margin-top:8px}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#4ade80)}
+    .bill-row{
+      display:grid;
+      grid-template-columns:1.4fr 1fr 1fr auto;
+      gap:10px;
+      align-items:end;
+      padding:10px;
+      background:var(--card2);
+      border:1px solid var(--border);
+      border-radius:12px;
+      margin-bottom:10px
+    }
+    details{padding:0;overflow:hidden}
+    details > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:16px;
+      font-weight:800;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:#1e293b;
+      color:#f8fafc;
+    }
+    details > summary::-webkit-details-marker{display:none}
+    details .detail-body{padding:0 14px 14px 14px;border-top:1px solid var(--border)}
+    .sticky-mobile{
+      position:sticky;
+      top:8px;
+      z-index:20;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:12px
+    }
+    .sticky-mobile .mini{
+      padding:10px 12px;
+      background:#f8fafc;
+      color:#111827;
+      border:1px solid #cbd5e1;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:700;
+      box-shadow:0 6px 16px rgba(0,0,0,.12);
+    }
+    .pill-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    #cardVerdict{
+      border:2px solid #60a5fa;
+      box-shadow:0 0 0 1px rgba(96,165,250,.35),0 10px 26px rgba(96,165,250,.18);
+    }
+    #cardFinal{
+      border:2px solid #34d399;
+      box-shadow:0 0 0 1px rgba(52,211,153,.35),0 10px 26px rgba(52,211,153,.18);
+    }
+    #commandCard{border:2px solid rgba(52,211,153,.55)}
+    #nextCard{border:2px solid rgba(96,165,250,.55)}
+    @media (min-width:950px){
+      .layout{grid-template-columns:.95fr 1.05fr}
+      .metric .value{font-size:28px}
+      .sticky-mobile{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+    @media (max-width:760px){
+      .grid-2,.grid-3,.grid-4,.grid-5,.bill-row,.mode-row,.mode-row.three,.pill-row,.sticky-mobile{grid-template-columns:1fr}
+      .row{flex-direction:column;align-items:flex-start}
+      body{padding:8px}
+    }
+  </style>
+</head>
 <script>
 (function () {
   const STEP = 0.25;
   const PPOR_DEFAULT = 5.97;
   const IP_DEFAULT = 6.39;
   const WANDINA_URL = 'wandina_dashboard.html';
-
-  function injectStyles() {
-    if (document.getElementById('finance-ui-repair-style')) return;
-
-    const style = document.createElement('style');
-    style.id = 'finance-ui-repair-style';
-    style.textContent = `
-      body{
-        background: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
-      }
-
-      .hero{
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
-        border-color: #475569 !important;
-        box-shadow: 0 14px 34px rgba(0,0,0,0.28) !important;
-      }
-
-      .sticky-mobile .mini{
-        background: #f8fafc !important;
-        color: #111827 !important;
-        border: 1px solid #cbd5e1 !important;
-        font-weight: 700 !important;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
-      }
-
-      .mode-row{
-        gap: 12px !important;
-      }
-
-      .mode-btn,
-      .soft-btn{
-        background: #f8fafc !important;
-        color: #111827 !important;
-        border: 1px solid #cbd5e1 !important;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.10) !important;
-        font-weight: 800 !important;
-      }
-
-      .mode-btn.active{
-        background: #22c55e !important;
-        color: #052e16 !important;
-        border-color: #22c55e !important;
-        box-shadow: 0 8px 20px rgba(34,197,94,0.28) !important;
-      }
-
-      .card,
-      .metric,
-      .status-box,
-      details{
-        box-shadow: 0 10px 24px rgba(0,0,0,0.18) !important;
-      }
-
-      .metric{
-        background: #243244 !important;
-        border-color: #475569 !important;
-      }
-
-      #cardVerdict{
-        border: 2px solid #60a5fa !important;
-        box-shadow: 0 0 0 1px rgba(96,165,250,0.25), 0 10px 24px rgba(96,165,250,0.12) !important;
-      }
-
-      #cardFinal{
-        border: 2px solid #34d399 !important;
-        box-shadow: 0 0 0 1px rgba(52,211,153,0.25), 0 10px 24px rgba(52,211,153,0.12) !important;
-      }
-
-      #commandCard{
-        border: 2px solid rgba(52,211,153,0.55) !important;
-      }
-
-      #nextCard{
-        border: 2px solid rgba(96,165,250,0.55) !important;
-      }
-
-      details > summary{
-        background: #1e293b !important;
-        color: #f8fafc !important;
-      }
-
-      .finance-float-wrap{
-        position: fixed;
-        right: 14px;
-        bottom: 14px;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .finance-float-btn{
-        border: none;
-        border-radius: 14px;
-        padding: 12px 14px;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 800;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.20);
-        cursor: pointer;
-      }
-
-      .finance-rate-row{
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-      }
-
-      .finance-rate-btn{
-        width: 42px;
-        height: 42px;
-        border: none;
-        border-radius: 10px;
-        background: #1f6feb;
-        color: #fff;
-        font-size: 22px;
-        font-weight: 800;
-        cursor: pointer;
-        flex: 0 0 42px;
-      }
-
-      @media (max-width: 760px){
-        .finance-float-wrap{
-          right: 10px;
-          bottom: 10px;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-  }
 
   function round2(n) {
     return Math.round(n * 100) / 100;
@@ -615,6 +199,59 @@ render();
     el.dispatchEvent(new Event('input', { bubbles: true }));
     el.dispatchEvent(new Event('change', { bubbles: true }));
     if (typeof render === 'function') render();
+  }
+
+  function ensureUiStyles() {
+    if (document.getElementById('finance-helper-style')) return;
+
+    const style = document.createElement('style');
+    style.id = 'finance-helper-style';
+    style.textContent = `
+      .finance-float-wrap{
+        position:fixed;
+        right:14px;
+        bottom:14px;
+        z-index:9999;
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+      .finance-float-btn{
+        border:none;
+        border-radius:14px;
+        padding:12px 14px;
+        color:#fff;
+        font-size:14px;
+        font-weight:800;
+        box-shadow:0 10px 25px rgba(0,0,0,0.20);
+        cursor:pointer;
+      }
+      .finance-rate-row{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        margin-top:8px;
+      }
+      .finance-rate-btn{
+        width:42px;
+        height:42px;
+        border:none;
+        border-radius:10px;
+        background:#1f6feb;
+        color:#fff;
+        font-size:22px;
+        font-weight:800;
+        cursor:pointer;
+        flex:0 0 42px;
+      }
+      @media (max-width:760px){
+        .finance-float-wrap{
+          right:10px;
+          bottom:10px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   function attachStepperToInput(inputId, defaultValue) {
@@ -709,7 +346,7 @@ render();
   }
 
   function init() {
-    injectStyles();
+    ensureUiStyles();
     attachStepperToInput('pporRate', PPOR_DEFAULT);
     attachStepperToInput('ipRate', IP_DEFAULT);
     addFloatingButtons();
@@ -718,7 +355,7 @@ render();
 
   window.addEventListener('load', function () {
     init();
-    setTimeout(init, 500);
+    setTimeout(init, 400);
   });
 })();
 </script>
