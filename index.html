@@ -108,272 +108,126 @@ button{
 .progress-fill{
   background:linear-gradient(90deg,#22c55e,#4ade80);
 }
+<style>
+  :root{
+    --bg:#0f172a;
+    --card:#111827;
+    --card2:#1f2937;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --border:#334155;
+    --green:#10b981;
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --blue:#3b82f6;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:10px;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+  .wrap{max-width:1200px;margin:0 auto}
+  .hero,.card,.metric,.status-box,details{background:var(--card);border:1px solid var(--border);border-radius:16px}
+  .hero,.card,.status-box{padding:14px}
+  h1,h2,h3{margin:0 0 10px 0}
+  .sub,.small{color:var(--muted);line-height:1.5}
+  .sub{font-size:14px}
+  .small{font-size:12px}
+  .layout{display:grid;grid-template-columns:1fr;gap:12px}
+  .stack{display:grid;gap:12px}
+  .grid-2,.grid-3,.grid-4,.grid-5{display:grid;gap:10px}
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  label{display:block}
+  label span{display:block;margin-bottom:6px;color:var(--muted);font-size:13px;font-weight:700}
+  input,select,textarea,button{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:#111827;font-size:15px}
+  input[readonly]{background:#e5e7eb}
+  textarea{min-height:90px;resize:vertical}
+  .mode-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+  .mode-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mode-btn,.soft-btn{background:var(--white);font-weight:700;cursor:pointer}
+  .mode-btn.active{background:var(--green);border-color:var(--green);color:#052e16}
+  .metric{padding:14px;background:var(--card2)}
+  .metric .label{color:var(--muted);font-size:12px;font-weight:700}
+  .metric .value{margin-top:8px;font-size:24px;font-weight:800;line-height:1.08;word-break:break-word}
+  .metric .note{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.4}
+  .status-box{line-height:1.6}
+  .status-good-box{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.5)}
+  .status-warn-box{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
+  .status-bad-box{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+  .status-info-box{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
+  .status-good{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.5)}
+  .status-warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
+  .status-bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+  .status-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
+  .row{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--card2);border:1px solid var(--border);margin-bottom:10px}
+  .progress{height:12px;background:#020617;border:1px solid var(--border);border-radius:999px;overflow:hidden;margin-top:8px}
+  .progress-fill{height:100%;width:0%;background:var(--green)}
+  .bill-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;align-items:end;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
+  details{padding:0;overflow:hidden}
+  details > summary{list-style:none;cursor:pointer;padding:16px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+  details > summary::-webkit-details-marker{display:none}
+  details .detail-body{padding:0 14px 14px 14px;border-top:1px solid var(--border)}
+  .sticky-mobile{position:sticky;top:8px;z-index:20;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .sticky-mobile .mini{padding:10px 12px;background:rgba(15,23,42,.97);border:1px solid var(--border);border-radius:12px;font-size:12px}
+  .pill-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  @media (min-width:950px){
+    .layout{grid-template-columns:.95fr 1.05fr}
+    .metric .value{font-size:28px}
+    .sticky-mobile{grid-template-columns:repeat(3,minmax(0,1fr))}
+  }
+  @media (max-width:760px){
+    .grid-2,.grid-3,.grid-4,.grid-5,.bill-row,.mode-row,.mode-row.three,.pill-row,.sticky-mobile{grid-template-columns:1fr}
+    .row{flex-direction:column;align-items:flex-start}
+    body{padding:8px}
+  }
+      body{
+    background:linear-gradient(180deg,#0f172a 0%, #020617 100%);
+  }
+
+  .hero{
+    box-shadow:0 14px 34px rgba(0,0,0,0.28);
+  }
+
+  .card,.metric,.status-box,details{
+    box-shadow:0 8px 22px rgba(0,0,0,0.18);
+  }
+
+  #cardVerdict{
+    border-color:rgba(59,130,246,.7);
+    box-shadow:0 0 0 1px rgba(59,130,246,.35), 0 10px 26px rgba(59,130,246,.18);
+  }
+
+  #cardFinal{
+    border-color:rgba(16,185,129,.7);
+    box-shadow:0 0 0 1px rgba(16,185,129,.35), 0 10px 26px rgba(16,185,129,.18);
+  }
+
+  #commandCard{
+    border-color:rgba(16,185,129,.55);
+  }
+
+  #nextCard{
+    border-color:rgba(59,130,246,.55);
+  }
+
+  .metric{
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+
+  .metric:hover,.card:hover,details:hover{
+    transform:translateY(-1px);
+  }
+
+  .mode-btn,.soft-btn{
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+
+  .mode-btn:hover,.soft-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 8px 18px rgba(0,0,0,.18);
+  }
 </style>
-</head>
-<body>
-<div class="wrap">
-  <div class="sticky-mobile">
-    <div class="mini" id="stickyVerdict">Verdict: -</div>
-    <div class="mini" id="stickyFloor">Floor: -</div>
-    <div class="mini" id="stickyFinal">Final: -</div>
-  </div>
-
-  <div class="hero">
-    <h1>Finance Control</h1>
-    <div class="sub">Mobile-first full system. Home first, quick updates first, everything else collapsible.</div>
-    <div class="mode-row">
-      <button id="mode-now" class="mode-btn active" type="button">Current phase</button>
-      <button id="mode-future" class="mode-btn" type="button">2027 0.8 mode</button>
-    </div>
-    <div class="mode-row three">
-      <button id="strategy-auto" class="mode-btn active" type="button">Auto</button>
-      <button id="strategy-survival" class="mode-btn" type="button">Survival</button>
-      <button id="strategy-attack" class="mode-btn" type="button">Attack</button>
-    </div>
-  </div>
-
-  <div class="layout">
-    <div class="stack">
-<div class="card" style="border:2px solid #3b82f6;">
-  <h2>Control Centre</h2>
-        <div class="grid-2" style="gap:14px;">
-          <div class="metric" id="cardVerdict"><div class="label">Verdict</div><div class="value" id="verdictVal"></div><div class="note" id="verdictNote"></div></div>
-          <div class="metric" id="cardFloorStatus"><div class="label">Floor status</div><div class="value" id="floorStatusVal"></div><div class="note">SAFE / NEAR / BELOW</div></div>
-          <div class="metric" id="cardSafe"><div class="label">Safe spend</div><div class="value" id="safeSpendVal"></div><div class="note">Maximum weekly spending</div></div>
-          <div class="metric" id="cardFinal"><div class="label">Final position</div><div class="value" id="finalVal"></div><div class="note">After all current settings</div></div>
-        </div>
-      </div>
-
-      <div class="card" id="commandCard" style="border:2px solid #22c55e;">
-        <h2>Weekly command</h2>
-        <div class="status-box status-info-box" id="commandOutputBox">
-          <div id="commandOutput"></div>
-        </div>
-      </div>
-
-      <div class="card status-info" id="nextCard">
-        <h2>What changes this week</h2>
-        <div class="status-box status-info-box">
-          <h3 id="nextMoveTitle" style="margin-top:0;"></h3>
-          <div id="nextMoveBody"></div>
-        </div>
-      </div>
-
-      <div class="card control">
-        <h2>Quick update</h2>
-        <div class="small">These are the main inputs you should touch on your phone.</div>
-        <div class="grid-2" style="margin-top:10px;">
-          <label><span>Current offset</span><input id="offset" value="30000"></label>
-          <label><span>Current savings</span><input id="savings" value="2600"></label>
-          <label><span>Offset floor / danger line</span><input id="offsetFloor" value="30000"></label>
-          <label><span>Weeks to 24 July</span><input id="weeksToTarget" readonly></label>
-          <label><span>Current weekly income</span><input id="incomeNow" value="3250"></label>
-          <label><span>2027 weekly income</span><input id="incomeFuture" value="2600"></label>
-        </div>
-        <div class="grid-2" style="margin-top:10px;">
-          <label><span>Spend input mode</span><button id="toggleSpendMode" class="soft-btn" type="button">Single weekly total enabled</button></label>
-          <label><span>View depth</span><button id="toggleDeep" class="soft-btn" type="button">Simple mode visible</button></label>
-        </div>
-        <div id="spendManualWrap" style="margin-top:10px;">
-          <label><span>Total weekly spending</span><input id="spend" value="600"></label>
-        </div>
-        <div id="spendPasteWrap" class="hidden" style="margin-top:10px;">
-          <label><span>Paste spending entries</span><textarea id="spendEntries"></textarea></label>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>At a glance</h2>
-        <div class="grid-2">
-          <div class="metric" id="cardFloorNow"><div class="label">Floor gap now</div><div class="value" id="floorNowVal"></div><div class="note">Current offset minus floor</div></div>
-          <div class="metric" id="cardFloor4"><div class="label">Floor gap 4 weeks</div><div class="value" id="floor4Val"></div><div class="note">4-week offset minus floor</div></div>
-          <div class="metric" id="cardFloor8"><div class="label">Floor gap 8 weeks</div><div class="value" id="floor8Val"></div><div class="note">8-week offset minus floor</div></div>
-          <div class="metric" id="cardPressure"><div class="label">Total pressure</div><div class="value" id="pressureVal"></div><div class="note">Weekly non-negotiable load</div></div>
-        </div>
-      </div>
-
-      <div class="status-box" id="mentorBox">
-        <h3 id="mentorTitle"></h3>
-        <div id="mentorBody"></div>
-      </div>
-      <div class="card status-info" id="strategyCard">
-        <h2>Strategy summary</h2>
-        <div class="small" id="strategySummary"></div>
-      </div>
-
-
-      <details open>
-        <summary>Suggested weekly transfers <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="grid-2" style="margin-top:12px;">
-            <div class="metric" id="livingCard"><div class="label">Living</div><div class="value" id="livingVal"></div><div class="note">Adjustable control lever</div></div>
-            <div class="metric" id="splurgeCard"><div class="label">Splurge</div><div class="value" id="splurgeVal"></div><div class="note">Keep tight</div></div>
-            <div class="metric" id="billsCard"><div class="label">Bills bucket</div><div class="value" id="billsVal"></div><div class="note">Do not starve this</div></div>
-            <div class="metric" id="saveTargetCard"><div class="label">Savings target</div><div class="value" id="saveTargetVal"></div><div class="note">Locked until 24 July</div></div>
-          </div>
-        </div>
-      </details>
-
-      <details>
-        <summary>Upcoming bills <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="small" style="margin-top:12px;">Each bill gets its own row. Weekly pressure is calculated from the due date automatically.</div>
-          <div id="billsContainer" style="margin-top:12px;"></div>
-          <button id="addBill" class="soft-btn" type="button">Add upcoming bill</button>
-        </div>
-      </details>
-
-      <details>
-        <summary>August obligations <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="grid-2" style="margin-top:12px;">
-            <div class="metric"><div class="label">Fence</div><div class="value" id="fenceVal"></div><div class="note">Locked target</div></div>
-            <div class="metric"><div class="label">Cruise remaining</div><div class="value" id="cruiseVal"></div><div class="note">Locked target</div></div>
-            <div class="metric"><div class="label">Current savings</div><div class="value" id="savingsVal"></div><div class="note">Starting point</div></div>
-            <div class="metric"><div class="label">Required weekly</div><div class="value" id="weeklyReqVal"></div><div class="note">Until 24 July</div></div>
-          </div>
-          <div class="small" style="margin-top:12px;">Current funding progress</div>
-          <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-          <div class="small" id="progressText" style="margin-top:8px;"></div>
-        </div>
-      </details>
-
-      <details>
-        <summary>PPOR engine <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="grid-2" style="margin-top:12px;">
-            <label><span>PPOR balance</span><input id="pporBalanceCalc" value="560540"></label>
-            <label><span>PPOR years remaining</span><input id="pporYearsRemaining" value="28.5"></label>
-            <label><span>PPOR interest rate %</span><input id="pporRate" value="5.97"></label>
-            <label><span>PPOR weekly repayment</span><input id="pporWeeklyCalc" readonly></label>
-          </div>
-        </div>
-      </details>
-
-      <details>
-        <summary>IP build logic <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="grid-2" style="margin-top:12px;">
-            <label><span>Build stage</span>
-              <select id="buildStage">
-                <option value="plate">Plate height</option>
-                <option value="roof">Roof cover</option>
-                <option value="lockup">Lock up</option>
-                <option value="tiling">Tiling</option>
-                <option value="practical">Practical completion</option>
-                <option value="complete">Complete / rented</option>
-              </select>
-            </label>
-            <label><span>IP / Build interest rate %</span><input id="ipRate" value="6.39"></label>
-            <label><span>Expected weekly rent when complete</span><input id="rentWeekly" value="700"></label>
-            <label><span>2027 TRS days per week</span><input id="futureTRSDays" value="0"></label>
-            <label><span>TRS pay per day</span><input id="trsRate" value="450"></label>
-          </div>
-          <div class="grid-2" style="margin-top:12px;">
-            <div class="metric"><div class="label">Total planned IP debt</div><div class="value" id="ipDebtTotalVal"></div><div class="note">Equity release + proposed lending</div></div>
-            <div class="metric"><div class="label">Active debt at stage</div><div class="value" id="activeDebtVal"></div><div class="note" id="activeDebtNote"></div></div>
-            <div class="metric"><div class="label">Build interest / week</div><div class="value" id="ipInterestVal"></div><div class="note">Calculated from active drawn debt</div></div>
-            <div class="metric"><div class="label">Post-completion weekly net</div><div class="value" id="ipPostNetVal"></div><div class="note">Interest less expected rent</div></div>
-          </div>
-        </div>
-      </details>
-
-      <details>
-        <summary>Strategy and valuations <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="small" style="margin-top:12px;">Manual overrides are what the engine uses for decisions.</div>
-          <div class="grid-2" style="margin-top:12px;">
-            <label><span>PPOR live market reference</span><input id="pporLiveRef" value="960000"></label>
-            <label><span>PPOR manual override</span><input id="pporValue" value="1400000"></label>
-            <label><span>Wandina live market reference</span><input id="ipLiveRef" value="715000"></label>
-            <label><span>Wandina manual override</span><input id="ipValue" value="620000"></label>
-            <label><span>PPOR loan</span><input id="pporLoan" value="560540"></label>
-            <label><span>Debt recycle split target</span><input id="debtRecycleTarget" value="100000"></label>
-          </div>
-          <div class="grid-3" style="margin-top:12px;">
-            <label><span>IP low</span><input id="ipLow" value="680000"></label>
-            <label><span>IP mid</span><input id="ipMid" value="720000"></label>
-            <label><span>IP high</span><input id="ipHigh" value="800000"></label>
-            <label><span>Sell cost %</span><input id="sellCostPct" value="2.5"></label>
-            <label><span>Sale legal / discharge costs</span><input id="saleLegalCosts" value="4000"></label>
-            <label><span>Other sale costs</span><input id="saleOtherCosts" value="0"></label>
-          </div>
-        </div>
-      </details>
-
-      <details>
-        <summary>Decision signals <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="grid-2" style="margin-top:12px;">
-            <div class="metric" id="refinanceCard"><div class="label">Refinance readiness</div><div class="value" id="refinanceVal"></div></div>
-            <div class="metric" id="sellSignalCard"><div class="label">Sell signal</div><div class="value" id="sellVal"></div></div>
-            <div class="metric" id="debtSignalCard"><div class="label">Debt recycle readiness</div><div class="value" id="debtVal"></div></div>
-            <div class="metric" id="futureSignalCard"><div class="label">2027 readiness</div><div class="value" id="futureReadyVal"></div></div>
-          </div>
-          <div class="status-box status-info-box" style="margin-top:12px;" id="equityAction"></div>
-        </div>
-      </details>
-
-      <details>
-        <summary>Pressure stack <span>▼</span></summary>
-        <div class="detail-body">
-          <div style="margin-top:12px;">
-            <div class="row"><span>PPOR weekly repayment</span><strong id="stackPPOR"></strong></div>
-            <div class="row"><span>Bills bucket</span><strong id="stackBills"></strong></div>
-            <div class="row"><span>August savings target</span><strong id="stackSavings"></strong></div>
-            <div class="row"><span>Upcoming bills</span><strong id="stackUpcoming"></strong></div>
-            <div class="row"><span>IP current pressure</span><strong id="stackIP"></strong></div>
-            <div class="row"><span>Offset floor</span><strong id="stackFloor"></strong></div>
-            <div class="row"><span><strong>Total weekly pressure</strong></span><strong id="stackTotal"></strong></div>
-          </div>
-        </div>
-      </details>
-
-      <details>
-        <summary>Offset trend <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="grid-2" style="margin-top:12px;">
-            <div class="metric" id="offsetNowCard"><div class="label">Current offset</div><div class="value" id="offsetNowVal"></div><div class="note">Starting point</div></div>
-            <div class="metric" id="offset4Card"><div class="label">4-week projection</div><div class="value" id="offset4Val"></div><div class="note">At current settings</div></div>
-            <div class="metric" id="offset8Card"><div class="label">8-week projection</div><div class="value" id="offset8Val"></div><div class="note">At current settings</div></div>
-          </div>
-        </div>
-      </details>
-
-      <details id="deepArea" class="hidden">
-        <summary>Deep analysis <span>▼</span></summary>
-        <div class="detail-body">
-          <div class="small" style="margin-top:12px;">Deep analysis is hidden by default on mobile.</div>
-          <div class="grid-2" style="margin-top:12px;">
-            <div class="metric"><div class="label">PPOR equity</div><div class="value" id="pporEquityVal"></div><div class="note" id="pporEquityNote"></div></div>
-            <div class="metric"><div class="label">PPOR usable equity</div><div class="value" id="pporUsableVal"></div><div class="note">80% rule</div></div>
-            <div class="metric"><div class="label">IP equity</div><div class="value" id="ipEquityVal"></div><div class="note" id="ipEquityNote"></div></div>
-            <div class="metric"><div class="label">IP usable equity</div><div class="value" id="ipUsableVal"></div><div class="note">80% rule</div></div>
-            <div class="metric"><div class="label">Net low</div><div class="value" id="netLowVal"></div></div>
-            <div class="metric"><div class="label">Net mid</div><div class="value" id="netMidVal"></div></div>
-            <div class="metric"><div class="label">Net high</div><div class="value" id="netHighVal"></div></div>
-            <div class="metric"><div class="label">Net price to wipe PPOR</div><div class="value" id="wipeNeedVal"></div></div>
-          </div>
-        </div>
-      </details>
-    </div>
-
-    <div class="stack">
-      <div class="card">
-        <h2>Desktop side summary</h2>
-        <div class="small">Useful on larger screens. On phones, the home and sticky cards do the heavy lifting.</div>
-        <div class="grid-2" style="margin-top:12px;">
-          <div class="metric"><div class="label">Mode</div><div class="value" id="sideModeVal"></div><div class="note">Current strategy mode</div></div>
-          <div class="metric"><div class="label">TRS weekly</div><div class="value" id="trsWeeklyVal"></div><div class="note">Only in 2027 mode</div></div>
-          <div class="metric"><div class="label">Income used</div><div class="value" id="incomeUsedVal"></div><div class="note">After phase logic</div></div>
-          <div class="metric"><div class="label">Bills weekly</div><div class="value" id="upcomingWeeklyVal"></div><div class="note">From due dates</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
 const CONFIG={FENCE_COST:4644,CRUISE_REMAINING:11600,EQUITY_RELEASE:215000,PROPOSED_LENDING:373000,PLANNED_TOTAL_IP_DEBT:588000,BILLS_BUCKET:150,LIVE_PPOR_REFERENCE:960000,LIVE_IP_REFERENCE:715000};
 let mode='now',strategyMode='auto',showDeep=false,usePasteSpend=false,billCounter=1;
 const $=id=>document.getElementById(id);
