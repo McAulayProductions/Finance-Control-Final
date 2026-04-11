@@ -476,6 +476,136 @@ render();
   const IP_DEFAULT = 6.39;
   const WANDINA_URL = 'wandina_dashboard.html';
 
+  function injectStyles() {
+    if (document.getElementById('finance-ui-repair-style')) return;
+
+    const style = document.createElement('style');
+    style.id = 'finance-ui-repair-style';
+    style.textContent = `
+      body{
+        background: linear-gradient(180deg, #0f172a 0%, #111827 100%) !important;
+      }
+
+      .hero{
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+        border-color: #475569 !important;
+        box-shadow: 0 14px 34px rgba(0,0,0,0.28) !important;
+      }
+
+      .sticky-mobile .mini{
+        background: #f8fafc !important;
+        color: #111827 !important;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: 700 !important;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12) !important;
+      }
+
+      .mode-row{
+        gap: 12px !important;
+      }
+
+      .mode-btn,
+      .soft-btn{
+        background: #f8fafc !important;
+        color: #111827 !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.10) !important;
+        font-weight: 800 !important;
+      }
+
+      .mode-btn.active{
+        background: #22c55e !important;
+        color: #052e16 !important;
+        border-color: #22c55e !important;
+        box-shadow: 0 8px 20px rgba(34,197,94,0.28) !important;
+      }
+
+      .card,
+      .metric,
+      .status-box,
+      details{
+        box-shadow: 0 10px 24px rgba(0,0,0,0.18) !important;
+      }
+
+      .metric{
+        background: #243244 !important;
+        border-color: #475569 !important;
+      }
+
+      #cardVerdict{
+        border: 2px solid #60a5fa !important;
+        box-shadow: 0 0 0 1px rgba(96,165,250,0.25), 0 10px 24px rgba(96,165,250,0.12) !important;
+      }
+
+      #cardFinal{
+        border: 2px solid #34d399 !important;
+        box-shadow: 0 0 0 1px rgba(52,211,153,0.25), 0 10px 24px rgba(52,211,153,0.12) !important;
+      }
+
+      #commandCard{
+        border: 2px solid rgba(52,211,153,0.55) !important;
+      }
+
+      #nextCard{
+        border: 2px solid rgba(96,165,250,0.55) !important;
+      }
+
+      details > summary{
+        background: #1e293b !important;
+        color: #f8fafc !important;
+      }
+
+      .finance-float-wrap{
+        position: fixed;
+        right: 14px;
+        bottom: 14px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .finance-float-btn{
+        border: none;
+        border-radius: 14px;
+        padding: 12px 14px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 800;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.20);
+        cursor: pointer;
+      }
+
+      .finance-rate-row{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .finance-rate-btn{
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 10px;
+        background: #1f6feb;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 800;
+        cursor: pointer;
+        flex: 0 0 42px;
+      }
+
+      @media (max-width: 760px){
+        .finance-float-wrap{
+          right: 10px;
+          bottom: 10px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function round2(n) {
     return Math.round(n * 100) / 100;
   }
@@ -485,31 +615,6 @@ render();
     el.dispatchEvent(new Event('input', { bubbles: true }));
     el.dispatchEvent(new Event('change', { bubbles: true }));
     if (typeof render === 'function') render();
-  }
-
-  function styleSmallButton(btn, bg) {
-    btn.style.width = '42px';
-    btn.style.height = '42px';
-    btn.style.border = 'none';
-    btn.style.borderRadius = '10px';
-    btn.style.background = bg;
-    btn.style.color = '#fff';
-    btn.style.fontSize = '22px';
-    btn.style.fontWeight = '800';
-    btn.style.cursor = 'pointer';
-    btn.style.flex = '0 0 42px';
-  }
-
-  function styleFloatingButton(btn, bg) {
-    btn.style.border = 'none';
-    btn.style.borderRadius = '14px';
-    btn.style.padding = '12px 14px';
-    btn.style.background = bg;
-    btn.style.color = '#fff';
-    btn.style.fontSize = '14px';
-    btn.style.fontWeight = '800';
-    btn.style.boxShadow = '0 10px 25px rgba(0,0,0,0.20)';
-    btn.style.cursor = 'pointer';
   }
 
   function attachStepperToInput(inputId, defaultValue) {
@@ -525,20 +630,17 @@ render();
     }
 
     const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.gap = '8px';
-    row.style.marginTop = '8px';
+    row.className = 'finance-rate-row';
 
     const minus = document.createElement('button');
     minus.type = 'button';
+    minus.className = 'finance-rate-btn';
     minus.textContent = '−';
-    styleSmallButton(minus, '#1f6feb');
 
     const plus = document.createElement('button');
     plus.type = 'button';
+    plus.className = 'finance-rate-btn';
     plus.textContent = '+';
-    styleSmallButton(plus, '#1f6feb');
 
     input.style.flex = '1';
     input.style.minWidth = '0';
@@ -581,26 +683,22 @@ render();
 
     const wrap = document.createElement('div');
     wrap.id = 'financeFloatingTools';
-    wrap.style.position = 'fixed';
-    wrap.style.right = '14px';
-    wrap.style.bottom = '14px';
-    wrap.style.zIndex = '9999';
-    wrap.style.display = 'flex';
-    wrap.style.flexDirection = 'column';
-    wrap.style.gap = '10px';
+    wrap.className = 'finance-float-wrap';
 
     const wandinaBtn = document.createElement('button');
     wandinaBtn.type = 'button';
+    wandinaBtn.className = 'finance-float-btn';
+    wandinaBtn.style.background = '#111827';
     wandinaBtn.textContent = 'Wandina';
-    styleFloatingButton(wandinaBtn, '#111827');
     wandinaBtn.onclick = function () {
       window.open(WANDINA_URL, '_blank');
     };
 
     const topBtn = document.createElement('button');
     topBtn.type = 'button';
+    topBtn.className = 'finance-float-btn';
+    topBtn.style.background = '#334155';
     topBtn.textContent = 'Top';
-    styleFloatingButton(topBtn, '#334155');
     topBtn.onclick = function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -611,6 +709,7 @@ render();
   }
 
   function init() {
+    injectStyles();
     attachStepperToInput('pporRate', PPOR_DEFAULT);
     attachStepperToInput('ipRate', IP_DEFAULT);
     addFloatingButtons();
@@ -619,9 +718,7 @@ render();
 
   window.addEventListener('load', function () {
     init();
-    setTimeout(init, 600);
+    setTimeout(init, 500);
   });
 })();
 </script>
-</body>
-</html>
