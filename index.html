@@ -1193,35 +1193,13 @@ render();
       decisionCard.classList.add(decision === 'SELL' ? 'wandina-accent-sell' : decision === 'WATCH' ? 'wandina-accent-warn' : 'wandina-accent-good');
     }
 
-    $('wd2DecisionPill').className = \`wandina-pill \${pill}\`;
-    $('wd2DecisionPill').textContent = \`Hybrid mode: \${decision}\`;
-    $('wd2DecisionTitle').textContent = decision;
-    $('wd2DecisionNote').textContent = note;
-
-    $('wd2PporBase').textContent = formatYears(baseWeeks);
-    $('wd2PporSell').textContent = formatYears(sellWeeks);
-    $('wd2PporSaved').textContent = Number.isFinite(savedWeeks) ? \`\${yearsSaved.toFixed(1)} years\` : '—';
-    $('wd2InterestSaved').textContent = currency(interestSaved);
-
-    $('wd2SalePrice').textContent = currency(salePrice);
-    $('wd2NetAfterCosts').textContent = currency(grossAfterCosts - plannedDebt);
-    $('wd2EstimatedCgt').textContent = currency(estimatedCgt);
-    $('wd2NetToOffset').textContent = currency(netToOffset);
-
-    $('wd2GrossWeeklyDrag').textContent = currency(grossWeeklyDrag);
-    $('wd2PaygWeekly').textContent = currency(paygWeekly);
-    $('wd2AdjWeeklyDrag').textContent = currency(adjustedWeeklyDrag);
-    $('wd2GuaranteeWeeks').textContent = guaranteeWeeks > 0 ? \`\${guaranteeWeeks} weeks\` : 'Expired';
-
-    $('wd2OffsetBase').textContent = currency(current8);
-    $('wd2Offset100').textContent = currency(offset100);
-    $('wd2Offset300').textContent = currency(offset300);
-    $('wd2OffsetSell').textContent = currency(offsetSell);
-
-    $('wd2HeldDays').textContent = contractDate ? \`\${heldDays} days\` : 'Set date';
-    $('wd2DiscountStatus').textContent = discountEligible ? '50% discount eligible' : 'No discount yet';
-    $('wd2DaysToDiscount').textContent = discountEligible ? 'Ready now' : \`\${daysToDiscount} days\`;
-    $('wd2DiscountBar').style.width = \`\${clamp((heldDays/365)*100, 0, 100)}%\`;
+$('wd2DecisionPill').className = 'wandina-pill ' + pill;
+$('wd2DecisionPill').textContent = 'Hybrid mode: ' + decision;
+$('wd2PporSaved').textContent = Number.isFinite(savedWeeks) ? (yearsSaved.toFixed(1) + ' years') : '—';
+$('wd2GuaranteeWeeks').textContent = guaranteeWeeks > 0 ? (guaranteeWeeks + ' weeks') : 'Expired';
+$('wd2HeldDays').textContent = contractDate ? (heldDays + ' days') : 'Set date';
+$('wd2DaysToDiscount').textContent = discountEligible ? 'Ready now' : (daysToDiscount + ' days');
+$('wd2DiscountBar').style.width = clamp((heldDays/365)*100, 0, 100) + '%';
   }
 
   function bindInputs(){
