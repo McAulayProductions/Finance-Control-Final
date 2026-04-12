@@ -1128,7 +1128,8 @@ render();
     const high = num($('ipHigh')?.value);
     const scenario = getSaleScenario();
     const salePrice = scenario === 'low' ? low : scenario === 'high' ? high : mid;
-
+    const saleSourceLabel = scenario === 'low' ? 'IP low' : scenario === 'high' ? 'IP high' : 'IP mid';
+    
     const taxRate = num($('wd2TaxRate')?.value) / 100 || 0.39;
     const depreciation = num($('wd2Depreciation')?.value) || 10000;
     const paygCapture = (num($('wd2PaygCapture')?.value) || 100) / 100;
