@@ -1054,13 +1054,14 @@ render();
             <div class="wandina-row"><span>PPOR interest saved</span><strong id="wd2InterestSaved">—</strong></div>
           </div>
 
-          <div class="wandina-card">
-            <h3>After-tax sale outcome</h3>
-            <div class="wandina-row"><span>Sale price used</span><strong id="wd2SalePrice">—</strong></div>
-            <div class="wandina-row"><span>Net after costs</span><strong id="wd2NetAfterCosts">—</strong></div>
-            <div class="wandina-row"><span>Estimated CGT</span><strong id="wd2EstimatedCgt">—</strong></div>
-            <div class="wandina-row"><span>Net to offset</span><strong id="wd2NetToOffset">—</strong></div>
-          </div>
+         <div class="wandina-card">
+  <h3>After-tax sale outcome</h3>
+  <div class="wandina-row"><span>Sale source</span><strong id="wd2SaleSource">—</strong></div>
+  <div class="wandina-row"><span>Sale price used</span><strong id="wd2SalePriceUsed">—</strong></div>
+  <div class="wandina-row"><span>Net after costs</span><strong id="wd2NetAfterCosts">—</strong></div>
+  <div class="wandina-row"><span>Estimated CGT</span><strong id="wd2EstimatedCgt">—</strong></div>
+  <div class="wandina-row"><span>Net to offset</span><strong id="wd2NetToOffset">—</strong></div>
+</div>
 
           <div class="wandina-card">
             <h3>Weekly holding reality</h3>
@@ -1211,6 +1212,26 @@ $('wd2GuaranteeWeeks').textContent = guaranteeWeeks > 0 ? (guaranteeWeeks + ' we
 $('wd2HeldDays').textContent = contractDate ? (heldDays + ' days') : 'Set date';
 $('wd2DaysToDiscount').textContent = discountEligible ? 'Ready now' : (daysToDiscount + ' days');
 $('wd2DiscountBar').style.width = clamp((heldDays/365)*100, 0, 100) + '%';
+// --- Wandina usability fix (forced output) ---
+try {
+  const scenario = $('wd2Scenario')?.value || 'mid';
+  const low = num($('ipLow')?.value);
+  const mid = num($('ipMid')?.value);
+  const high = num($('ipHigh')?.value);
+
+  const salePrice = scenario === 'low' ? low : scenario === 'high' ? high : mid;
+  const saleSourceLabel = scenario === 'low' ? 'IP low' : scenario === 'high' ? 'IP high' : 'IP mid';
+
+  if ($('wd2SaleSource')) {
+    $('wd2SaleSource').textContent = saleSourceLabel;
+  }
+
+  if ($('wd2SalePriceUsed')) {
+    $('wd2SalePriceUsed').textContent = currency(salePrice);
+  }
+} catch(e) {
+  console.log('Wandina usability fix error:', e);
+}
   }
 
   function bindInputs(){
