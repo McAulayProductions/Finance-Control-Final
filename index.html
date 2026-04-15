@@ -790,10 +790,43 @@ render();
     if (typeof render === 'function') render();
   }
 
-  window.addEventListener('load', function () {
-    init();
-    setTimeout(init, 400);
-  });
+  // Force Wandina to attach after main app renders
+(function attachWandinaAfterRender(){
+  if (typeof render === 'function') {
+    const originalRender = render;
+
+    window.render = function () {
+      const result = originalRender.apply(this, arguments);
+
+      try {
+        ensureStyles();
+        ensureSection();
+        bindInputs();
+        updateEngine();
+      } catch (e) {
+        console.log('Wandina attach error:', e);
+      }
+
+      return result;
+    };
+
+    // run once immediately as well
+    setTimeout(() => {
+      try {
+        ensureStyles();
+        ensureSection();
+        bindInputs();
+        updateEngine();
+      } catch (e) {
+        console.log('Wandina initial attach error:', e);
+      }
+    }, 300);
+
+  } else {
+    // fallback if render doesn't exist yet
+    setTimeout(attachWandinaAfterRender, 200);
+  }
+})();
 })();
 </script>
 <script>
