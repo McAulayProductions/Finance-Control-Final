@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,8 +168,7 @@ let mode='now',strategyMode='auto',showDeep=false,usePasteSpend=false,billCounte
 const $=id=>document.getElementById(id);
 const currencyFmt=n=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(n)?n:0);
 const num=v=>{const n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return Number.isFinite(n)?n:0;};
-const parseSpendEntries=text=>text.split(/
-|,|;/).map(x=>x.trim()).filter(Boolean).map(num).filter(n=>n>0);
+const parseSpendEntries=text=>text.split(/\\n|,|;/).map(x=>x.trim()).filter(Boolean).map(num).filter(n=>n>0);
 const today=()=>new Date();
 const formatDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const currency=currencyFmt;
