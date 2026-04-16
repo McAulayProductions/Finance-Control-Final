@@ -294,50 +294,9 @@ function updateWandina(){
   const baseInterest=estimatePporInterest(baseEffectivePpor,pporRate,pporWeekly,baseWeeks), sellInterest=estimatePporInterest(sellEffectivePpor,pporRate,pporWeekly,sellWeeks), interestSaved=Math.max(0,baseInterest-sellInterest);
   const fullIpInterestAnnual=plannedDebt*(ipRate/100), grossWeeklyDrag=(fullIpInterestAnnual+annualHoldingCosts-(rentWeekly*52))/52, totalDeductionEstimate=Math.max(0,fullIpInterestAnnual+annualHoldingCosts-(rentWeekly*52)+depreciation), annualTaxBenefit=totalDeductionEstimate*taxRate, paygWeekly=(annualTaxBenefit*paygCapture)/52, adjustedWeeklyDrag=grossWeeklyDrag-paygWeekly;
   const current8=offset+(num($('finalVal')?.textContent)||0)*8, offset100=current8+100*8, offset300=current8+300*8, offsetSell=offset+netToOffset;
-let decision='HOLD';
-let pill='hold';
-let note='Hold. Asset is still performing efficiently.';
-let decisionBasis='Default hold';
-
-// Trigger A: strong financial outcome
-if(netToOffset>=120000 && yearsSaved>=3 && discountEligible){
-  decision='SELL';
-  pill='sell';
-  note='Strong financial outcome with CGT discount.';
-  decisionBasis='Trigger A: strong net + years saved';
-}
-
-// Trigger B: efficiency exit, but stricter
-else if((netToOffset / Math.max(1.5, heldDays/365)) >= 40000 && yearsSaved>=3 && discountEligible){
-  decision='SELL';
-  pill='sell';
-  note='Capital has performed efficiently and redeployment is justified.';
-  decisionBasis='Trigger B: stricter efficiency';
-}
-
-// Trigger C: timing window
-else if(!discountEligible && daysToDiscount<=60 && netToOffset>=100000){
-  decision='WATCH';
-  pill='watch';
-  note='Close to CGT discount. Waiting improves outcome.';
-  decisionBasis='Trigger C: timing window';
-}
-
-// Trigger D: deterioration risk
-else if(adjustedWeeklyDrag>150 && guaranteeWeeks<=10){
-  decision='WATCH';
-  pill='watch';
-  note='Holding conditions deteriorating. Monitor closely.';
-  decisionBasis='Trigger D: drag risk';
-}
-
-// Trigger E: near-sell zone
-else if(netToOffset>=80000 && yearsSaved>=2){
-  decision='WATCH';
-  pill='watch';
-  note='Close to a meaningful sell zone, but not compelling enough yet.';
-  decisionBasis='Trigger E: near-sell zone';
-}
+  let decision='HOLD', pill='hold', note='Hold. The after-tax sale outcome is not yet strong enough or does not accelerate the PPOR enough to justify exit.', decisionBasis='Default hold';
+  if(netToOffset>=120000&&yearsSaved>=yearsSavedThreshold&&discountEligible){decision='SELL'; pill='sell'; note='Strong after-tax proceeds, strong PPOR acceleration, and the CGT discount is available.'; decisionBasis='Strong net proceeds + years saved + CGT discount';}
+  else if((netToOffset>=80000&&yearsSaved>=Math.max(2,yearsSavedThreshold-1))||(!discountEligible&&daysToDiscount<=90)||(guaranteeWeeks<=12&&adjustedWeeklyDrag>150)){decision='WATCH'; pill='watch'; note=!discountEligible?'Close to the 12-month CGT threshold. Waiting may materially improve the after-tax outcome.':'Approaching a meaningful decision zone. Keep tracking valuation, PPOR years saved, and post-tax proceeds.'; decisionBasis='Near threshold / near CGT discount / weakening hold economics';}
   const decisionCard=$('wd2DecisionCard'); if(decisionCard){decisionCard.classList.remove('wandina-accent-good','wandina-accent-warn','wandina-accent-sell'); decisionCard.classList.add(decision==='SELL'?'wandina-accent-sell':decision==='WATCH'?'wandina-accent-warn':'wandina-accent-good');}
   $('wd2DecisionPill').className='wandina-pill '+pill; $('wd2DecisionPill').textContent='Hybrid mode: '+decision; $('wd2DecisionTitle').textContent=decision; $('wd2DecisionNote').textContent=note;
   $('wd2PporBase').textContent=formatYears(baseWeeks); $('wd2PporSell').textContent=formatYears(sellWeeks); $('wd2PporSaved').textContent=Number.isFinite(savedWeeks)?(yearsSaved.toFixed(1)+' years'):'—'; $('wd2InterestSaved').textContent=currency(interestSaved);
