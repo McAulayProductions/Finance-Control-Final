@@ -118,16 +118,18 @@
         </div>
         <div class="wandina-body">
           <div class="wandina-inputs">
-            <label><span>CGT contract date</span><input id="wd2ContractDate" type="date"></label>
-            <label><span>Rent guarantee end date</span><input id="wd2GuaranteeEnd" type="date"></label>
-            <label><span>CGT cost base</span><input id="wd2CostBase" value="588000"></label>
-            <label><span>Tax rate for estimates</span><input id="wd2TaxRate" value="39"></label>
-            <label><span>Annual depreciation</span><input id="wd2Depreciation" value="10000"></label>
-            <label><span>PAYG capture %</span><input id="wd2PaygCapture" value="100"></label>
-            <label><span>Annual rates + insurance + mgmt + maintenance</span><input id="wd2HoldingCosts" value="7000"></label>
-            <label><span>Meaningful PPOR years-saved threshold</span><input id="wd2YearsSavedThreshold" value="4"></label>
-            <label><span>Sale valuation case</span><select id="wd2Scenario"><option value="low">Low</option><option value="mid" selected>Mid</option><option value="high">High</option></select></label>
-          </div>
+  <label><span>CGT contract date</span><input id="wd2ContractDate" type="date"></label>
+  <label><span>Rent guarantee end date</span><input id="wd2GuaranteeEnd" type="date"></label>
+  <label><span>CGT cost base</span><input id="wd2CostBase" value="588000"></label>
+  <label><span>Tax rate for estimates</span><input id="wd2TaxRate" value="39"></label>
+  <label><span>Annual depreciation</span><input id="wd2Depreciation" value="10000"></label>
+  <label><span>PAYG capture %</span><input id="wd2PaygCapture" value="100"></label>
+  <label><span>Annual rates + insurance + mgmt + maintenance</span><input id="wd2HoldingCosts" value="7000"></label>
+  <label><span>Meaningful PPOR years-saved threshold</span><input id="wd2YearsSavedThreshold" value="4"></label>
+  <label><span>Sale valuation case</span><select id="wd2Scenario"><option value="low">Low</option><option value="mid" selected>Mid</option><option value="high">High</option></select></label>
+  <label><span>Use manual sale price?</span><select id="wd2UseManualPrice"><option value="no" selected>No</option><option value="yes">Yes</option></select></label>
+  <label><span>Manual sale price</span><input id="wd2ManualSalePrice" value="0"></label>
+</div>
           <div class="wandina-grid">
             <div class="wandina-card" id="wd2DecisionCard"><h3>Decision</h3><div id="wd2DecisionPill" class="wandina-pill info">Loading…</div><div class="wandina-big" id="wd2DecisionTitle" style="margin-top:10px;">—</div><div class="wandina-note" id="wd2DecisionNote">—</div></div>
             <div class="wandina-card"><h3>How to use this</h3><div class="wandina-row"><span>Sale source</span><strong id="wd2SaleSource">—</strong></div><div class="wandina-row"><span>Sale price used</span><strong id="wd2SalePriceUsed">—</strong></div><div class="wandina-note">Sale valuation case chooses which main-app valuation is used: Low = IP low, Mid = IP mid, High = IP high. Changing the CGT contract date mainly affects CGT timing, discount status, estimated CGT, net to offset, and possibly the final decision.</div></div>
