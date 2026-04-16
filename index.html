@@ -241,6 +241,17 @@
       padding:10px;
       font-size:14px
     }
+    .bill-row{
+      display:grid;
+      grid-template-columns:1.6fr 1fr 1fr auto;
+      gap:10px;
+      align-items:end;
+      padding:10px;
+      background:var(--card2);
+      border:1px solid var(--border);
+      border-radius:12px;
+      margin-bottom:10px
+    }
     .top-buttons{
       position:fixed;
       right:12px;
@@ -446,6 +457,20 @@
         </div>
       </details>
 
+      <details open>
+        <summary>Bills & upcoming bills</summary>
+        <div class="detail-body">
+          <div class="grid-3" style="margin-bottom:12px;">
+            <div class="metric status-info" id="billsBucketCard"><div class="label">Bills bucket</div><div class="value" id="billsBucketVal">—</div><div class="note">Recurring weekly allowance</div></div>
+            <div class="metric status-info" id="upcomingWeeklyCard"><div class="label">Upcoming bills / week</div><div class="value" id="upcomingWeeklyVal">—</div><div class="note">Smoothed from due dates</div></div>
+            <div class="metric status-info" id="totalBillsPressureCard"><div class="label">Total bills pressure</div><div class="value" id="totalBillsPressureVal">—</div><div class="note">Bills bucket + upcoming</div></div>
+          </div>
+          <div class="small" style="margin-bottom:10px;">Use this for one-off bills. The app converts each bill into weekly pressure based on due date.</div>
+          <div id="billsContainer"></div>
+          <button id="addBill" class="soft-btn" type="button">Add upcoming bill</button>
+        </div>
+      </details>
+
       <details>
         <summary>August obligations</summary>
         <div class="detail-body">
@@ -537,6 +562,31 @@ const num = v => {
 };
 const today = () => new Date();
 const formatDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function addBillRow(name='', amount='', dueDate=''){
+  const wrap = $('billsContainer');
+  if(!wrap) return;
+  const row = document.createElement('div');
+  row.className = 'bill-row';
+  row.innerHTML = `
+    <label><span>Bill name</span><input class="bill-name" value="${name}"></label>
+    <label><span>Amount</span><input class="bill-amount" value="${amount}"></label>
+    <label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label>
+    <button type="button" class="soft-btn remove-bill">Remove</button>
+  `;
+  wrap.appendChild(row);
+  row.querySelectorAll('input').forEach(el => el.addEventListener('input', render));
+  row.querySelector('.remove-bill').addEventListener('click', ()=>{ row.remove(); render(); });
+}
+function readBills(){
+  return Array.from(document.querySelectorAll('.bill-row')).map(row => {
+    const name = row.querySelector('.bill-name')?.value?.trim() || 'Upcoming bill';
+    const amount = num(row.querySelector('.bill-amount')?.value);
+    const dueDate = row.querySelector('.bill-date')?.value || '';
+    const diffDays = dueDate ? Math.max(1, Math.ceil((new Date(dueDate + 'T00:00:00') - today())/(1000*60*60*24))) : 7;
+    const weeks = Math.max(1, Math.ceil(diffDays/7));
+    return {name, amount, dueDate, weeks, weekly: amount/weeks};
+  }).filter(b => b.amount > 0);
+}
 
 function weeksToJuly24(){
   const now = today();
@@ -672,28 +722,21 @@ function computeCore(){
   const weeks = weeksToJuly24();
   const savingsGap = CONFIG.FENCE_COST + CONFIG.CRUISE_REMAINING - savings;
   const weeklySavingsTarget = Math.max(0, savingsGap / weeks);
+  const bills = readBills();
+  const upcomingWeekly = bills.reduce((a,b)=>a+b.weekly,0);
 
   const trsWeekly = mode === 'future' ? trsDays * trsRate : 0;
   const income = (mode === 'now' ? incomeNow : incomeFuture) + trsWeekly;
 
-  const stageMap = {
-    plate:{ratio:.405},
-    roof:{ratio:.585},
-    lockup:{ratio:.765},
-    tiling:{ratio:.925},
-    practical:{ratio:1},
-    complete:{ratio:1}
-  };
+  const stageMap = {plate:{ratio:.405},roof:{ratio:.585},lockup:{ratio:.765},tiling:{ratio:.925},practical:{ratio:1},complete:{ratio:1}};
   const stageRatio = stageMap[buildStage]?.ratio ?? 1;
-  const activeDebt = buildStage === 'complete'
-    ? CONFIG.PLANNED_TOTAL_IP_DEBT
-    : 215000 + (373000 * stageRatio);
+  const activeDebt = buildStage === 'complete' ? CONFIG.PLANNED_TOTAL_IP_DEBT : 215000 + (373000 * stageRatio);
 
   const weeklyIPInterest = (activeDebt * (ipRate/100)) / 52;
   const fullIPInterest = (CONFIG.PLANNED_TOTAL_IP_DEBT * (ipRate/100)) / 52;
   const ipPressure = buildStage === 'complete' ? Math.max(fullIPInterest - rentWeekly, 0) : weeklyIPInterest;
 
-  const totalPressure = pporWeekly + CONFIG.BILLS_BUCKET + weeklySavingsTarget + ipPressure;
+  const totalPressure = pporWeekly + CONFIG.BILLS_BUCKET + upcomingWeekly + weeklySavingsTarget + ipPressure;
   const safeSpend = income - totalPressure;
   const finalPosition = safeSpend - spend;
   const floorGapNow = offset - offsetFloor;
@@ -741,13 +784,14 @@ function computeCore(){
   if(activeStrategy === 'survival'){ living = 500; splurge = 0; }
   if(activeStrategy === 'attack'){ living = 500; splurge = floorGap8 > 5000 ? 25 : 50; }
 
-  const strategySummary = `Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. Verdict: ${verdict}. Floor: ${floorStatus}. Active strategy mode: ${activeStrategy.toUpperCase()}.`;
+  const strategySummary = `Weekly pressure is ${currency(totalPressure)} against income of ${currency(income)}. Verdict: ${verdict}. Floor: ${floorStatus}. Active strategy mode: ${activeStrategy.toUpperCase()}. Upcoming bills weekly: ${currency(upcomingWeekly)}.`;
 
   return {
     offset, savings, offsetFloor, income, spend, pporBalance, pporRate, pporYears, pporWeekly,
     ipRate, rentWeekly, trsWeekly, totalPressure, safeSpend, finalPosition, floorGapNow, floorGap8,
     weeklySavingsTarget, weeks, verdict, verdictNote, floorStatus, mentorTitle, mentorBody,
-    nextMoveTitle, nextMoveBody, living, splurge, activeStrategy, strategySummary, ipPressure
+    nextMoveTitle, nextMoveBody, living, splurge, activeStrategy, strategySummary, ipPressure,
+    upcomingWeekly
   };
 }
 function updateWandina(core){
@@ -897,6 +941,9 @@ function render(){
   $('livingVal').textContent = currency(m.living);
   $('splurgeVal').textContent = currency(m.splurge);
   $('saveTargetVal').textContent = currency(m.weeklySavingsTarget);
+  $('billsBucketVal').textContent = currency(CONFIG.BILLS_BUCKET);
+  $('upcomingWeeklyVal').textContent = currency(m.upcomingWeekly);
+  $('totalBillsPressureVal').textContent = currency(CONFIG.BILLS_BUCKET + m.upcomingWeekly);
 
   $('fenceVal').textContent = currency(CONFIG.FENCE_COST);
   $('cruiseVal').textContent = currency(CONFIG.CRUISE_REMAINING);
@@ -928,6 +975,9 @@ function render(){
   paint($('livingCard'), m.living <= 500 ? 'status-good' : 'status-warn');
   paint($('splurgeCard'), m.splurge === 0 ? 'status-good' : 'status-info');
   paint($('saveTargetCard'), m.weeklySavingsTarget > 900 ? 'status-bad' : m.weeklySavingsTarget > 700 ? 'status-warn' : 'status-good');
+  paint($('billsBucketCard'), 'status-info');
+  paint($('upcomingWeeklyCard'), m.upcomingWeekly > 300 ? 'status-warn' : 'status-info');
+  paint($('totalBillsPressureCard'), (CONFIG.BILLS_BUCKET + m.upcomingWeekly) > 450 ? 'status-warn' : 'status-info');
 
   updateWandina(m);
 }
@@ -939,10 +989,12 @@ $('strategy-survival').addEventListener('click', ()=>{strategyMode='survival'; $
 $('strategy-attack').addEventListener('click', ()=>{strategyMode='attack'; $('strategy-attack').classList.add('active'); $('strategy-auto').classList.remove('active'); $('strategy-survival').classList.remove('active'); render();});
 $('jumpTop').addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
 $('jumpWandina').addEventListener('click', ()=>document.querySelector('details')?.scrollIntoView({behavior:'smooth'}));
+if($('addBill')) $('addBill').addEventListener('click', ()=>{ const d = new Date(); d.setDate(d.getDate()+14); addBillRow('', '', formatDate(d)); render(); });
 
 setupDefaults();
 addRateStepper('pporRate', 5.97);
 addRateStepper('ipRate', 6.39);
+addBillRow('Power bill', '1433', (()=>{ const d = new Date(); d.setDate(d.getDate()+21); return formatDate(d); })());
 render();
 </script>
 </body>
