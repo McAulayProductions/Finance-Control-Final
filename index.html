@@ -289,6 +289,23 @@
       .layout{grid-template-columns:.95fr 1.05fr}
       .metric .value{font-size:28px}
     }
+    
+    .debug-banner{
+      position:sticky;
+      top:0;
+      z-index:10000;
+      padding:12px 14px;
+      margin-bottom:12px;
+      border:2px solid rgba(239,68,68,.65);
+      border-radius:14px;
+      background:rgba(127,29,29,.92);
+      color:#fff;
+      font-weight:700;
+      white-space:pre-wrap;
+      word-break:break-word;
+      display:none;
+    }
+
     @media (max-width:760px){
       .grid-2,.grid-3,.grid-4,.wandina-grid,.wandina-inputs,.sticky-mobile,.mode-row,.mode-row.three,.bill-row{grid-template-columns:1fr}
       .row{flex-direction:column;align-items:flex-start}
@@ -299,6 +316,7 @@
 </head>
 <body>
 <div class="wrap">
+  <div id="debugBanner" class="debug-banner"></div>
   <div class="sticky-mobile">
     <div class="mini" id="stickyVerdict">Verdict: -</div>
     <div class="mini" id="stickyFloor">Floor: -</div>
@@ -544,6 +562,28 @@
 </div>
 
 <script>
+
+(function(){
+  function showDebug(msg){
+    var el = document.getElementById('debugBanner');
+    if(!el) return;
+    el.style.display = 'block';
+    el.textContent = 'DEBUG ERROR\n' + msg;
+  }
+  window.addEventListener('error', function(e){
+    try{
+      showDebug((e.message || 'Unknown error') + (e.filename ? ('\n' + e.filename + ':' + e.lineno + ':' + e.colno) : ''));
+    }catch(_){}
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    try{
+      var reason = e.reason && (e.reason.stack || e.reason.message || String(e.reason));
+      showDebug('Unhandled promise rejection\n' + reason);
+    }catch(_){}
+  });
+  window.__showDebug = showDebug;
+})();
+
 const CONFIG = {
   FENCE_COST: 4644,
   CRUISE_REMAINING: 11600,
@@ -995,7 +1035,7 @@ setupDefaults();
 addRateStepper('pporRate', 5.97);
 addRateStepper('ipRate', 6.39);
 addBillRow('Power bill', '1433', (()=>{ const d = new Date(); d.setDate(d.getDate()+21); return formatDate(d); })());
-render();
+try { render(); } catch (err) { if (window.__showDebug) window.__showDebug((err && (err.stack || err.message)) || String(err)); throw err; }
 </script>
 </body>
 </html>
