@@ -70,6 +70,7 @@
   <div class="hero">
     <h1>Finance Control</h1>
     <div class="sub">Blended version: full Finance Control shell plus the stronger Wandina decision, CGT timing, PPOR acceleration, and trigger logic.</div>
+<div class="section-note" id="runtimeStatus">Runtime status: loading…</div>
     <div class="mode-toggle">
       <button id="mode-now" class="active" type="button">Current phase</button>
       <button id="mode-future" type="button">2027 0.8 mode</button>
@@ -460,7 +461,7 @@ function compute(){
   const wandina=computeWandina(pporRate, offset, pporBalanceCalc, pporWeeklyCalc);
   const totalPressure=pporWeeklyCalc+CONFIG.BILLS_BUCKET+weeklySavingsTarget+upcomingWeekly+ipPressure, safeSpend=income-totalPressure, finalPosition=safeSpend-spend;
   const offset4=offset+finalPosition*4, offset8=offset+finalPosition*8, floorGapNow=offset-offsetFloor, floorGap4=offset4-offsetFloor, floorGap8=offset8-offsetFloor;
-  const pporValue=num($('pporValue').value)||960000, ipValue=num($('salePrice').value)||780000, pporLoan=num($('pporLoan').value)||560540, ipDebt=CONFIG.PLANNED_TOTAL_IP_DEBT;
+  const pporValue=960000, ipValue=num($('salePrice').value)||780000, pporLoan=num($('pporBalanceCalc').value)||560540, ipDebt=CONFIG.PLANNED_TOTAL_IP_DEBT;
   const pporEquity=pporValue-pporLoan, ipEquity=ipValue-ipDebt, pporUsable=Math.max(pporValue*.8-pporLoan,0), ipUsable=Math.max(ipValue*.8-ipDebt,0);
   const ipLow=num($('salePrice').value)*0.92, ipMid=num($('salePrice').value), ipHigh=num($('salePrice').value)*1.05, sellPct=(num($('sellCostPct').value)||3)/100, saleFixed=4000;
   const netSale=price=>Math.max(price-(price*sellPct)-saleFixed-ipDebt,0), netLow=netSale(ipLow), netMid=netSale(ipMid), netHigh=netSale(ipHigh), wipeNeed=(pporLoan+ipDebt+saleFixed)/Math.max(.0001,1-sellPct);
@@ -484,6 +485,7 @@ function compute(){
 
 function render(){
   const m=compute();
+  if ($('runtimeStatus')) $('runtimeStatus').textContent='Runtime status: calculations loaded';
   $('deepArea').classList.toggle('hidden',!showDeep);
   $('spendManualWrap').classList.toggle('hidden',usePasteSpend);
   $('spendPasteWrap').classList.toggle('hidden',!usePasteSpend);
@@ -609,6 +611,7 @@ function render(){
   paint($('offset8Card'),m.floorGap8<0?'status-bad':m.floorGap8<3000?'status-warn':'status-good');
 }
 
+try {
 document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',render));
 $('toggleSpendMode').addEventListener('click',()=>{usePasteSpend=!usePasteSpend;render();});
 $('toggleDeep').addEventListener('click',()=>{showDeep=!showDeep;render();});
@@ -620,6 +623,10 @@ $('strategy-attack').addEventListener('click',()=>{strategyMode='attack';render(
 $('addBill').addEventListener('click',()=>{const d=today(); d.setDate(d.getDate()+14); addBillRow('', '', formatDate(d)); render();});
 addBillRow('Power bill','1433',(()=>{const d=today(); d.setDate(d.getDate()+21); return formatDate(d);})());
 render();
+} catch (err) {
+  if ($('runtimeStatus')) $('runtimeStatus').textContent = 'Runtime status: ERROR - ' + err.message;
+  console.error(err);
+}
 </script>
 </body>
 </html>
