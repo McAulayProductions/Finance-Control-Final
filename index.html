@@ -82,6 +82,12 @@
     </div>
   </div>
 
+  <div class="card status-info" id="debugCard">
+    <h2>Runtime debug</h2>
+    <div class="section-note">This panel shows missing IDs and any JavaScript error directly on the page.</div>
+    <div id="debugPanel" style="white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;">Booting…</div>
+  </div>
+
   <div class="layout">
     <div class="stack">
       <div class="card">
@@ -319,6 +325,17 @@
 </div>
 
 <script>
+const DEBUG_LINES = [];
+function dbg(msg){
+  DEBUG_LINES.push(String(msg));
+  const p = document.getElementById('debugPanel');
+  if (p) p.textContent = DEBUG_LINES.join('\n');
+  const r = document.getElementById('runtimeStatus');
+  if (r) r.textContent = 'Runtime status: ' + String(msg);
+}
+window.addEventListener('error', function(e){
+  dbg('ERROR: ' + e.message + ' @ ' + e.filename + ':' + e.lineno);
+});
 const CONFIG = {
   FENCE_COST: 4644,
   CRUISE_REMAINING: 11600,
@@ -445,6 +462,27 @@ function getWeeklyCommand(m){
   return actions.join('<br>');
 }
 
+const REQUIRED_IDS = [
+  'runtimeStatus','debugPanel','offset','savings','offsetFloor','weeksToTarget','incomeNow','incomeFuture',
+  'pporBalanceCalc','pporYearsRemaining','pporRate','pporWeeklyCalc','ipRate','futureTRSDays','trsRate',
+  'buildStage','rentWeekly','spend','billsContainer','fenceVal','cruiseVal','savingsVal','weeklyReqVal',
+  'progressFill','progressText','ipDebt','otherCosts','deprAnnual','taxRate','salePrice','sellCostPct',
+  'taxCostBase','capWorksClaimed','offsetInjectionPct','acqDate','saleContractDate','guaranteeEnds',
+  'mIpInterestW','mPretaxW','mAftertaxW','mPaygW','mDiscountStatus','mDiscountDays','mCgt','mNetCash',
+  'mInterestSaved','saleAdvice','triggerReadout','mBaseYears','mNewYears','mYearsCut','mOffsetAfter','pporAdvice',
+  'verdictVal','verdictNote','safeSpendVal','pressureVal','finalVal','floorNowVal','floor4Val','floor8Val',
+  'floorStatusVal','mentorTitle','mentorBody','strategySummary','nextMoveTitle','nextMoveBody','commandOutput',
+  'livingVal','splurgeVal','billsVal','saveTargetVal','refinanceVal','sellVal','debtVal','futureReadyVal',
+  'equityAction','stackPPOR','stackBills','stackSavings','stackUpcoming','stackIP','stackFloor','stackTotal',
+  'offsetNowVal','offset4Val','offset8Val','pporEquityVal','pporEquityNote','pporUsableVal','ipEquityVal',
+  'ipEquityNote','ipUsableVal','netLowVal','netMidVal','netHighVal','wipeNeedVal','wandinaStatusBar',
+  'toggleSpendMode','toggleDeep','mode-now','mode-future','strategy-auto','strategy-survival','strategy-attack','addBill'
+];
+(function(){
+  const missing = REQUIRED_IDS.filter(id => !document.getElementById(id));
+  if (missing.length) dbg('Missing IDs: ' + missing.join(', '));
+  else dbg('DOM self-check passed');
+})();
 function compute(){
   const offset=num($('offset').value), savings=num($('savings').value), offsetFloor=num($('offsetFloor').value)||30000;
   const incomeNow=num($('incomeNow').value)||3250, incomeFuture=num($('incomeFuture').value)||2600;
@@ -484,6 +522,7 @@ function compute(){
 }
 
 function render(){
+  dbg('Render started');
   const m=compute();
   if ($('runtimeStatus')) $('runtimeStatus').textContent='Runtime status: calculations loaded';
   $('deepArea').classList.toggle('hidden',!showDeep);
@@ -579,7 +618,7 @@ function render(){
 
   const bar=$('wandinaStatusBar'); bar.innerHTML='';
   const addPill=(cls,text)=>{const d=document.createElement('div'); d.className='pill '+cls; d.textContent=text; bar.appendChild(d);};
-  addPill(offsetNowVal = (m.floorGap8<0?'bad-pill':m.floorGap8<3000?'warn-pill':'good-pill'), `Offset ${m.floorStatus}`);
+  addPill((m.floorGap8<0?'bad-pill':m.floorGap8<3000?'warn-pill':'good-pill'), `Offset ${m.floorStatus}`);
   addPill(m.wandina.aftertaxW<=-100?'bad-pill':m.wandina.aftertaxW<0?'warn-pill':'good-pill', `IP after-tax ${currency(m.wandina.aftertaxW)}/wk`);
   addPill(m.wandina.trigger==='RED'?'bad-pill':m.wandina.trigger==='AMBER'?'warn-pill':'good-pill', `Wandina ${m.wandina.trigger}`);
   addPill('info-pill', `Years cut ${m.wandina.yearsCut.toFixed(1)}`);
@@ -609,6 +648,7 @@ function render(){
   paint($('offsetNowCard'),'status-info');
   paint($('offset4Card'),m.floorGap4<0?'status-bad':m.floorGap4<3000?'status-warn':'status-good');
   paint($('offset8Card'),m.floorGap8<0?'status-bad':m.floorGap8<3000?'status-warn':'status-good');
+  dbg('Render completed successfully');
 }
 
 try {
