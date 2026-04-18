@@ -1,155 +1,115 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Finance Control V10</title>
-<style>
-:root{
-  --bg:#0f1115; --card:#1c1f26; --card2:#232834; --text:#fff; --muted:#94a3b8;
-  --border:#2a2f39; --green:#00ff88; --amber:#ffaa00; --red:#ff4d4d; --blue:#60a5fa;
-}
-*{box-sizing:border-box}
-body{margin:0;padding:12px;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.wrap{max-width:1280px;margin:0 auto}
-.card,.metric,details,.sticky{background:var(--card);border:1px solid var(--border);border-radius:14px}
-.card{padding:14px;margin-bottom:12px}
-h1,h2,h3{margin:0 0 10px 0}
-.small{font-size:12px;color:var(--muted);line-height:1.45}
-.grid-2,.grid-3,.grid-4{display:grid;gap:10px}
-.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-label{display:block}
-label span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-input,select,button,textarea{width:100%;padding:10px;border:none;border-radius:8px;background:#fff;color:#111}
-input[readonly]{background:#e5e7eb}
-.metric{padding:12px;background:var(--card2)}
-.metric .label{font-size:12px;color:var(--muted)}
-.metric .value{font-size:24px;font-weight:700;margin-top:6px;word-break:break-word}
-.metric .note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
-.status-good{border-color:rgba(0,255,136,.45);background:rgba(0,255,136,.08)}
-.status-warn{border-color:rgba(255,170,0,.45);background:rgba(255,170,0,.08)}
-.status-bad{border-color:rgba(255,77,77,.45);background:rgba(255,77,77,.08)}
-.status-info{border-color:rgba(96,165,250,.45);background:rgba(96,165,250,.08)}
-.good{color:var(--green)} .warn{color:var(--amber)} .bad{color:var(--red)} .info{color:var(--blue)}
-.sticky{position:sticky;top:8px;z-index:20;padding:10px;margin-bottom:12px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:rgba(28,31,38,.96)}
-.mini{padding:10px;border:1px solid var(--border);border-radius:10px;background:#151922;font-size:12px}
-.row{padding:10px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
-details{overflow:hidden;margin-bottom:12px}
-details > summary{cursor:pointer;padding:14px;font-weight:700;list-style:none}
-details > summary::-webkit-details-marker{display:none}
-.detail-body{padding:0 14px 14px 14px;border-top:1px solid var(--border)}
-.bill-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px;align-items:end;padding:10px;border-radius:10px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
-@media (max-width:760px){
-  .grid-2,.grid-3,.grid-4,.sticky,.bill-row{grid-template-columns:1fr}
-  .metric .value{font-size:22px}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance Control V10 Debug-Safe</title>
+  <style>
+    :root{
+      --bg:#0f1115; --card:#1c1f26; --card2:#232834; --text:#ffffff; --muted:#94a3b8;
+      --green:#00ff88; --amber:#ffaa00; --red:#ff4d4d; --blue:#60a5fa; --border:#2a2f39;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;padding:12px;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1280px;margin:0 auto}
+    .card,.metric,details,.sticky{background:var(--card);border:1px solid var(--border);border-radius:14px}
+    .card{padding:14px;margin-bottom:12px}
+    h1,h2,h3{margin:0 0 10px 0}
+    .small{font-size:12px;color:var(--muted);line-height:1.45}
+    .grid-2,.grid-3,.grid-4{display:grid;gap:10px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    label{display:block}
+    label span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input,select,button,textarea{width:100%;padding:10px;border:none;border-radius:8px;background:#fff;color:#111}
+    input[readonly]{background:#e5e7eb}
+    .metric{padding:12px;background:var(--card2)}
+    .metric .label{font-size:12px;color:var(--muted)}
+    .metric .value{font-size:24px;font-weight:700;margin-top:6px;word-break:break-word}
+    .metric .note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .good{color:var(--green)} .warn{color:var(--amber)} .bad{color:var(--red)} .info{color:var(--blue)}
+    .status-good{border-color:rgba(0,255,136,.45);background:rgba(0,255,136,.08)}
+    .status-warn{border-color:rgba(255,170,0,.45);background:rgba(255,170,0,.08)}
+    .status-bad{border-color:rgba(255,77,77,.45);background:rgba(255,77,77,.08)}
+    .status-info{border-color:rgba(96,165,250,.45);background:rgba(96,165,250,.08)}
+    .sticky{
+      position:sticky;top:8px;z-index:20;padding:10px;margin-bottom:12px;
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:rgba(28,31,38,.96)
+    }
+    .mini{padding:10px;border:1px solid var(--border);border-radius:10px;background:#151922;font-size:12px}
+    details{overflow:hidden;margin-bottom:12px}
+    details>summary{cursor:pointer;padding:14px;font-weight:700;list-style:none}
+    details>summary::-webkit-details-marker{display:none}
+    .detail-body{padding:0 14px 14px 14px;border-top:1px solid var(--border)}
+    .row{padding:10px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
+    .bill-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px;align-items:end;padding:10px;border-radius:10px;background:var(--card2);border:1px solid var(--border);margin-bottom:8px}
+    #debugPanel{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    @media (max-width:760px){
+      .grid-2,.grid-3,.grid-4,.sticky,.bill-row{grid-template-columns:1fr}
+      .metric .value{font-size:22px}
+    }
+  </style>
 </head>
 <body>
 <div class="wrap">
+
   <div class="sticky">
     <div class="mini" id="stickyVerdict">Verdict: -</div>
     <div class="mini" id="stickyFloor">Floor: -</div>
-    <div class="mini" id="stickyPpor">PPOR: -</div>
-    <div class="mini" id="stickyWandina">Wandina: -</div>
+    <div class="mini" id="stickyPpor">PPOR impact: -</div>
+    <div class="mini" id="stickyDebug">Debug: booting</div>
+  </div>
+
+  <div class="card status-info" id="debugCard">
+    <h2>Debug panel</h2>
+    <div class="small">This version shows missing IDs and script errors directly on the page.</div>
+    <div id="debugPanel">Booting…</div>
   </div>
 
   <div class="card">
-    <h1>Finance Control V10</h1>
-    <div class="small">Clean system rebuild: income core, obligations engine, cashflow control, Wandina asset engine, PPOR kill layer, and sell timing engine.</div>
+    <h1>Finance Control</h1>
+    <div class="small">Debug-safe V10. If anything breaks, the error should appear above instead of silently blanking the app.</div>
   </div>
 
   <div class="card">
-    <h2>Income Core</h2>
-    <div class="grid-3">
-      <label><span>Current weekly income</span><input id="incomeNow" value="3250"></label>
-      <label><span>2027 reduced weekly income</span><input id="incomeReduced" value="2600"></label>
-      <label><span>Mode</span>
-        <select id="mode">
-          <option value="now">Current phase</option>
-          <option value="reduced">Reduced income phase</option>
-        </select>
-      </label>
-      <label><span>TRS days / week</span><input id="trsDays" value="0"></label>
-      <label><span>TRS pay / day</span><input id="trsRate" value="450"></label>
-      <label><span>Income year type</span>
-        <select id="incomeYearType">
-          <option value="1">Full income year</option>
-          <option value="0.8">Reduced income year</option>
-        </select>
-      </label>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Cashflow Control</h2>
-    <div class="grid-3">
-      <label><span>Current offset</span><input id="offset" value="30000"></label>
-      <label><span>Current savings</span><input id="savings" value="2600"></label>
-      <label><span>Offset floor</span><input id="offsetFloor" value="30000"></label>
-      <label><span>Total weekly spending</span><input id="spend" value="600"></label>
-      <label><span>Living transfer</span><input id="living" value="500"></label>
-      <label><span>Splurge transfer</span><input id="splurge" value="50"></label>
-      <label><span>Bills bucket</span><input id="billsBucket" value="150"></label>
+    <h2>Quick update</h2>
+    <div class="grid-2">
+      <label><span>Offset</span><input id="offset" value="30000"></label>
+      <label><span>Savings</span><input id="savings" value="2600"></label>
+      <label><span>Weekly Income</span><input id="income" value="3250"></label>
+      <label><span>Weekly Spend</span><input id="spend" value="600"></label>
+      <label><span>Offset Floor</span><input id="floor" value="30000"></label>
       <label><span>Weeks to 24 July</span><input id="weeksToTarget" readonly></label>
     </div>
   </div>
 
-  <div class="grid-2">
-    <div class="metric" id="metricVerdict"><div class="label">Verdict</div><div class="value" id="verdictVal">-</div><div class="note" id="verdictNote"></div></div>
-    <div class="metric" id="metricFloor"><div class="label">Floor status</div><div class="value" id="floorStatusVal">-</div><div class="note" id="floorStatusNote"></div></div>
-    <div class="metric"><div class="label">Weekly pressure</div><div class="value" id="pressureVal">-</div><div class="note">All non-negotiable load</div></div>
-    <div class="metric"><div class="label">Final weekly position</div><div class="value" id="finalVal">-</div><div class="note">Income minus pressure minus spend</div></div>
-    <div class="metric"><div class="label">Safe spend</div><div class="value" id="safeSpendVal">-</div><div class="note">Income minus pressure</div></div>
-    <div class="metric"><div class="label">8-week offset position</div><div class="value" id="offset8Val">-</div><div class="note">Projected</div></div>
+  <div class="card">
+    <h2>Topline</h2>
+    <div class="grid-2">
+      <div class="metric" id="verdictCard"><div class="label">Verdict</div><div class="value" id="verdictVal">-</div><div class="note" id="verdictNote"></div></div>
+      <div class="metric" id="floorCard"><div class="label">Floor status</div><div class="value" id="floorStatusVal">-</div><div class="note" id="floorStatusNote"></div></div>
+      <div class="metric"><div class="label">Safe spend</div><div class="value" id="safeSpendVal">-</div><div class="note">Income less pressure</div></div>
+      <div class="metric"><div class="label">Final position</div><div class="value" id="finalVal">-</div><div class="note">After weekly spend</div></div>
+    </div>
   </div>
 
   <div class="card" id="commandCard">
-    <h2>Weekly Command</h2>
+    <h2>Weekly command</h2>
     <div id="commandOutput">-</div>
   </div>
 
   <div class="card">
-    <h2>What Changes This Week</h2>
+    <h2>What changes this week</h2>
     <h3 id="nextTitle">-</h3>
     <div id="nextBody">-</div>
   </div>
 
   <details open>
-    <summary>Obligations Engine</summary>
+    <summary>Wandina Decision Engine</summary>
     <div class="detail-body">
-      <div class="small" style="margin-top:12px;">PPOR repayment + August obligations + bills smoothing.</div>
-      <div class="grid-3" style="margin-top:12px;">
-        <label><span>PPOR balance</span><input id="pporBalance" value="560540"></label>
-        <label><span>PPOR rate %</span><input id="pporRate" value="5.92"></label>
-        <label><span>PPOR years remaining</span><input id="pporYears" value="28.5"></label>
-        <label><span>Fence cost</span><input id="fenceCost" value="4644"></label>
-        <label><span>Cruise remaining</span><input id="cruiseRemaining" value="11600"></label>
-        <label><span>Other fixed weekly obligations</span><input id="otherWeekly" value="0"></label>
-      </div>
       <div class="grid-2" style="margin-top:12px;">
-        <div class="metric"><div class="label">PPOR weekly repayment</div><div class="value" id="pporWeeklyVal">-</div><div class="note">Calculated</div></div>
-        <div class="metric"><div class="label">August weekly target</div><div class="value" id="augustWeeklyVal">-</div><div class="note">Fence + cruise</div></div>
-      </div>
-    </div>
-  </details>
-
-  <details open>
-    <summary>Upcoming Bills</summary>
-    <div class="detail-body">
-      <div id="billsContainer" style="margin-top:12px;"></div>
-      <button id="addBill" type="button">Add upcoming bill</button>
-    </div>
-  </details>
-
-  <details open>
-    <summary>Wandina Asset Engine</summary>
-    <div class="detail-body">
-      <div class="grid-3" style="margin-top:12px;">
         <label><span>Build stage</span>
           <select id="stage">
             <option value="0.10">Slab down</option>
@@ -162,30 +122,35 @@ details > summary::-webkit-details-marker{display:none}
           </select>
         </label>
         <label><span>Fence paid?</span>
-          <select id="fencePaid">
+          <select id="fence">
             <option value="0" selected>No</option>
             <option value="1">Yes</option>
           </select>
         </label>
-        <label><span>WACHS rent / week</span><input id="rent" value="700"></label>
-        <label><span>IP rate %</span><input id="ipRate" value="6.39"></label>
         <label><span>Equity loan</span><input id="equityLoan" value="215000"></label>
         <label><span>Build lending</span><input id="buildLoan" value="373000"></label>
-        <label><span>Current value / sale price override</span><input id="salePrice" value="800000"></label>
-        <label><span>Growth rate %</span><input id="growthRate" value="5"></label>
-        <label><span>Years to test</span><input id="yearsToTest" value="5"></label>
+        <label><span>WACHS rent / week</span><input id="rent" value="700"></label>
+        <label><span>IP interest rate %</span><input id="ipRate" value="6.39"></label>
+        <label><span>Manual sale price / value override</span><input id="salePrice" value="800000"></label>
+        <label><span>Income mode</span>
+          <select id="incomeMode">
+            <option value="1">Full income year</option>
+            <option value="0.8">Reduced income year</option>
+          </select>
+        </label>
       </div>
 
       <div class="grid-2" style="margin-top:12px;">
         <div class="metric"><div class="label">Current active debt</div><div class="value" id="activeDebtVal">-</div><div class="note" id="activeDebtNote"></div></div>
-        <div class="metric"><div class="label">Final debt</div><div class="value" id="finalDebtVal">-</div><div class="note">At full draw</div></div>
+        <div class="metric"><div class="label">Final debt at completion</div><div class="value" id="finalDebtVal">-</div><div class="note">At full draw</div></div>
         <div class="metric"><div class="label">Weekly interest now</div><div class="value" id="interestNowVal">-</div><div class="note">Current stage</div></div>
         <div class="metric"><div class="label">Weekly interest final</div><div class="value" id="interestFinalVal">-</div><div class="note">At full draw</div></div>
         <div class="metric" id="unlockCard"><div class="label">WACHS unlock</div><div class="value" id="unlockVal">-</div><div class="note" id="unlockNote"></div></div>
         <div class="metric" id="rentVsInterestCard"><div class="label">Rent vs interest</div><div class="value" id="rentVsInterestVal">-</div><div class="note" id="rentVsInterestNote"></div></div>
-        <div class="metric" id="wandinaPressureCard"><div class="label">Pressure signal</div><div class="value" id="pressureSignalVal">-</div><div class="note" id="pressureSignalNote"></div></div>
+        <div class="metric" id="pressureCard"><div class="label">Pressure signal</div><div class="value" id="pressureSignalVal">-</div><div class="note" id="pressureSignalNote"></div></div>
         <div class="metric" id="impactCard"><div class="label">PPOR impact</div><div class="value" id="impactVal">-</div><div class="note" id="impactNote"></div></div>
-        <div class="metric"><div class="label">Equity now</div><div class="value" id="equityVal">-</div><div class="note">Sale value less final debt</div></div>
+        <div class="metric" id="decisionCard"><div class="label">Decision verdict</div><div class="value" id="decisionVal">-</div><div class="note" id="decisionNote"></div></div>
+        <div class="metric"><div class="label">Wandina equity</div><div class="value" id="equityVal">-</div><div class="note">Sale value less final debt</div></div>
       </div>
     </div>
   </details>
@@ -193,13 +158,17 @@ details > summary::-webkit-details-marker{display:none}
   <details open>
     <summary>PPOR Kill Projection</summary>
     <div class="detail-body">
-      <div class="grid-3" style="margin-top:12px;">
+      <div class="grid-2" style="margin-top:12px;">
+        <label><span>Current PPOR balance</span><input id="pporBalance" value="560540"></label>
+        <label><span>PPOR rate %</span><input id="pporRate" value="5.92"></label>
+        <label><span>PPOR years remaining</span><input id="pporYears" value="28.5"></label>
         <label><span>Selling costs %</span><input id="sellCostPct" value="2.5"></label>
-        <label><span>Extra sale costs</span><input id="extraSaleCosts" value="4000"></label>
+        <label><span>Extra sale costs ($)</span><input id="extraSaleCosts" value="4000"></label>
         <label><span>Estimated CGT % of gain</span><input id="cgtPct" value="25"></label>
       </div>
+
       <div class="grid-2" style="margin-top:12px;">
-        <div class="metric"><div class="label">Net sale proceeds to PPOR</div><div class="value" id="netProceedsVal">-</div><div class="note">After selling costs + light CGT</div></div>
+        <div class="metric"><div class="label">Net sale proceeds to PPOR</div><div class="value" id="netProceedsVal">-</div><div class="note">After sale costs and light CGT</div></div>
         <div class="metric"><div class="label">New PPOR balance</div><div class="value" id="newPporVal">-</div><div class="note">After lump sum</div></div>
         <div class="metric"><div class="label">New weekly repayment</div><div class="value" id="newWeeklyVal">-</div><div class="note">Same term</div></div>
         <div class="metric"><div class="label">Years remaining after sale</div><div class="value" id="newYearsVal">-</div><div class="note">Using current weekly repayment</div></div>
@@ -210,15 +179,24 @@ details > summary::-webkit-details-marker{display:none}
     </div>
   </details>
 
-  <details open>
+  <details>
     <summary>Sell Timing Engine</summary>
     <div class="detail-body">
-      <div class="metric" style="margin-top:12px;">
-        <div class="label">Best sell window</div>
-        <div class="value" id="bestSellWindow">-</div>
-        <div class="note" id="timingSummary"></div>
+      <div class="grid-3" style="margin-top:12px;">
+        <label><span>Growth rate %</span><input id="growthRate" value="5"></label>
+        <label><span>Years to test</span><input id="yearsToTest" value="5"></label>
+        <label><span>Best sell window</span><input id="bestSellWindow" readonly></label>
       </div>
-      <div id="timingRows" style="margin-top:12px;"></div>
+      <div class="row" id="timingSummary" style="margin-top:12px;">-</div>
+      <div id="timingRows"></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Upcoming bills</summary>
+    <div class="detail-body">
+      <div id="billsContainer" style="margin-top:12px;"></div>
+      <button id="addBill" type="button">Add upcoming bill</button>
     </div>
   </details>
 
@@ -226,321 +204,355 @@ details > summary::-webkit-details-marker{display:none}
 
 <script>
 (function(){
+  const REQUIRED_IDS = [
+    'debugPanel','stickyVerdict','stickyFloor','stickyPpor','stickyDebug','offset','savings','income','spend','floor','weeksToTarget',
+    'verdictCard','verdictVal','verdictNote','floorCard','floorStatusVal','floorStatusNote','safeSpendVal','finalVal',
+    'commandCard','commandOutput','nextTitle','nextBody',
+    'stage','fence','equityLoan','buildLoan','rent','ipRate','salePrice','incomeMode',
+    'activeDebtVal','activeDebtNote','finalDebtVal','interestNowVal','interestFinalVal','unlockCard','unlockVal','unlockNote',
+    'rentVsInterestCard','rentVsInterestVal','rentVsInterestNote','pressureCard','pressureSignalVal','pressureSignalNote',
+    'impactCard','impactVal','impactNote','decisionCard','decisionVal','decisionNote','equityVal',
+    'pporBalance','pporRate','pporYears','sellCostPct','extraSaleCosts','cgtPct',
+    'netProceedsVal','newPporVal','newWeeklyVal','newYearsVal','timeSavedVal','interestSavedVal','pporSummary',
+    'growthRate','yearsToTest','bestSellWindow','timingSummary','timingRows',
+    'billsContainer','addBill'
+  ];
+
+  const debugLines = [];
   const $ = id => document.getElementById(id);
-  const currency = n => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(n)?n:0);
-  const num = v => {
-    const n = parseFloat(String(v).replace(/[^0-9.-]/g,''));
-    return Number.isFinite(n) ? n : 0;
+  const debug = msg => {
+    debugLines.push(msg);
+    const panel = $('debugPanel');
+    if (panel) panel.textContent = debugLines.join('\n');
   };
-  const today = () => new Date();
+  const setStickyDebug = msg => {
+    const el = $('stickyDebug');
+    if (el) el.textContent = `Debug: ${msg}`;
+  };
 
-  function weeksToJuly24() {
-    const now = today();
-    const year = (now.getMonth() > 6 || (now.getMonth() === 6 && now.getDate() > 24)) ? now.getFullYear()+1 : now.getFullYear();
-    const target = new Date(year, 6, 24);
-    const diffDays = Math.max(0, Math.ceil((target - now)/(1000*60*60*24)));
-    return Math.max(1, Math.ceil(diffDays/7));
-  }
-
-  function pmt(balance, annualRatePct, years){
-    const r = annualRatePct/100/52;
-    const n = years*52;
-    if (balance <= 0) return 0;
-    if (r <= 0) return balance / n;
-    return balance * r / (1 - Math.pow(1+r, -n));
-  }
-
-  function totalInterest(balance, annualRatePct, years){
-    const payment = pmt(balance, annualRatePct, years);
-    const n = years*52;
-    return Math.max(0, payment*n - balance);
-  }
-
-  function yearsForPayment(balance, annualRatePct, weeklyPayment){
-    if (balance <= 0) return 0;
-    const r = annualRatePct/100/52;
-    if (weeklyPayment <= balance * r) return Infinity;
-    const n = -Math.log(1 - (balance*r/weeklyPayment)) / Math.log(1+r);
-    return n / 52;
-  }
-
-  function stageInfo(stage){
-    const map = {
-      0.10:'Slab down',
-      0.25:'Plate Height',
-      0.45:'Roof Cover',
-      0.65:'Lockup',
-      0.82:'Tiling',
-      0.97:'Practical Completion',
-      1.00:'Rented / Complete'
-    };
-    return map[stage.toFixed(2)] || 'Stage';
-  }
-
-  function addBillRow(name='', amount='', dueDate=''){
-    const row = document.createElement('div');
-    row.className = 'bill-row';
-    row.innerHTML = `
-      <label><span>Bill name</span><input class="bill-name" value="${name}"></label>
-      <label><span>Amount</span><input class="bill-amount" value="${amount}"></label>
-      <label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label>
-      <button type="button" class="remove-bill">Remove</button>
-    `;
-    $('billsContainer').appendChild(row);
-    row.querySelectorAll('input').forEach(el => el.addEventListener('input', render));
-    row.querySelector('.remove-bill').addEventListener('click', () => { row.remove(); render(); });
-  }
-
-  function readBills(){
-    return Array.from(document.querySelectorAll('.bill-row')).map(row => {
-      const amount = num(row.querySelector('.bill-amount').value);
-      const dueDate = row.querySelector('.bill-date').value;
-      const diffDays = dueDate ? Math.max(1, Math.ceil((new Date(dueDate) - today())/(1000*60*60*24))) : 7;
-      const weeks = Math.max(1, Math.ceil(diffDays/7));
-      return { amount, weekly: amount / weeks };
-    }).filter(x => x.amount > 0);
-  }
-
-  function setStatusCard(el, status){
-    el.classList.remove('status-good','status-warn','status-bad','status-info');
-    el.classList.add(status);
-  }
-
-  function compute(){
-    const weeks = weeksToJuly24();
-    $('weeksToTarget').value = String(weeks);
-
-    const incomeBase = $('mode').value === 'reduced' ? num($('incomeReduced').value) : num($('incomeNow').value);
-    const trsWeekly = num($('trsDays').value) * num($('trsRate').value);
-    const income = incomeBase + trsWeekly;
-
-    const offset = num($('offset').value);
-    const savings = num($('savings').value);
-    const spend = num($('spend').value);
-    const floor = num($('offsetFloor').value);
-    const billsBucket = num($('billsBucket').value);
-    const otherWeekly = num($('otherWeekly').value);
-
-    const pporBalance = num($('pporBalance').value);
-    const pporRate = num($('pporRate').value);
-    const pporYears = num($('pporYears').value);
-    const pporWeekly = pmt(pporBalance, pporRate, pporYears);
-    const currentInterest = totalInterest(pporBalance, pporRate, pporYears);
-
-    const fenceCost = num($('fenceCost').value);
-    const cruiseRemaining = num($('cruiseRemaining').value);
-    const augustWeekly = Math.max(0, (fenceCost + cruiseRemaining - savings) / weeks);
-
-    const billsWeekly = readBills().reduce((a,b)=>a+b.weekly,0);
-
-    const stage = num($('stage').value);
-    const stageLabel = stageInfo(stage);
-    const fencePaid = num($('fencePaid').value) === 1;
-    const equityLoan = num($('equityLoan').value);
-    const buildLoan = num($('buildLoan').value);
-    const rent = num($('rent').value);
-    const ipRate = num($('ipRate').value);
-    const salePrice = num($('salePrice').value);
-    const growthRate = num($('growthRate').value) / 100;
-    const yearsToTest = Math.max(1, Math.round(num($('yearsToTest').value)));
-    const incomeYearType = num($('incomeYearType').value) || 1;
-
-    const finalDebt = equityLoan + buildLoan;
-    const activeDebt = equityLoan + buildLoan * stage;
-    const interestNow = activeDebt * (ipRate/100) / 52;
-    const interestFinal = finalDebt * (ipRate/100) / 52;
-    const rentUnlocked = fencePaid && stage >= 1;
-    const rentVsInterest = rentUnlocked ? (rent - interestFinal) : (0 - interestNow);
-
-    let pressure = 'HIGH', pressureNote = 'Negative carry is still biting.';
-    if (rentVsInterest >= 100) { pressure = 'LOW'; pressureNote = 'Rent covers interest with room.'; }
-    else if (rentVsInterest >= -50) { pressure = 'NEUTRAL'; pressureNote = 'Close to breakeven.'; }
-
-    let impact = 'HURTING', impactNote = 'Wandina is still slowing the PPOR plan.';
-    if (!fencePaid) { impact = 'BLOCKED'; impactNote = 'Fence payment is still gating WACHS income.'; }
-    else if (stage < 1) { impact = 'WAITING'; impactNote = 'Build not income-live yet.'; }
-    else if (rentVsInterest >= 0) { impact = 'HELPING'; impactNote = 'Income is no longer hurting the plan.'; }
-
-    const equity = salePrice - finalDebt;
-
-    const sellCostPct = num($('sellCostPct').value)/100;
-    const extraSaleCosts = num($('extraSaleCosts').value);
-    const cgtPct = num($('cgtPct').value)/100;
-
-    const grossSaleProceeds = salePrice - finalDebt - salePrice*sellCostPct - extraSaleCosts;
-    const estimatedGain = Math.max(0, salePrice - finalDebt);
-    const cgt = estimatedGain * cgtPct * incomeYearType;
-    const netProceeds = Math.max(0, grossSaleProceeds - cgt);
-
-    const newPpor = Math.max(0, pporBalance - netProceeds);
-    const newWeekly = pmt(newPpor, pporRate, pporYears);
-    const newInterest = totalInterest(newPpor, pporRate, pporYears);
-    const newYears = yearsForPayment(newPpor, pporRate, pporWeekly);
-    const timeSaved = Number.isFinite(newYears) ? Math.max(0, pporYears - newYears) : 0;
-    const interestSaved = Math.max(0, currentInterest - newInterest);
-
-    const totalPressure = pporWeekly + billsBucket + augustWeekly + billsWeekly + otherWeekly + Math.max(0, interestNow);
-    const safeSpend = income - totalPressure;
-    const finalPos = safeSpend - spend;
-    const offset8 = offset + savings + finalPos * 8;
-    const floorGap = offset8 - floor;
-
-    let floorStatus = 'SAFE';
-    if (floorGap < 0) floorStatus = 'BELOW';
-    else if (floorGap < 3000) floorStatus = 'NEAR';
-
-    let decision = 'HOLD';
-    let decisionNote = 'Holding is still defensible.';
-    if (stage >= 1 && netProceeds > 120000 && (rentVsInterest < 0 || timeSaved >= 4)) {
-      decision = 'SELL WINDOW OPEN';
-      decisionNote = 'Post-completion, proceeds are meaningful, and PPOR acceleration is strong.';
-    } else if (stage >= 0.82 || netProceeds > 90000) {
-      decision = 'WATCH';
-      decisionNote = 'Approaching a decision window, but not a clear sell yet.';
+  try {
+    const missing = REQUIRED_IDS.filter(id => !$(id));
+    if (missing.length) {
+      debug('Missing IDs: ' + missing.join(', '));
+      setStickyDebug('missing IDs');
+      return;
     }
 
-    let bestYear = 1;
-    let bestScore = -Infinity;
-    const timingRows = [];
+    debug('DOM self-check passed');
+    setStickyDebug('DOM ok');
 
-    for (let y = 1; y <= yearsToTest; y++) {
-      const futureValue = salePrice * Math.pow(1 + growthRate, y);
-      const futureGross = futureValue - finalDebt - futureValue*sellCostPct - extraSaleCosts;
-      const futureGain = Math.max(0, futureValue - finalDebt);
-      const futureCgt = futureGain * cgtPct * incomeYearType;
-      const futureNet = Math.max(0, futureGross - futureCgt);
-      const futureNewPpor = Math.max(0, pporBalance - futureNet);
-      const futureYears = yearsForPayment(futureNewPpor, pporRate, pporWeekly);
-      const futureTimeSaved = Number.isFinite(futureYears) ? Math.max(0, pporYears - futureYears) : 0;
-      const futureInterestSaved = Math.max(0, currentInterest - totalInterest(futureNewPpor, pporRate, pporYears));
-      const score = futureInterestSaved + (futureTimeSaved * 25000);
+    const currency = n => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(n)?n:0);
+    const num = v => {
+      const n = parseFloat(String(v).replace(/[^0-9.-]/g,''));
+      return Number.isFinite(n) ? n : 0;
+    };
+    const today = () => new Date();
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestYear = y;
+    function weeksToJuly24() {
+      const now = today();
+      const year = (now.getMonth() > 6 || (now.getMonth() === 6 && now.getDate() > 24)) ? now.getFullYear()+1 : now.getFullYear();
+      const target = new Date(year, 6, 24);
+      const diffDays = Math.max(0, Math.ceil((target - now)/(1000*60*60*24)));
+      return Math.max(1, Math.ceil(diffDays/7));
+    }
+
+    function pmt(balance, annualRatePct, years){
+      const r = annualRatePct/100/52;
+      const n = years*52;
+      if (balance <= 0) return 0;
+      if (r <= 0) return balance / n;
+      return balance * r / (1 - Math.pow(1+r, -n));
+    }
+
+    function totalInterest(balance, annualRatePct, years){
+      const payment = pmt(balance, annualRatePct, years);
+      const n = years*52;
+      return Math.max(0, payment*n - balance);
+    }
+
+    function yearsForPayment(balance, annualRatePct, weeklyPayment){
+      if (balance <= 0) return 0;
+      const r = annualRatePct/100/52;
+      if (weeklyPayment <= balance * r) return Infinity;
+      const n = -Math.log(1 - (balance*r/weeklyPayment)) / Math.log(1+r);
+      return n / 52;
+    }
+
+    function stageInfo(stage){
+      const map = {
+        '0.10':'Slab down',
+        '0.25':'Plate Height',
+        '0.45':'Roof Cover',
+        '0.65':'Lockup',
+        '0.82':'Tiling',
+        '0.97':'Practical Completion',
+        '1.00':'Rented / Complete'
+      };
+      return map[stage.toFixed(2)] || 'Stage';
+    }
+
+    function addBillRow(name='', amount='', dueDate=''){
+      const row = document.createElement('div');
+      row.className = 'bill-row';
+      row.innerHTML = `
+        <label><span>Bill name</span><input class="bill-name" value="${name}"></label>
+        <label><span>Amount</span><input class="bill-amount" value="${amount}"></label>
+        <label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label>
+        <button type="button" class="remove-bill">Remove</button>
+      `;
+      $('billsContainer').appendChild(row);
+      row.querySelectorAll('input').forEach(el => el.addEventListener('input', render));
+      row.querySelector('.remove-bill').addEventListener('click', () => { row.remove(); render(); });
+    }
+
+    function readBills(){
+      return Array.from(document.querySelectorAll('.bill-row')).map(row => {
+        const amount = num(row.querySelector('.bill-amount').value);
+        const dueDate = row.querySelector('.bill-date').value;
+        const diffDays = dueDate ? Math.max(1, Math.ceil((new Date(dueDate) - today())/(1000*60*60*24))) : 7;
+        const weeks = Math.max(1, Math.ceil(diffDays/7));
+        return { amount, weekly: amount / weeks };
+      }).filter(x => x.amount > 0);
+    }
+
+    function setStatusCard(el, status){
+      el.classList.remove('status-good','status-warn','status-bad','status-info');
+      el.classList.add(status);
+    }
+
+    function compute(){
+      const weeks = weeksToJuly24();
+      $('weeksToTarget').value = String(weeks);
+
+      const offset = num($('offset').value);
+      const savings = num($('savings').value);
+      const income = num($('income').value);
+      const spend = num($('spend').value);
+      const floor = num($('floor').value);
+
+      const stage = num($('stage').value);
+      const stageLabel = stageInfo(stage);
+      const fencePaid = num($('fence').value) === 1;
+      const equityLoan = num($('equityLoan').value);
+      const buildLoan = num($('buildLoan').value);
+      const rent = num($('rent').value);
+      const ipRate = num($('ipRate').value);
+      const salePrice = num($('salePrice').value);
+      const incomeMode = num($('incomeMode').value) || 1;
+
+      const finalDebt = equityLoan + buildLoan;
+      const activeDebt = equityLoan + buildLoan * stage;
+      const interestNow = activeDebt * (ipRate/100) / 52;
+      const interestFinal = finalDebt * (ipRate/100) / 52;
+      const rentUnlocked = fencePaid && stage >= 1;
+      const rentVsInterest = rentUnlocked ? (rent - interestFinal) : (0 - interestNow);
+
+      let pressure = 'HIGH', pressureNote = 'Negative carry is still biting.';
+      if (rentVsInterest >= 100) { pressure = 'LOW'; pressureNote = 'Rent covers interest with room.'; }
+      else if (rentVsInterest >= -50) { pressure = 'NEUTRAL'; pressureNote = 'Close to breakeven.'; }
+
+      let impact = 'HURTING', impactNote = 'Wandina is still slowing the PPOR plan.';
+      if (!fencePaid) { impact = 'BLOCKED'; impactNote = 'Fence payment is still gating WACHS income.'; }
+      else if (stage < 1) { impact = 'WAITING'; impactNote = 'Build not income-live yet.'; }
+      else if (rentVsInterest >= 0) { impact = 'HELPING'; impactNote = 'Income is no longer hurting the plan.'; }
+
+      const equity = salePrice - finalDebt;
+
+      const pporBalance = num($('pporBalance').value);
+      const pporRate = num($('pporRate').value);
+      const pporYears = num($('pporYears').value);
+      const sellCostPct = num($('sellCostPct').value)/100;
+      const extraSaleCosts = num($('extraSaleCosts').value);
+      const cgtPct = num($('cgtPct').value)/100;
+
+      const grossSaleProceeds = salePrice - finalDebt - salePrice*sellCostPct - extraSaleCosts;
+      const estimatedGain = Math.max(0, salePrice - finalDebt);
+      const cgt = estimatedGain * cgtPct * incomeMode;
+      const netProceeds = Math.max(0, grossSaleProceeds - cgt);
+
+      const currentWeekly = pmt(pporBalance, pporRate, pporYears);
+      const currentInterest = totalInterest(pporBalance, pporRate, pporYears);
+      const newPpor = Math.max(0, pporBalance - netProceeds);
+      const newWeekly = pmt(newPpor, pporRate, pporYears);
+      const newInterest = totalInterest(newPpor, pporRate, pporYears);
+      const newYears = yearsForPayment(newPpor, pporRate, currentWeekly);
+      const timeSaved = Number.isFinite(newYears) ? Math.max(0, pporYears - newYears) : 0;
+      const interestSaved = Math.max(0, currentInterest - newInterest);
+
+      let decision = 'HOLD';
+      let decisionNote = 'Holding is still defensible.';
+      if (stage >= 1 && netProceeds > 120000 && (rentVsInterest < 0 || timeSaved >= 4)) {
+        decision = 'SELL WINDOW OPEN';
+        decisionNote = 'Post-completion, proceeds are meaningful, and PPOR acceleration is strong.';
+      } else if (stage >= 0.82 || netProceeds > 90000) {
+        decision = 'WATCH';
+        decisionNote = 'Approaching a decision window, but not a clear sell yet.';
       }
 
-      timingRows.push({ y, futureValue, futureNet, futureTimeSaved, futureInterestSaved });
+      const billsWeekly = readBills().reduce((a,b)=>a+b.weekly,0);
+      const weeklySavingsTarget = Math.max(0, (4644 + 11600 - savings) / weeks);
+      const totalPressure = currentWeekly + 150 + weeklySavingsTarget + billsWeekly + Math.max(0, interestNow);
+      const safeSpend = income - totalPressure;
+      const finalPos = safeSpend - spend;
+      const offset8 = offset + savings + finalPos * 8;
+      const floorGap = offset8 - floor;
+
+      let floorStatus = 'SAFE';
+      if (floorGap < 0) floorStatus = 'BELOW';
+      else if (floorGap < 3000) floorStatus = 'NEAR';
+
+      const growthRate = num($('growthRate').value)/100;
+      const yearsToTest = Math.max(1, Math.round(num($('yearsToTest').value)));
+      let bestYear = 1;
+      let bestScore = -Infinity;
+      const timingRows = [];
+
+      for (let y = 1; y <= yearsToTest; y++) {
+        const futureValue = salePrice * Math.pow(1 + growthRate, y);
+        const futureGross = futureValue - finalDebt - futureValue*sellCostPct - extraSaleCosts;
+        const futureGain = Math.max(0, futureValue - finalDebt);
+        const futureCgt = futureGain * cgtPct * incomeMode;
+        const futureNet = Math.max(0, futureGross - futureCgt);
+        const futureNewPpor = Math.max(0, pporBalance - futureNet);
+        const futureYears = yearsForPayment(futureNewPpor, pporRate, currentWeekly);
+        const futureTimeSaved = Number.isFinite(futureYears) ? Math.max(0, pporYears - futureYears) : 0;
+        const futureInterestSaved = Math.max(0, currentInterest - totalInterest(futureNewPpor, pporRate, pporYears));
+        const score = futureInterestSaved + (futureTimeSaved * 25000);
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestYear = y;
+        }
+
+        timingRows.push({ y, futureValue, futureNet, futureTimeSaved, futureInterestSaved });
+      }
+
+      return {
+        weeks, stageLabel, activeDebt, finalDebt, interestNow, interestFinal, rentUnlocked, rentVsInterest,
+        pressure, pressureNote, impact, impactNote, equity, decision, decisionNote,
+        netProceeds, newPpor, newWeekly, newYears, timeSaved, interestSaved,
+        currentWeekly, currentInterest, cgt, safeSpend, finalPos, floorStatus, floorGap,
+        bestYear, timingRows
+      };
     }
 
-    return {
-      weeks, income, offset, savings, stageLabel, activeDebt, finalDebt, interestNow, interestFinal, rentUnlocked, rentVsInterest,
-      pressure, pressureNote, impact, impactNote, equity, decision, decisionNote, netProceeds, newPpor, newWeekly, newYears,
-      timeSaved, interestSaved, currentInterest, pporWeekly, safeSpend, finalPos, floorStatus, floorGap,
-      bestYear, timingRows
-    };
-  }
+    function render(){
+      debug('Render started');
+      const m = compute();
 
-  function render(){
-    const m = compute();
+      $('verdictVal').textContent = m.decision;
+      $('verdictNote').textContent = m.decisionNote;
+      $('floorStatusVal').textContent = m.floorStatus;
+      $('floorStatusNote').textContent = `8-week floor gap: ${currency(m.floorGap)}`;
+      $('safeSpendVal').textContent = currency(m.safeSpend);
+      $('finalVal').textContent = currency(m.finalPos);
 
-    $('verdictVal').textContent = m.decision;
-    $('verdictNote').textContent = m.decisionNote;
-    $('floorStatusVal').textContent = m.floorStatus;
-    $('floorStatusNote').textContent = `8-week floor gap: ${currency(m.floorGap)}`;
-    $('pressureVal').textContent = currency(m.pporWeekly + 0); // visually refreshed below
-    $('finalVal').textContent = currency(m.finalPos);
-    $('safeSpendVal').textContent = currency(m.safeSpend);
-    $('offset8Val').textContent = currency(m.offset + m.savings + m.finalPos * 8);
+      $('stickyVerdict').textContent = `Verdict: ${m.decision}`;
+      $('stickyFloor').textContent = `Floor: ${m.floorStatus}`;
+      $('stickyPpor').textContent = `PPOR impact: ${m.timeSaved.toFixed(1)} yrs saved`;
 
-    $('stickyVerdict').textContent = `Verdict: ${m.decision}`;
-    $('stickyFloor').textContent = `Floor: ${m.floorStatus}`;
-    $('stickyPpor').textContent = `PPOR: ${m.timeSaved.toFixed(1)} yrs saved`;
-    $('stickyWandina').textContent = `Wandina: ${m.impact}`;
+      let command = 'Stable → stay consistent this week';
+      if (m.floorStatus === 'BELOW') command = '🛑 Protect the offset immediately and cut flexible spending.';
+      else if (m.impact === 'BLOCKED') command = 'Fence payment is still blocking WACHS income.';
+      else if (m.decision === 'SELL WINDOW OPEN') command = 'Run a serious sell model. The PPOR impact is now meaningful.';
+      else if (m.decision === 'WATCH') command = 'Keep Wandina under review. You are nearing a decision window.';
 
-    let command = 'Stable → stay consistent this week';
-    if (m.floorStatus === 'BELOW') command = '🛑 Protect the offset immediately and cut flexible spending.';
-    else if (m.impact === 'BLOCKED') command = 'Fence payment is still blocking WACHS income.';
-    else if (m.decision === 'SELL WINDOW OPEN') command = 'Run a serious sell model. The PPOR impact is now meaningful.';
-    else if (m.decision === 'WATCH') command = 'Keep Wandina under review. You are nearing a decision window.';
-    $('commandOutput').innerHTML = command;
+      $('commandOutput').innerHTML = command;
+      $('nextTitle').textContent = m.decision === 'SELL WINDOW OPEN' ? 'Model the sale properly' : (m.impact === 'BLOCKED' ? 'Unlock the income gate' : 'Maintain course');
+      $('nextBody').textContent = m.decision === 'SELL WINDOW OPEN'
+        ? 'Test multiple sale prices and compare PPOR time saved.'
+        : (m.impact === 'BLOCKED'
+          ? 'Fence + completion still matter more than opinions.'
+          : 'Keep pressure low and avoid sloppy spending.');
 
-    $('nextTitle').textContent = m.decision === 'SELL WINDOW OPEN' ? 'Model the sale properly' : (m.impact === 'BLOCKED' ? 'Unlock the income gate' : 'Maintain course');
-    $('nextBody').textContent = m.decision === 'SELL WINDOW OPEN'
-      ? 'Test multiple sale prices and compare PPOR time saved.'
-      : (m.impact === 'BLOCKED'
-        ? 'Fence + completion still matter more than opinions.'
-        : 'Keep pressure low and avoid sloppy spending.');
+      $('activeDebtVal').textContent = currency(m.activeDebt);
+      $('activeDebtNote').textContent = m.stageLabel;
+      $('finalDebtVal').textContent = currency(m.finalDebt);
+      $('interestNowVal').textContent = currency(m.interestNow);
+      $('interestFinalVal').textContent = currency(m.interestFinal);
+      $('unlockVal').textContent = m.rentUnlocked ? 'UNLOCKED' : 'NOT YET';
+      $('unlockNote').textContent = m.rentUnlocked ? 'Fence paid and property income-live.' : 'Fence and/or stage still blocking rent.';
+      $('rentVsInterestVal').textContent = currency(m.rentVsInterest);
+      $('rentVsInterestNote').textContent = m.rentVsInterest >= 0 ? 'Rent covers interest.' : 'Interest still beats rent.';
+      $('pressureSignalVal').textContent = m.pressure;
+      $('pressureSignalNote').textContent = m.pressureNote;
+      $('impactVal').textContent = m.impact;
+      $('impactNote').textContent = m.impactNote;
+      $('decisionVal').textContent = m.decision;
+      $('decisionNote').textContent = m.decisionNote;
+      $('equityVal').textContent = currency(m.equity);
 
-    $('pporWeeklyVal').textContent = currency(m.pporWeekly);
-    $('augustWeeklyVal').textContent = currency(Math.max(0, (num($('fenceCost').value)+num($('cruiseRemaining').value)-num($('savings').value))/m.weeks));
+      $('netProceedsVal').textContent = currency(m.netProceeds);
+      $('newPporVal').textContent = currency(m.newPpor);
+      $('newWeeklyVal').textContent = currency(m.newWeekly);
+      $('newYearsVal').textContent = Number.isFinite(m.newYears) ? `${m.newYears.toFixed(1)} yrs` : 'n/a';
+      $('timeSavedVal').textContent = `${m.timeSaved.toFixed(1)} yrs`;
+      $('interestSavedVal').textContent = currency(m.interestSaved);
 
-    $('activeDebtVal').textContent = currency(m.activeDebt);
-    $('activeDebtNote').textContent = m.stageLabel;
-    $('finalDebtVal').textContent = currency(m.finalDebt);
-    $('interestNowVal').textContent = currency(m.interestNow);
-    $('interestFinalVal').textContent = currency(m.interestFinal);
-    $('unlockVal').textContent = m.rentUnlocked ? 'UNLOCKED' : 'NOT YET';
-    $('unlockNote').textContent = m.rentUnlocked ? 'Fence paid and property income-live.' : 'Fence and/or stage still blocking rent.';
-    $('rentVsInterestVal').textContent = currency(m.rentVsInterest);
-    $('rentVsInterestNote').textContent = m.rentVsInterest >= 0 ? 'Rent covers interest.' : 'Interest still beats rent.';
-    $('pressureSignalVal').textContent = m.pressure;
-    $('pressureSignalNote').textContent = m.pressureNote;
-    $('impactVal').textContent = m.impact;
-    $('impactNote').textContent = m.impactNote;
-    $('equityVal').textContent = currency(m.equity);
+      let pporSummary = 'Selling meaningfully accelerates the PPOR plan.';
+      let pporClass = 'good';
+      if (m.timeSaved < 1.5 && m.interestSaved < 30000) {
+        pporSummary = 'Selling has limited PPOR impact at this sale price.';
+        pporClass = 'warn';
+      }
+      if (m.rentVsInterest >= 0 && m.timeSaved < 3) {
+        pporSummary = 'Holding is still defensible because Wandina is not strongly hurting the PPOR plan.';
+        pporClass = 'good';
+      }
+      $('pporSummary').innerHTML = `<span class="${pporClass}"><strong>${pporSummary}</strong></span><br><br>
+        Current weekly repayment: ${currency(m.currentWeekly)}<br>
+        Current total interest remaining: ${currency(m.currentInterest)}<br>
+        Estimated CGT used in scenario: ${currency(m.cgt)}`;
 
-    $('netProceedsVal').textContent = currency(m.netProceeds);
-    $('newPporVal').textContent = currency(m.newPpor);
-    $('newWeeklyVal').textContent = currency(m.newWeekly);
-    $('newYearsVal').textContent = Number.isFinite(m.newYears) ? `${m.newYears.toFixed(1)} yrs` : 'n/a';
-    $('timeSavedVal').textContent = `${m.timeSaved.toFixed(1)} yrs`;
-    $('interestSavedVal').textContent = currency(m.interestSaved);
+      $('bestSellWindow').value = `Year ${m.bestYear}`;
+      const timingLead = m.bestYear === 1
+        ? 'On these assumptions, earlier selling has the strongest PPOR effect.'
+        : `On these assumptions, Year ${m.bestYear} gives the strongest PPOR acceleration.`;
+      $('timingSummary').textContent = timingLead;
 
-    let pporSummary = 'Selling meaningfully accelerates the PPOR plan.';
-    let pporClass = 'good';
-    if (m.timeSaved < 1.5 && m.interestSaved < 30000) {
-      pporSummary = 'Selling has limited PPOR impact at this sale price.';
-      pporClass = 'warn';
+      $('timingRows').innerHTML = m.timingRows.map(r => `
+        <div class="row">
+          <strong>Year ${r.y}</strong><br>
+          Future value: ${currency(r.futureValue)}<br>
+          Net proceeds: ${currency(r.futureNet)}<br>
+          PPOR time saved: ${r.futureTimeSaved.toFixed(1)} yrs<br>
+          Interest saved: ${currency(r.futureInterestSaved)}
+        </div>
+      `).join('');
+
+      setStatusCard($('verdictCard'), m.decision === 'SELL WINDOW OPEN' ? 'status-bad' : (m.decision === 'WATCH' ? 'status-warn' : 'status-good'));
+      setStatusCard($('floorCard'), m.floorStatus === 'BELOW' ? 'status-bad' : (m.floorStatus === 'NEAR' ? 'status-warn' : 'status-good'));
+      setStatusCard($('commandCard'), m.floorStatus === 'BELOW' ? 'status-bad' : (m.decision === 'WATCH' ? 'status-warn' : 'status-good'));
+      setStatusCard($('unlockCard'), m.rentUnlocked ? 'status-good' : 'status-bad');
+      setStatusCard($('rentVsInterestCard'), m.rentVsInterest >= 0 ? 'status-good' : 'status-warn');
+      setStatusCard($('pressureCard'), m.pressure === 'LOW' ? 'status-good' : (m.pressure === 'NEUTRAL' ? 'status-warn' : 'status-bad'));
+      setStatusCard($('impactCard'), m.impact === 'HELPING' ? 'status-good' : (m.impact === 'BLOCKED' || m.impact === 'WAITING' ? 'status-warn' : 'status-bad'));
+      setStatusCard($('decisionCard'), m.decision === 'HOLD' ? 'status-good' : (m.decision === 'WATCH' ? 'status-warn' : 'status-bad'));
+
+      debug('Render completed successfully');
+      setStickyDebug('render ok');
     }
-    if (m.rentVsInterest >= 0 && m.timeSaved < 3) {
-      pporSummary = 'Holding is still defensible because Wandina is not strongly hurting the PPOR plan.';
-      pporClass = 'good';
-    }
-    if (m.stageLabel !== 'Rented / Complete' && !m.rentUnlocked) {
-      pporSummary = 'You are still pre-income. Fence payment and completion timing matter before any sell call.';
-      pporClass = 'warn';
-    }
-    $('pporSummary').innerHTML = `<span class="${pporClass}"><strong>${pporSummary}</strong></span><br><br>
-      Current weekly repayment: ${currency(m.pporWeekly)}<br>
-      Current total interest remaining: ${currency(m.currentInterest)}<br>
-      Estimated CGT used in scenario: ${currency(Math.max(0, (num($('salePrice').value)- (num($('equityLoan').value)+num($('buildLoan').value)))) * (num($('cgtPct').value)/100) * (num($('incomeYearType').value)||1))}`;
 
-    $('bestSellWindow').textContent = `Year ${m.bestYear}`;
-    $('timingSummary').textContent = m.bestYear === 1
-      ? 'On these assumptions, earlier selling has the strongest PPOR effect.'
-      : `On these assumptions, Year ${m.bestYear} gives the strongest PPOR acceleration.`;
+    document.querySelectorAll('input,select,textarea').forEach(el => el.addEventListener('input', render));
+    $('addBill').addEventListener('click', () => {
+      const d = today(); d.setDate(d.getDate()+14);
+      const dt = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      addBillRow('', '', dt);
+      render();
+    });
 
-    $('timingRows').innerHTML = m.timingRows.map(r => `
-      <div class="row">
-        <strong>Year ${r.y}</strong><br>
-        Future value: ${currency(r.futureValue)}<br>
-        Net proceeds: ${currency(r.futureNet)}<br>
-        PPOR time saved: ${r.futureTimeSaved.toFixed(1)} yrs<br>
-        Interest saved: ${currency(r.futureInterestSaved)}
-      </div>
-    `).join('');
+    const d = today(); d.setDate(d.getDate()+21);
+    addBillRow('Power bill', '1433', `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
 
-    setStatusCard($('metricVerdict'), m.decision === 'SELL WINDOW OPEN' ? 'status-bad' : (m.decision === 'WATCH' ? 'status-warn' : 'status-good'));
-    setStatusCard($('metricFloor'), m.floorStatus === 'BELOW' ? 'status-bad' : (m.floorStatus === 'NEAR' ? 'status-warn' : 'status-good'));
-    setStatusCard($('commandCard'), m.floorStatus === 'BELOW' ? 'status-bad' : (m.decision === 'WATCH' ? 'status-warn' : 'status-good'));
-    setStatusCard($('unlockCard'), m.rentUnlocked ? 'status-good' : 'status-bad');
-    setStatusCard($('rentVsInterestCard'), m.rentVsInterest >= 0 ? 'status-good' : 'status-warn');
-    setStatusCard($('wandinaPressureCard'), m.pressure === 'LOW' ? 'status-good' : (m.pressure === 'NEUTRAL' ? 'status-warn' : 'status-bad'));
-    setStatusCard($('impactCard'), m.impact === 'HELPING' ? 'status-good' : (m.impact === 'BLOCKED' || m.impact === 'WAITING' ? 'status-warn' : 'status-bad'));
-  }
-
-  document.querySelectorAll('input,select,textarea').forEach(el => el.addEventListener('input', render));
-  $('addBill').addEventListener('click', () => {
-    const d = today(); d.setDate(d.getDate()+14);
-    const dt = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    addBillRow('', '', dt);
     render();
-  });
-
-  const d = today(); d.setDate(d.getDate()+21);
-  addBillRow('Power bill', '1433', `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
-  render();
+  } catch (err) {
+    const panel = document.getElementById('debugPanel');
+    if (panel) {
+      panel.textContent = 'ERROR\n' + err.message + '\n\n' + (err.stack || '');
+    }
+    const sticky = document.getElementById('stickyDebug');
+    if (sticky) sticky.textContent = 'Debug: ERROR';
+  }
 })();
 </script>
 </body>
