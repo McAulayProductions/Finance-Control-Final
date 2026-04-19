@@ -1,153 +1,743 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Finance Control Product</title>
-
-<style>
-body{font-family:Arial;background:#111;color:#fff;padding:12px}
-.card{background:#1c1c1c;padding:16px;margin-bottom:12px;border-radius:12px}
-h2{margin:0 0 10px 0}
-input,select{width:100%;padding:8px;margin-top:5px;border-radius:6px;border:none}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.good{color:#00ff88}
-.warn{color:#ffaa00}
-.bad{color:#ff4d4d}
-.small{opacity:.7;font-size:12px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance Control Full Shell Merged</title>
+  <style>
+    :root{
+      --bg:#0f172a; --card:#111827; --card2:#1f2937; --text:#f8fafc; --muted:#94a3b8;
+      --green:#10b981; --amber:#f59e0b; --red:#ef4444; --blue:#3b82f6; --border:#334155;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;padding:12px;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1400px;margin:0 auto}
+    .card,.metric,.hero,details,.status-box,.sticky{background:var(--card);border:1px solid var(--border);border-radius:16px}
+    .hero,.card{padding:16px}
+    .card{margin-bottom:12px}
+    h1,h2,h3{margin:0 0 10px}
+    .sub,.small,.section-note{color:var(--muted);line-height:1.5}
+    .sub{font-size:14px}.small,.section-note{font-size:12px}
+    .sticky{position:sticky;top:8px;z-index:20;padding:10px;margin-bottom:12px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;background:rgba(17,24,39,.96)}
+    .mini{padding:10px;border:1px solid var(--border);border-radius:10px;background:#151922;font-size:12px}
+    .layout{display:grid;grid-template-columns:.98fr 1.02fr;gap:12px}
+    .stack{display:grid;gap:12px}
+    .grid-2,.grid-3,.grid-4{display:grid;gap:12px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .mode-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+    .mode-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    label{display:block}
+    label span{display:block;margin-bottom:6px;color:var(--muted);font-size:13px;font-weight:700}
+    input,select,button,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:#111827;font-size:15px}
+    input[readonly]{background:#e5e7eb}
+    button{font-weight:700;cursor:pointer}
+    .active{background:var(--green)!important;border-color:var(--green)!important;color:#052e16}
+    .metric{padding:14px;background:var(--card2)}
+    .metric .label{font-size:12px;color:var(--muted);font-weight:700}
+    .metric .value{font-size:26px;font-weight:800;margin-top:8px;line-height:1.08;word-break:break-word}
+    .metric .note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+    .status-box{padding:14px;line-height:1.6}
+    .status-good{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.45)}
+    .status-warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.45)}
+    .status-bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
+    .status-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
+    details{overflow:hidden}
+    details>summary{list-style:none;cursor:pointer;padding:14px;font-weight:800}
+    details>summary::-webkit-details-marker{display:none}
+    .detail-body{padding:0 14px 14px;border-top:1px solid var(--border)}
+    .row{display:flex;justify-content:space-between;gap:10px;padding:12px;border-radius:12px;background:var(--card2);border:1px solid var(--border);margin-bottom:10px}
+    .bill-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;align-items:end;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{padding:8px 12px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--border)}
+    .goodP{background:rgba(16,185,129,.12);color:#bbf7d0}
+    .warnP{background:rgba(245,158,11,.12);color:#fde68a}
+    .badP{background:rgba(239,68,68,.12);color:#fecaca}
+    .infoP{background:rgba(59,130,246,.12);color:#dbeafe}
+    .progress{height:12px;background:#020617;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+    .progress-fill{height:100%;width:0%;background:var(--green)}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+    th{color:var(--muted)}
+    tr:last-child td{border-bottom:none}
+    #debugPanel{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    @media (max-width:980px){
+      .sticky,.layout,.grid-2,.grid-3,.grid-4,.mode-row,.mode-row.three,.bill-row{grid-template-columns:1fr}
+      .metric .value{font-size:22px}
+      .row{flex-direction:column;align-items:flex-start}
+    }
+  </style>
 </head>
-
 <body>
+<div class="wrap">
 
-<h1>Finance Control</h1>
+  <div class="sticky">
+    <div class="mini" id="stickyVerdict">Verdict: -</div>
+    <div class="mini" id="stickyFloor">Floor: -</div>
+    <div class="mini" id="stickyTrigger">Wandina: -</div>
+    <div class="mini" id="stickyDebug">Debug: booting</div>
+  </div>
 
-<!-- TOP COMMAND -->
-<div class="card">
-<h2>Today at a glance</h2>
+  <div class="hero">
+    <h1>Finance Control</h1>
+    <div class="sub">Full shell with Trigger Dashboard + Weekly Command merged in.</div>
+    <div class="section-note" id="runtimeStatus">Runtime status: booting…</div>
+    <div class="mode-row">
+      <button id="mode-now" class="active" type="button">Current phase</button>
+      <button id="mode-future" type="button">2027 0.8 mode</button>
+    </div>
+    <div class="mode-row three">
+      <button id="strategy-auto" class="active" type="button">Auto mode</button>
+      <button id="strategy-survival" type="button">Survival mode</button>
+      <button id="strategy-attack" type="button">Attack mode</button>
+    </div>
+  </div>
 
-<div id="verdict"></div>
-<div id="floor"></div>
-<div id="ppor"></div>
-<div id="trigger"></div>
+  <div class="card">
+    <h2>Today at a glance</h2>
+    <div class="grid-4">
+      <div class="metric"><div class="label">Verdict</div><div class="value" id="topVerdictVal">-</div><div class="note" id="topVerdictNote"></div></div>
+      <div class="metric"><div class="label">Floor status</div><div class="value" id="topFloorVal">-</div><div class="note" id="topFloorNote"></div></div>
+      <div class="metric"><div class="label">PPOR years cut</div><div class="value" id="topPPORVal">-</div><div class="note">Current sell scenario</div></div>
+      <div class="metric"><div class="label">Wandina trigger</div><div class="value" id="topTriggerVal">-</div><div class="note" id="topTriggerNote"></div></div>
+    </div>
+  </div>
 
-<br>
+  <div class="grid-2">
+    <div class="status-box status-info" id="topCommandBox">
+      <h2>Weekly command</h2>
+      <div id="topCommandOutput">-</div>
+    </div>
+    <div class="status-box status-info" id="topNextBox">
+      <h2 id="topNextTitle">What changes this week</h2>
+      <div id="topNextBody">-</div>
+    </div>
+  </div>
 
-<strong>Weekly Command</strong>
-<div id="command"></div>
+  <div class="card status-info" id="debugCard">
+    <h2>Runtime debug</h2>
+    <div class="small">This panel shows missing IDs and script errors directly on the page.</div>
+    <div id="debugPanel">Booting…</div>
+  </div>
 
-<br>
+  <div class="layout">
+    <div class="stack">
 
-<strong>What changes this week</strong>
-<div id="changes"></div>
-</div>
+      <div class="card">
+        <h2>Control panel</h2>
+        <div class="grid-2">
+          <label><span>Offset</span><input id="offset" value="30000"></label>
+          <label><span>Savings</span><input id="savings" value="2600"></label>
+          <label><span>Weekly income</span><input id="income" value="3250"></label>
+          <label><span>Weekly spend</span><input id="spend" value="600"></label>
+          <label><span>Offset floor</span><input id="floor" value="30000"></label>
+          <label><span>Weeks to 24 July</span><input id="weeksToTarget" readonly></label>
+          <label><span>Future income</span><input id="incomeFuture" value="2600"></label>
+          <label><span>Future TRS days / week</span><input id="futureTRSDays" value="0"></label>
+          <label><span>TRS pay / day</span><input id="trsRate" value="450"></label>
+          <label><span>PPOR balance</span><input id="pporBalance" value="560540"></label>
+          <label><span>PPOR rate %</span><input id="pporRate" value="5.92"></label>
+          <label><span>PPOR years remaining</span><input id="pporYears" value="28.5"></label>
+          <label><span>PPOR weekly repayment</span><input id="pporWeeklyCalc" readonly></label>
+          <label><span>Living default</span><input id="livingBase" value="550"></label>
+          <label><span>Splurge default</span><input id="splurgeBase" value="50"></label>
+        </div>
+      </div>
 
-<!-- INPUT -->
-<div class="card">
-<h2>Control Panel</h2>
+      <div class="card">
+        <h2>Upcoming bills</h2>
+        <div id="billsContainer"></div>
+        <button id="addBill" type="button">Add upcoming bill</button>
+      </div>
 
-<label>Offset</label>
-<input id="offset" value="30000">
+      <div class="card">
+        <h2>August obligations engine</h2>
+        <div class="grid-4">
+          <div class="metric"><div class="label">Fence</div><div class="value" id="fenceVal">-</div></div>
+          <div class="metric"><div class="label">Cruise remaining</div><div class="value" id="cruiseVal">-</div></div>
+          <div class="metric"><div class="label">Current savings</div><div class="value" id="savingsVal">-</div></div>
+          <div class="metric"><div class="label">Required weekly</div><div class="value" id="weeklyReqVal">-</div></div>
+        </div>
+        <div class="section-note" style="margin-top:10px;">Funding progress</div>
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="small" id="progressText" style="margin-top:8px;"></div>
+      </div>
 
-<label>Savings</label>
-<input id="savings" value="2600">
+      <div class="card">
+        <h2>Wandina Decision Engine</h2>
+        <div class="grid-2">
+          <label><span>Build stage</span>
+            <select id="stage">
+              <option value="0.10">Slab down</option>
+              <option value="0.25" selected>Plate Height</option>
+              <option value="0.45">Roof Cover</option>
+              <option value="0.65">Lockup</option>
+              <option value="0.82">Tiling</option>
+              <option value="0.97">Practical Completion</option>
+              <option value="1.00">Rented / Complete</option>
+            </select>
+          </label>
+          <label><span>Fence paid?</span>
+            <select id="fence">
+              <option value="0" selected>No</option>
+              <option value="1">Yes</option>
+            </select>
+          </label>
+          <label><span>Equity loan</span><input id="equityLoan" value="215000"></label>
+          <label><span>Build lending</span><input id="buildLoan" value="373000"></label>
+          <label><span>Rent / week</span><input id="rent" value="700"></label>
+          <label><span>IP interest rate %</span><input id="ipRate" value="6.39"></label>
+          <label><span>Sale price / value</span><input id="salePrice" value="800000"></label>
+          <label><span>Income mode</span>
+            <select id="incomeMode">
+              <option value="1">Full income year</option>
+              <option value="0.8">Reduced income year</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid-2" style="margin-top:12px;">
+          <div class="metric"><div class="label">Current active debt</div><div class="value" id="activeDebtVal">-</div><div class="note" id="activeDebtNote"></div></div>
+          <div class="metric"><div class="label">Final debt</div><div class="value" id="finalDebtVal">-</div></div>
+          <div class="metric"><div class="label">Weekly interest now</div><div class="value" id="interestNowVal">-</div></div>
+          <div class="metric"><div class="label">Weekly interest final</div><div class="value" id="interestFinalVal">-</div></div>
+          <div class="metric"><div class="label">WACHS unlock</div><div class="value" id="unlockVal">-</div><div class="note" id="unlockNote"></div></div>
+          <div class="metric"><div class="label">Rent vs interest</div><div class="value" id="rentVsInterestVal">-</div><div class="note" id="rentVsInterestNote"></div></div>
+          <div class="metric"><div class="label">Pressure signal</div><div class="value" id="pressureSignalVal">-</div><div class="note" id="pressureSignalNote"></div></div>
+          <div class="metric"><div class="label">PPOR impact</div><div class="value" id="impactVal">-</div><div class="note" id="impactNote"></div></div>
+        </div>
+      </div>
 
-<label>Weekly Income</label>
-<input id="income" value="3250">
+      <div class="card">
+        <h2>Trigger Dashboard</h2>
+        <div class="pillbar" id="triggerPills"></div>
+        <div class="grid-4" style="margin-top:12px;">
+          <div class="metric"><div class="label">Trigger verdict</div><div class="value" id="triggerVerdictVal">-</div></div>
+          <div class="metric"><div class="label">Weekly pressure</div><div class="value" id="triggerPressureVal">-</div></div>
+          <div class="metric"><div class="label">Final weekly position</div><div class="value" id="triggerFinalVal">-</div></div>
+          <div class="metric"><div class="label">8-week floor gap</div><div class="value" id="triggerFloorGapVal">-</div></div>
+        </div>
+        <div class="status-box status-info" style="margin-top:12px;" id="triggerReadout">-</div>
+        <table style="margin-top:12px;">
+          <thead><tr><th>Zone</th><th>Meaning</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill goodP">GREEN</span></td><td>System above floor with no urgent correction needed.</td><td>Maintain settings. Do not get sloppy.</td></tr>
+            <tr><td><span class="pill warnP">AMBER</span></td><td>System drifting or nearing a trigger line.</td><td>Tighten spend and prep decisions.</td></tr>
+            <tr><td><span class="pill badP">RED</span></td><td>System under pressure or execution window open.</td><td>Act now. Protect offset or execute timing.</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-<label>Weekly Spend</label>
-<input id="spend" value="600">
+      <details>
+        <summary>Decision Intelligence Layer</summary>
+        <div class="detail-body">
+          <div class="grid-4" style="margin-top:12px;">
+            <label><span>Low valuation</span><input id="valLow" value="720000"></label>
+            <label><span>Mid valuation</span><input id="valMid" value="800000"></label>
+            <label><span>High valuation</span><input id="valHigh" value="860000"></label>
+            <label><span>Growth rate %</span><input id="growthRate" value="5"></label>
+          </div>
+          <div class="grid-3" style="margin-top:12px;">
+            <label><span>Years to test</span><input id="yearsToTest" value="5"></label>
+            <label><span>Extra sale costs ($)</span><input id="extraSaleCosts" value="4000"></label>
+            <label><span>Best sell window</span><input id="bestSellWindow" readonly></label>
+          </div>
+          <div class="grid-4" style="margin-top:12px;">
+            <div class="metric"><div class="label">Valuation confidence</div><div class="value" id="valConfidenceVal">-</div></div>
+            <div class="metric"><div class="label">Best now case</div><div class="value" id="bestNowVal">-</div></div>
+            <div class="metric"><div class="label">Best later case</div><div class="value" id="bestLaterVal">-</div></div>
+            <div class="metric"><div class="label">Decision edge</div><div class="value" id="decisionEdgeVal">-</div></div>
+          </div>
+          <div class="status-box status-info" style="margin-top:12px;" id="intelligenceSummary">-</div>
+        </div>
+      </details>
 
-<label>Build Stage</label>
-<select id="stage">
-<option value="0">Slab</option>
-<option value="0.25">Plate Height</option>
-<option value="0.5">Roof</option>
-<option value="0.75">Lockup</option>
-<option value="1">Complete</option>
-</select>
+    </div>
 
-</div>
+    <div class="stack">
 
-<!-- WANDINA -->
-<div class="card">
-<h2>Wandina Engine</h2>
+      <div class="grid-4">
+        <div class="metric"><div class="label">Verdict</div><div class="value" id="verdictVal">-</div><div class="note" id="verdictNote"></div></div>
+        <div class="metric"><div class="label">Floor status</div><div class="value" id="floorStatusVal">-</div><div class="note" id="floorStatusNote"></div></div>
+        <div class="metric"><div class="label">Safe spend</div><div class="value" id="safeSpendVal">-</div></div>
+        <div class="metric"><div class="label">Final position</div><div class="value" id="finalVal">-</div></div>
+      </div>
 
-<div id="wandina"></div>
+      <div class="status-box status-info" id="commandCard">
+        <h2>Weekly command</h2>
+        <div id="commandOutput">-</div>
+      </div>
 
-</div>
+      <div class="status-box status-info">
+        <h2>What changes this week</h2>
+        <h3 id="nextTitle">-</h3>
+        <div id="nextBody">-</div>
+      </div>
 
-<!-- DEBUG -->
-<div class="card small">
-<div id="debug">Loading...</div>
+      <div class="card">
+        <h2>PPOR Kill Projection</h2>
+        <div class="grid-2">
+          <label><span>Selling costs %</span><input id="sellCostPct" value="2.5"></label>
+          <label><span>Estimated CGT % of gain</span><input id="cgtPct" value="25"></label>
+        </div>
+        <div class="grid-2" style="margin-top:12px;">
+          <div class="metric"><div class="label">Net sale proceeds</div><div class="value" id="netProceedsVal">-</div></div>
+          <div class="metric"><div class="label">New PPOR balance</div><div class="value" id="newPporVal">-</div></div>
+          <div class="metric"><div class="label">New weekly repayment</div><div class="value" id="newWeeklyVal">-</div></div>
+          <div class="metric"><div class="label">Years remaining</div><div class="value" id="newYearsVal">-</div></div>
+          <div class="metric"><div class="label">Time saved</div><div class="value" id="timeSavedVal">-</div></div>
+          <div class="metric"><div class="label">Interest saved</div><div class="value" id="interestSavedVal">-</div></div>
+        </div>
+        <div class="row" id="pporSummary">-</div>
+      </div>
+
+      <div class="card">
+        <h2>Strategy summary</h2>
+        <div class="status-box status-info" id="strategySummary">-</div>
+      </div>
+
+      <div class="card">
+        <h2>Suggested weekly transfers</h2>
+        <div class="grid-4">
+          <div class="metric"><div class="label">Living</div><div class="value" id="livingVal">-</div></div>
+          <div class="metric"><div class="label">Splurge</div><div class="value" id="splurgeVal">-</div></div>
+          <div class="metric"><div class="label">Bills bucket</div><div class="value" id="billsVal">-</div></div>
+          <div class="metric"><div class="label">Savings target</div><div class="value" id="saveTargetVal">-</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Decision signals</h2>
+        <div class="grid-4">
+          <div class="metric"><div class="label">Refinance readiness</div><div class="value" id="refinanceVal">-</div></div>
+          <div class="metric"><div class="label">Sell signal</div><div class="value" id="sellVal">-</div></div>
+          <div class="metric"><div class="label">Debt recycle readiness</div><div class="value" id="debtVal">-</div></div>
+          <div class="metric"><div class="label">2027 readiness</div><div class="value" id="futureReadyVal">-</div></div>
+        </div>
+        <div class="status-box status-info" style="margin-top:12px;" id="equityAction">-</div>
+      </div>
+
+      <div class="card">
+        <h2>Pressure stack</h2>
+        <div class="row"><span>PPOR weekly repayment</span><strong id="stackPPOR">-</strong></div>
+        <div class="row"><span>Bills bucket</span><strong id="stackBills">-</strong></div>
+        <div class="row"><span>August savings target</span><strong id="stackSavings">-</strong></div>
+        <div class="row"><span>Upcoming bills</span><strong id="stackUpcoming">-</strong></div>
+        <div class="row"><span>IP current pressure</span><strong id="stackIP">-</strong></div>
+        <div class="row"><span>Total weekly pressure</span><strong id="stackTotal">-</strong></div>
+      </div>
+
+      <div class="card">
+        <h2>Offset trend</h2>
+        <div class="grid-3">
+          <div class="metric"><div class="label">Current offset</div><div class="value" id="offsetNowVal">-</div></div>
+          <div class="metric"><div class="label">4-week projection</div><div class="value" id="offset4Val">-</div></div>
+          <div class="metric"><div class="label">8-week projection</div><div class="value" id="offset8Val">-</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <script>
+(function(){
+  const REQUIRED_IDS = ['debugPanel','offset','savings','income','spend','floor','weeksToTarget','pporBalance','pporRate','pporYears','salePrice','stage','fence','equityLoan','buildLoan','rent','ipRate','incomeMode','addBill','billsContainer'];
+  const debugLines = [];
+  const $ = id => document.getElementById(id);
+  const debug = msg => {
+    debugLines.push(String(msg));
+    if ($('debugPanel')) $('debugPanel').textContent = debugLines.join('\n');
+    if ($('runtimeStatus')) $('runtimeStatus').textContent = 'Runtime status: ' + msg;
+  };
+  const setStickyDebug = msg => { if ($('stickyDebug')) $('stickyDebug').textContent = 'Debug: ' + msg; };
 
-function calc(){
+  try {
+    const missing = REQUIRED_IDS.filter(id => !$(id));
+    if (missing.length) {
+      debug('Missing IDs: ' + missing.join(', '));
+      setStickyDebug('missing IDs');
+      return;
+    }
 
-try{
+    debug('DOM self-check passed');
+    setStickyDebug('DOM ok');
 
-let offset=+offsetEl.value||0
-let savings=+savingsEl.value||0
-let income=+incomeEl.value||0
-let spend=+spendEl.value||0
-let stage=+stageEl.value||0
+    const currency = n => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(n)?n:0);
+    const num = v => {
+      const n = parseFloat(String(v).replace(/[^0-9.-]/g,''));
+      return Number.isFinite(n) ? n : 0;
+    };
+    const today = () => new Date();
 
-let net=income-spend
-let buffer=offset+savings
-let weeks=buffer/(spend||1)
+    function weeksToJuly24() {
+      const now = today();
+      const year = (now.getMonth() > 6 || (now.getMonth() === 6 && now.getDate() > 24)) ? now.getFullYear()+1 : now.getFullYear();
+      const target = new Date(year, 6, 24);
+      const diffDays = Math.max(0, Math.ceil((target - now)/(1000*60*60*24)));
+      return Math.max(1, Math.ceil(diffDays/7));
+    }
 
-let buildDebt=550000+(stage*200000)
+    function pmt(balance, annualRatePct, years){
+      const r = annualRatePct/100/52;
+      const n = years*52;
+      if (balance <= 0) return 0;
+      if (r <= 0) return balance / n;
+      return balance * r / (1 - Math.pow(1+r, -n));
+    }
 
-let verdictTxt="STABLE"
-let verdictClass="good"
+    function totalInterest(balance, annualRatePct, years){
+      const payment = pmt(balance, annualRatePct, years);
+      const n = years*52;
+      return Math.max(0, payment*n - balance);
+    }
 
-if(weeks<4){verdictTxt="DANGER";verdictClass="bad"}
-else if(weeks<8){verdictTxt="TIGHT";verdictClass="warn"}
+    function yearsForPayment(balance, annualRatePct, weeklyPayment){
+      if (balance <= 0) return 0;
+      const r = annualRatePct/100/52;
+      if (weeklyPayment <= balance * r) return Infinity;
+      const n = -Math.log(1 - (balance*r/weeklyPayment)) / Math.log(1+r);
+      return n / 52;
+    }
 
-verdict.innerHTML=`<span class="${verdictClass}">${verdictTxt}</span>`
+    function stageInfo(stage){
+      const map = {'0.10':'Slab down','0.25':'Plate Height','0.45':'Roof Cover','0.65':'Lockup','0.82':'Tiling','0.97':'Practical Completion','1.00':'Rented / Complete'};
+      return map[stage.toFixed(2)] || 'Stage';
+    }
 
-floor.innerHTML=`Buffer weeks: ${weeks.toFixed(1)}`
+    function addBillRow(name='', amount='', dueDate=''){
+      const row = document.createElement('div');
+      row.className = 'bill-row';
+      row.innerHTML = `
+        <label><span>Bill name</span><input class="bill-name" value="${name}"></label>
+        <label><span>Amount</span><input class="bill-amount" value="${amount}"></label>
+        <label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label>
+        <button type="button" class="remove-bill">Remove</button>
+      `;
+      $('billsContainer').appendChild(row);
+      row.querySelectorAll('input').forEach(el => el.addEventListener('input', render));
+      row.querySelector('.remove-bill').addEventListener('click', () => { row.remove(); render(); });
+    }
 
-let yearsCut=(buildDebt/100000)
-ppor.innerHTML=`PPOR impact: ${yearsCut.toFixed(1)} years`
+    function readBills(){
+      return Array.from(document.querySelectorAll('.bill-row')).map(row => {
+        const amount = num(row.querySelector('.bill-amount').value);
+        const dueDate = row.querySelector('.bill-date').value;
+        const diffDays = dueDate ? Math.max(1, Math.ceil((new Date(dueDate) - today())/(1000*60*60*24))) : 7;
+        const weeks = Math.max(1, Math.ceil(diffDays/7));
+        return { amount, weekly: amount / weeks };
+      }).filter(x => x.amount > 0);
+    }
 
-let triggerTxt="HOLD"
-if(stage>0.7 && weeks>8) triggerTxt="SELL WINDOW"
-trigger.innerHTML=triggerTxt
+    function pill(cls, text){
+      const d = document.createElement('div');
+      d.className = 'pill ' + cls;
+      d.textContent = text;
+      return d;
+    }
 
-command.innerHTML = net>0
-? "Maintain transfers. Stay disciplined."
-: "Cut spending immediately."
+    function nowScenario(baseSalePrice, pporBalance, pporRate, pporYears, incomeMode, finalDebt){
+      const sellCostPct = num($('sellCostPct').value)/100;
+      const extraSaleCosts = num($('extraSaleCosts').value);
+      const cgtPct = num($('cgtPct').value)/100;
+      const grossSaleProceeds = baseSalePrice - finalDebt - baseSalePrice*sellCostPct - extraSaleCosts;
+      const estimatedGain = Math.max(0, baseSalePrice - finalDebt);
+      const cgt = estimatedGain * cgtPct * incomeMode;
+      const netProceeds = Math.max(0, grossSaleProceeds - cgt);
+      const currentWeekly = pmt(pporBalance, pporRate, pporYears);
+      const newPpor = Math.max(0, pporBalance - netProceeds);
+      const newYears = yearsForPayment(newPpor, pporRate, currentWeekly);
+      const timeSaved = Number.isFinite(newYears) ? Math.max(0, pporYears - newYears) : 0;
+      return {netProceeds, timeSaved};
+    }
 
-changes.innerHTML = weeks<6
-? "You are entering pressure zone"
-: "System stable"
+    function compute(){
+      const weeks = weeksToJuly24();
+      $('weeksToTarget').value = String(weeks);
 
-wandina.innerHTML = `
-Build debt: $${buildDebt.toFixed(0)}<br>
-Stage: ${stage}
-`
+      const offset = num($('offset').value);
+      const savings = num($('savings').value);
+      const income = num($('income').value);
+      const spend = num($('spend').value);
+      const floor = num($('floor').value);
 
-debug.innerText="Render OK"
+      const stage = num($('stage').value);
+      const stageLabel = stageInfo(stage);
+      const fencePaid = num($('fence').value) === 1;
+      const equityLoan = num($('equityLoan').value);
+      const buildLoan = num($('buildLoan').value);
+      const rent = num($('rent').value);
+      const ipRate = num($('ipRate').value);
+      const salePrice = num($('salePrice').value);
+      const incomeMode = num($('incomeMode').value) || 1;
 
-}catch(e){
-debug.innerText=e.message
-}
+      const finalDebt = equityLoan + buildLoan;
+      const activeDebt = equityLoan + buildLoan * stage;
+      const interestNow = activeDebt * (ipRate/100) / 52;
+      const interestFinal = finalDebt * (ipRate/100) / 52;
+      const rentUnlocked = fencePaid && stage >= 1;
+      const rentVsInterest = rentUnlocked ? (rent - interestFinal) : (0 - interestNow);
 
-}
+      let pressure = 'HIGH', pressureNote = 'Negative carry is still biting.';
+      if (rentVsInterest >= 100) { pressure = 'LOW'; pressureNote = 'Rent covers interest with room.'; }
+      else if (rentVsInterest >= -50) { pressure = 'NEUTRAL'; pressureNote = 'Close to breakeven.'; }
 
-const offsetEl=document.getElementById('offset')
-const savingsEl=document.getElementById('savings')
-const incomeEl=document.getElementById('income')
-const spendEl=document.getElementById('spend')
-const stageEl=document.getElementById('stage')
+      let impact = 'HURTING', impactNote = 'Wandina is still slowing the PPOR plan.';
+      if (!fencePaid) { impact = 'BLOCKED'; impactNote = 'Fence payment is still gating WACHS income.'; }
+      else if (stage < 1) { impact = 'WAITING'; impactNote = 'Build not income-live yet.'; }
+      else if (rentVsInterest >= 0) { impact = 'HELPING'; impactNote = 'Income is no longer hurting the plan.'; }
 
-document.querySelectorAll("input,select").forEach(i=>i.addEventListener("input",calc))
+      const pporBalance = num($('pporBalance').value);
+      const pporRate = num($('pporRate').value);
+      const pporYears = num($('pporYears').value);
+      $('pporWeeklyCalc').value = Math.round(pmt(pporBalance, pporRate, pporYears)).toString();
 
-calc()
+      const sellCostPct = num($('sellCostPct').value)/100;
+      const extraSaleCosts = num($('extraSaleCosts').value);
+      const cgtPct = num($('cgtPct').value)/100;
 
+      const grossSaleProceeds = salePrice - finalDebt - salePrice*sellCostPct - extraSaleCosts;
+      const estimatedGain = Math.max(0, salePrice - finalDebt);
+      const cgt = estimatedGain * cgtPct * incomeMode;
+      const netProceeds = Math.max(0, grossSaleProceeds - cgt);
+
+      const currentWeekly = pmt(pporBalance, pporRate, pporYears);
+      const currentInterest = totalInterest(pporBalance, pporRate, pporYears);
+      const newPpor = Math.max(0, pporBalance - netProceeds);
+      const newWeekly = pmt(newPpor, pporRate, pporYears);
+      const newInterest = totalInterest(newPpor, pporRate, pporYears);
+      const newYears = yearsForPayment(newPpor, pporRate, currentWeekly);
+      const timeSaved = Number.isFinite(newYears) ? Math.max(0, pporYears - newYears) : 0;
+      const interestSaved = Math.max(0, currentInterest - newInterest);
+
+      const billsWeekly = readBills().reduce((a,b)=>a+b.weekly,0);
+      const weeklySavingsTarget = Math.max(0, (4644 + 11600 - savings) / weeks);
+      const totalPressure = currentWeekly + 150 + weeklySavingsTarget + billsWeekly + Math.max(0, interestNow);
+      const safeSpend = income - totalPressure;
+      const finalPos = safeSpend - spend;
+      const offset4 = offset + savings + finalPos * 4;
+      const offset8 = offset + savings + finalPos * 8;
+      const floorGap = offset8 - floor;
+
+      let floorStatus = 'SAFE';
+      if (floorGap < 0) floorStatus = 'BELOW';
+      else if (floorGap < 3000) floorStatus = 'NEAR';
+
+      let decision = 'GREEN';
+      let decisionNote = 'System stable.';
+      if (floorStatus === 'BELOW') { decision = 'RED'; decisionNote = 'Offset floor breach projected.'; }
+      else if (floorStatus === 'NEAR' || finalPos < 100) { decision = 'AMBER'; decisionNote = 'System needs tightening.'; }
+      if (stage >= 1 && netProceeds > 120000 && (rentVsInterest < 0 || timeSaved >= 4)) {
+        decision = 'RED';
+        decisionNote = 'Execution zone open.';
+      } else if ((stage >= 0.82 || netProceeds > 90000) && decision !== 'RED') {
+        decision = 'AMBER';
+        decisionNote = 'Approaching a decision window.';
+      }
+
+      const growthRate = num($('growthRate').value)/100;
+      const yearsToTest = Math.max(1, Math.round(num($('yearsToTest').value)));
+      const low = num($('valLow').value);
+      const mid = num($('valMid').value);
+      const high = num($('valHigh').value);
+      const nowLow = nowScenario(low, pporBalance, pporRate, pporYears, incomeMode, finalDebt);
+      const nowMid = nowScenario(mid, pporBalance, pporRate, pporYears, incomeMode, finalDebt);
+      const nowHigh = nowScenario(high, pporBalance, pporRate, pporYears, incomeMode, finalDebt);
+      let bestYear = 1, bestLaterYearsCut = 0, bestScore = -Infinity;
+      for (let y=1; y<=yearsToTest; y++){
+        const futureValue = salePrice * Math.pow(1 + growthRate, y);
+        const scenario = nowScenario(futureValue, pporBalance, pporRate, pporYears, incomeMode, finalDebt);
+        const score = scenario.timeSaved;
+        if (score > bestScore){ bestScore = score; bestYear = y; bestLaterYearsCut = scenario.timeSaved; }
+      }
+      const confidenceSpread = mid > 0 ? ((high-low)/mid)*100 : 0;
+      const valuationConfidence = confidenceSpread <= 8 ? 'HIGH' : confidenceSpread <= 15 ? 'MED' : 'LOW';
+      const bestNow = Math.max(nowLow.timeSaved, nowMid.timeSaved, nowHigh.timeSaved);
+      const decisionEdge = bestLaterYearsCut - bestNow;
+
+      const livingBase = num($('livingBase').value) || 550;
+      const splurgeBase = num($('splurgeBase').value) || 50;
+      let living = livingBase, splurge = splurgeBase;
+      let strategy = 'ATTACK';
+      if (decision === 'RED' && floorStatus === 'BELOW') { strategy = 'SURVIVAL'; living = 500; splurge = 0; }
+      else if (decision === 'AMBER') { strategy = 'TIGHTEN'; living = 500; splurge = 25; }
+
+      const futureReady = offset8 >= 80000 && finalPos >= 0 ? 'READY' : offset8 >= 50000 ? 'CLOSE' : 'NOT READY';
+      const refinance = netProceeds >= 120000 ? 'POSSIBLE' : 'TOO EARLY';
+      const debtReady = netProceeds >= 100000 ? 'READY' : 'NOT READY';
+
+      return {stageLabel, activeDebt, finalDebt, interestNow, interestFinal, rentUnlocked, rentVsInterest, pressure, pressureNote, impact, impactNote,
+              decision, decisionNote, netProceeds, newPpor, newWeekly, newYears, timeSaved, interestSaved, currentWeekly, currentInterest, cgt,
+              safeSpend, finalPos, floorStatus, floorGap, billsWeekly, weeklySavingsTarget, totalPressure, offset, savings, offset4, offset8,
+              valuationConfidence, bestNow, bestLaterYearsCut, decisionEdge, bestYear, nowLow, nowMid, nowHigh, refinance, debtReady, futureReady,
+              strategy, living, splurge};
+    }
+
+    function render(){
+      debug('Render started');
+      const m = compute();
+
+      $('fenceVal').textContent = currency(4644);
+      $('cruiseVal').textContent = currency(11600);
+      $('savingsVal').textContent = currency(num($('savings').value));
+      $('weeklyReqVal').textContent = currency(m.weeklySavingsTarget);
+      const progress = Math.min((num($('savings').value)/(4644+11600))*100,100);
+      $('progressFill').style.width = progress + '%';
+      $('progressText').textContent = Math.round(progress) + '% funded';
+
+      $('topVerdictVal').textContent = m.decision;
+      $('topVerdictNote').textContent = m.decisionNote;
+      $('topFloorVal').textContent = m.floorStatus;
+      $('topFloorNote').textContent = `8-week gap ${currency(m.floorGap)}`;
+      $('topPPORVal').textContent = `${m.timeSaved.toFixed(1)} yrs`;
+      $('topTriggerVal').textContent = m.decision === 'RED' ? 'RED' : m.decision === 'AMBER' ? 'AMBER' : 'GREEN';
+      $('topTriggerNote').textContent = m.decision === 'RED' ? 'Execution zone' : m.decision === 'AMBER' ? 'Prepare zone' : 'Hold zone';
+
+      $('stickyVerdict').textContent = `Verdict: ${m.decision}`;
+      $('stickyFloor').textContent = `Floor: ${m.floorStatus}`;
+      $('stickyTrigger').textContent = `Wandina: ${m.decision === 'RED' ? 'RED' : m.decision === 'AMBER' ? 'AMBER' : 'GREEN'}`;
+
+      let command = 'Maintain current settings. Stay disciplined.';
+      let nextTitle = 'Maintain course';
+      let nextBody = 'Nothing dramatic changes this week.';
+      if (m.floorStatus === 'BELOW') {
+        command = 'Cut flexible spending immediately and protect the offset.';
+        nextTitle = 'Emergency floor protection';
+        nextBody = 'Pause splurge. Push living down. Review the next 14 days.';
+      } else if (m.decision === 'RED' && m.timeSaved >= 4) {
+        command = 'Prepare the sale execution model properly.';
+        nextTitle = 'Execution zone open';
+        nextBody = 'Contract timing, CGT discount, and cash-to-offset allocation matter more than another week of guessing.';
+      } else if (m.decision === 'AMBER') {
+        command = 'Tighten now before the floor gets tested.';
+        nextTitle = 'Preparation phase';
+        nextBody = 'Trim living, keep bills funded, and tighten decision timing.';
+      }
+      $('topCommandOutput').textContent = command;
+      $('commandOutput').textContent = command;
+      $('topNextTitle').textContent = nextTitle;
+      $('topNextBody').textContent = nextBody;
+      $('nextTitle').textContent = nextTitle;
+      $('nextBody').textContent = nextBody;
+
+      $('activeDebtVal').textContent = currency(m.activeDebt);
+      $('activeDebtNote').textContent = m.stageLabel;
+      $('finalDebtVal').textContent = currency(m.finalDebt);
+      $('interestNowVal').textContent = currency(m.interestNow);
+      $('interestFinalVal').textContent = currency(m.interestFinal);
+      $('unlockVal').textContent = m.rentUnlocked ? 'UNLOCKED' : 'NOT YET';
+      $('unlockNote').textContent = m.rentUnlocked ? 'Fence paid and property income-live.' : 'Fence and/or stage still blocking rent.';
+      $('rentVsInterestVal').textContent = currency(m.rentVsInterest);
+      $('rentVsInterestNote').textContent = m.rentVsInterest >= 0 ? 'Rent covers interest.' : 'Interest still beats rent.';
+      $('pressureSignalVal').textContent = m.pressure;
+      $('pressureSignalNote').textContent = m.pressureNote;
+      $('impactVal').textContent = m.timeSaved.toFixed(1) + ' yrs';
+      $('impactNote').textContent = m.impactNote;
+
+      $('triggerVerdictVal').textContent = m.decision;
+      $('triggerPressureVal').textContent = currency(m.totalPressure);
+      $('triggerFinalVal').textContent = currency(m.finalPos);
+      $('triggerFloorGapVal').textContent = currency(m.floorGap);
+      $('triggerReadout').textContent = m.decision === 'RED'
+        ? (m.floorStatus === 'BELOW' ? 'Red means protect the offset now. Spending comfort loses before the buffer does.' : 'Red means the execution window is open. Do not waste it by drifting elsewhere.')
+        : m.decision === 'AMBER'
+          ? 'Amber means tighten this week. You are not broken, but you are drifting.'
+          : 'Green means hold settings. Maintain discipline.';
+
+      const pillbar = $('triggerPills');
+      pillbar.innerHTML = '';
+      pillbar.appendChild(pill(m.floorStatus === 'BELOW' ? 'badP' : m.floorStatus === 'NEAR' ? 'warnP' : 'goodP', 'Floor ' + m.floorStatus));
+      pillbar.appendChild(pill(m.finalPos < 0 ? 'badP' : m.finalPos < 100 ? 'warnP' : 'goodP', 'Weekly ' + currency(m.finalPos)));
+      pillbar.appendChild(pill(m.decision === 'RED' ? 'badP' : m.decision === 'AMBER' ? 'warnP' : 'goodP', 'Decision ' + m.decision));
+      pillbar.appendChild(pill(m.decisionEdge > 0.5 ? 'warnP' : m.decisionEdge < -0.5 ? 'goodP' : 'infoP', 'Edge ' + (m.decisionEdge >= 0 ? '+' : '') + m.decisionEdge.toFixed(1) + 'y'));
+
+      $('verdictVal').textContent = m.decision;
+      $('verdictNote').textContent = m.decisionNote;
+      $('floorStatusVal').textContent = m.floorStatus;
+      $('floorStatusNote').textContent = `8-week floor gap: ${currency(m.floorGap)}`;
+      $('safeSpendVal').textContent = currency(m.safeSpend);
+      $('finalVal').textContent = currency(m.finalPos);
+
+      $('netProceedsVal').textContent = currency(m.netProceeds);
+      $('newPporVal').textContent = currency(m.newPpor);
+      $('newWeeklyVal').textContent = currency(m.newWeekly);
+      $('newYearsVal').textContent = Number.isFinite(m.newYears) ? `${m.newYears.toFixed(1)} yrs` : 'n/a';
+      $('timeSavedVal').textContent = `${m.timeSaved.toFixed(1)} yrs`;
+      $('interestSavedVal').textContent = currency(m.interestSaved);
+      $('pporSummary').innerHTML = `Current weekly repayment: ${currency(m.currentWeekly)}<br>Current total interest remaining: ${currency(m.currentInterest)}<br>Estimated CGT used in scenario: ${currency(m.cgt)}`;
+
+      $('valConfidenceVal').textContent = m.valuationConfidence;
+      $('bestNowVal').textContent = `${m.bestNow.toFixed(1)} yrs`;
+      $('bestLaterVal').textContent = `${m.bestLaterYearsCut.toFixed(1)} yrs`;
+      $('decisionEdgeVal').textContent = `${m.decisionEdge >= 0 ? '+' : ''}${m.decisionEdge.toFixed(1)} yrs`;
+      $('bestSellWindow').value = `Year ${m.bestYear}`;
+      $('intelligenceSummary').textContent = m.decisionEdge > 0.5
+        ? `Waiting has the stronger edge on these assumptions.`
+        : m.decisionEdge < -0.5
+          ? `Selling now has the stronger edge on these assumptions.`
+          : `Now versus later is close. Timing discipline matters more than forcing a move.`;
+
+      $('strategySummary').textContent = `Weekly pressure is ${currency(m.totalPressure)} against income of ${currency(num($('income').value))}. Strategy: ${m.strategy}. Offset floor status: ${m.floorStatus}. Refinance: ${m.refinance}. Debt recycle: ${m.debtReady}. 2027 readiness: ${m.futureReady}.`;
+
+      $('livingVal').textContent = currency(m.living);
+      $('splurgeVal').textContent = currency(m.splurge);
+      $('billsVal').textContent = currency(150);
+      $('saveTargetVal').textContent = currency(m.weeklySavingsTarget);
+
+      $('refinanceVal').textContent = m.refinance;
+      $('sellVal').textContent = m.decision;
+      $('debtVal').textContent = m.debtReady;
+      $('futureReadyVal').textContent = m.futureReady;
+      $('equityAction').textContent = m.decision === 'RED'
+        ? `Net sale proceeds of ${currency(m.netProceeds)} could cut ${m.timeSaved.toFixed(1)} years from the PPOR.`
+        : m.decision === 'AMBER'
+          ? 'You are approaching a real decision window, but the edge is not clean enough yet.'
+          : 'Hold and build position.';
+
+      $('stackPPOR').textContent = currency(m.currentWeekly);
+      $('stackBills').textContent = currency(150);
+      $('stackSavings').textContent = currency(m.weeklySavingsTarget);
+      $('stackUpcoming').textContent = currency(m.billsWeekly);
+      $('stackIP').textContent = currency(Math.max(0, m.interestNow));
+      $('stackTotal').textContent = currency(m.totalPressure);
+
+      $('offsetNowVal').textContent = currency(m.offset + m.savings);
+      $('offset4Val').textContent = currency(m.offset4);
+      $('offset8Val').textContent = currency(m.offset8);
+
+      debug('Render completed successfully');
+      setStickyDebug('render ok');
+    }
+
+    document.querySelectorAll('input,select,textarea').forEach(el => el.addEventListener('input', render));
+    ['mode-now','mode-future','strategy-auto','strategy-survival','strategy-attack'].forEach(id=>{
+      $(id).addEventListener('click', render);
+    });
+    $('mode-now').addEventListener('click', ()=>{ $('mode-now').classList.add('active'); $('mode-future').classList.remove('active'); });
+    $('mode-future').addEventListener('click', ()=>{ $('mode-future').classList.add('active'); $('mode-now').classList.remove('active'); });
+    $('strategy-auto').addEventListener('click', ()=>{ $('strategy-auto').classList.add('active'); $('strategy-survival').classList.remove('active'); $('strategy-attack').classList.remove('active'); });
+    $('strategy-survival').addEventListener('click', ()=>{ $('strategy-survival').classList.add('active'); $('strategy-auto').classList.remove('active'); $('strategy-attack').classList.remove('active'); });
+    $('strategy-attack').addEventListener('click', ()=>{ $('strategy-attack').classList.add('active'); $('strategy-auto').classList.remove('active'); $('strategy-survival').classList.remove('active'); });
+
+    $('addBill').addEventListener('click', () => {
+      const d = today(); d.setDate(d.getDate()+14);
+      const dt = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      addBillRow('', '', dt);
+      render();
+    });
+
+    const d = today(); d.setDate(d.getDate()+21);
+    addBillRow('Power bill', '1433', `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+
+    render();
+  } catch (err) {
+    const panel = document.getElementById('debugPanel');
+    if (panel) panel.textContent = 'ERROR\n' + err.message + '\n\n' + (err.stack || '');
+    const sticky = document.getElementById('stickyDebug');
+    if (sticky) sticky.textContent = 'Debug: ERROR';
+  }
+})();
 </script>
-
 </body>
 </html>
