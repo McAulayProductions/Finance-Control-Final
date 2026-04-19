@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finance Control Full Shell Merged</title>
+  <title>Finance Control Full Shell Merged - Collapsible</title>
   <style>
     :root{
       --bg:#0f172a; --card:#111827; --card2:#1f2937; --text:#f8fafc; --muted:#94a3b8;
@@ -45,9 +45,11 @@
     .status-bad{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.45)}
     .status-info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.45)}
     details{overflow:hidden}
-    details>summary{list-style:none;cursor:pointer;padding:14px;font-weight:800}
+    details>summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
     details>summary::-webkit-details-marker{display:none}
-    .detail-body{padding:0 14px 14px;border-top:1px solid var(--border)}
+    details summary::after{content:'+';font-size:20px;color:var(--muted)}
+    details[open] summary::after{content:'−'}
+    .detail-body{padding:0 16px 16px;border-top:1px solid var(--border)}
     .row{display:flex;justify-content:space-between;gap:10px;padding:12px;border-radius:12px;background:var(--card2);border:1px solid var(--border);margin-bottom:10px}
     .bill-row{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:10px;align-items:end;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
     .pillbar{display:flex;gap:8px;flex-wrap:wrap}
@@ -82,7 +84,7 @@
 
   <div class="hero">
     <h1>Finance Control</h1>
-    <div class="sub">Full shell with Trigger Dashboard + Weekly Command merged in.</div>
+    <div class="sub">Full shell merged, with secondary sections collapsible.</div>
     <div class="section-note" id="runtimeStatus">Runtime status: booting…</div>
     <div class="mode-row">
       <button id="mode-now" class="active" type="button">Current phase</button>
@@ -116,118 +118,130 @@
     </div>
   </div>
 
-  <div class="card status-info" id="debugCard">
-    <h2>Runtime debug</h2>
-    <div class="small">This panel shows missing IDs and script errors directly on the page.</div>
-    <div id="debugPanel">Booting…</div>
-  </div>
+  <details open>
+    <summary>Runtime debug</summary>
+    <div class="detail-body">
+      <div class="small">This panel shows missing IDs and script errors directly on the page.</div>
+      <div id="debugPanel">Booting…</div>
+    </div>
+  </details>
+
+  <details open>
+    <summary>Control panel</summary>
+    <div class="detail-body">
+      <div class="grid-2" style="margin-top:12px;">
+        <label><span>Offset</span><input id="offset" value="30000"></label>
+        <label><span>Savings</span><input id="savings" value="2600"></label>
+        <label><span>Weekly income</span><input id="income" value="3250"></label>
+        <label><span>Weekly spend</span><input id="spend" value="600"></label>
+        <label><span>Offset floor</span><input id="floor" value="30000"></label>
+        <label><span>Weeks to 24 July</span><input id="weeksToTarget" readonly></label>
+        <label><span>Future income</span><input id="incomeFuture" value="2600"></label>
+        <label><span>Future TRS days / week</span><input id="futureTRSDays" value="0"></label>
+        <label><span>TRS pay / day</span><input id="trsRate" value="450"></label>
+        <label><span>PPOR balance</span><input id="pporBalance" value="560540"></label>
+        <label><span>PPOR rate %</span><input id="pporRate" value="5.92"></label>
+        <label><span>PPOR years remaining</span><input id="pporYears" value="28.5"></label>
+        <label><span>PPOR weekly repayment</span><input id="pporWeeklyCalc" readonly></label>
+        <label><span>Living default</span><input id="livingBase" value="550"></label>
+        <label><span>Splurge default</span><input id="splurgeBase" value="50"></label>
+      </div>
+    </div>
+  </details>
 
   <div class="layout">
     <div class="stack">
 
-      <div class="card">
-        <h2>Control panel</h2>
-        <div class="grid-2">
-          <label><span>Offset</span><input id="offset" value="30000"></label>
-          <label><span>Savings</span><input id="savings" value="2600"></label>
-          <label><span>Weekly income</span><input id="income" value="3250"></label>
-          <label><span>Weekly spend</span><input id="spend" value="600"></label>
-          <label><span>Offset floor</span><input id="floor" value="30000"></label>
-          <label><span>Weeks to 24 July</span><input id="weeksToTarget" readonly></label>
-          <label><span>Future income</span><input id="incomeFuture" value="2600"></label>
-          <label><span>Future TRS days / week</span><input id="futureTRSDays" value="0"></label>
-          <label><span>TRS pay / day</span><input id="trsRate" value="450"></label>
-          <label><span>PPOR balance</span><input id="pporBalance" value="560540"></label>
-          <label><span>PPOR rate %</span><input id="pporRate" value="5.92"></label>
-          <label><span>PPOR years remaining</span><input id="pporYears" value="28.5"></label>
-          <label><span>PPOR weekly repayment</span><input id="pporWeeklyCalc" readonly></label>
-          <label><span>Living default</span><input id="livingBase" value="550"></label>
-          <label><span>Splurge default</span><input id="splurgeBase" value="50"></label>
+      <details>
+        <summary>Upcoming bills</summary>
+        <div class="detail-body">
+          <div id="billsContainer" style="margin-top:12px;"></div>
+          <button id="addBill" type="button">Add upcoming bill</button>
         </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h2>Upcoming bills</h2>
-        <div id="billsContainer"></div>
-        <button id="addBill" type="button">Add upcoming bill</button>
-      </div>
+      <details>
+        <summary>August obligations engine</summary>
+        <div class="detail-body">
+          <div class="grid-4" style="margin-top:12px;">
+            <div class="metric"><div class="label">Fence</div><div class="value" id="fenceVal">-</div></div>
+            <div class="metric"><div class="label">Cruise remaining</div><div class="value" id="cruiseVal">-</div></div>
+            <div class="metric"><div class="label">Current savings</div><div class="value" id="savingsVal">-</div></div>
+            <div class="metric"><div class="label">Required weekly</div><div class="value" id="weeklyReqVal">-</div></div>
+          </div>
+          <div class="section-note" style="margin-top:10px;">Funding progress</div>
+          <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="small" id="progressText" style="margin-top:8px;"></div>
+        </div>
+      </details>
 
-      <div class="card">
-        <h2>August obligations engine</h2>
-        <div class="grid-4">
-          <div class="metric"><div class="label">Fence</div><div class="value" id="fenceVal">-</div></div>
-          <div class="metric"><div class="label">Cruise remaining</div><div class="value" id="cruiseVal">-</div></div>
-          <div class="metric"><div class="label">Current savings</div><div class="value" id="savingsVal">-</div></div>
-          <div class="metric"><div class="label">Required weekly</div><div class="value" id="weeklyReqVal">-</div></div>
+      <details open>
+        <summary>Wandina Decision Engine</summary>
+        <div class="detail-body">
+          <div class="grid-2" style="margin-top:12px;">
+            <label><span>Build stage</span>
+              <select id="stage">
+                <option value="0.10">Slab down</option>
+                <option value="0.25" selected>Plate Height</option>
+                <option value="0.45">Roof Cover</option>
+                <option value="0.65">Lockup</option>
+                <option value="0.82">Tiling</option>
+                <option value="0.97">Practical Completion</option>
+                <option value="1.00">Rented / Complete</option>
+              </select>
+            </label>
+            <label><span>Fence paid?</span>
+              <select id="fence">
+                <option value="0" selected>No</option>
+                <option value="1">Yes</option>
+              </select>
+            </label>
+            <label><span>Equity loan</span><input id="equityLoan" value="215000"></label>
+            <label><span>Build lending</span><input id="buildLoan" value="373000"></label>
+            <label><span>Rent / week</span><input id="rent" value="700"></label>
+            <label><span>IP interest rate %</span><input id="ipRate" value="6.39"></label>
+            <label><span>Sale price / value</span><input id="salePrice" value="800000"></label>
+            <label><span>Income mode</span>
+              <select id="incomeMode">
+                <option value="1">Full income year</option>
+                <option value="0.8">Reduced income year</option>
+              </select>
+            </label>
+          </div>
+          <div class="grid-2" style="margin-top:12px;">
+            <div class="metric"><div class="label">Current active debt</div><div class="value" id="activeDebtVal">-</div><div class="note" id="activeDebtNote"></div></div>
+            <div class="metric"><div class="label">Final debt</div><div class="value" id="finalDebtVal">-</div></div>
+            <div class="metric"><div class="label">Weekly interest now</div><div class="value" id="interestNowVal">-</div></div>
+            <div class="metric"><div class="label">Weekly interest final</div><div class="value" id="interestFinalVal">-</div></div>
+            <div class="metric"><div class="label">WACHS unlock</div><div class="value" id="unlockVal">-</div><div class="note" id="unlockNote"></div></div>
+            <div class="metric"><div class="label">Rent vs interest</div><div class="value" id="rentVsInterestVal">-</div><div class="note" id="rentVsInterestNote"></div></div>
+            <div class="metric"><div class="label">Pressure signal</div><div class="value" id="pressureSignalVal">-</div><div class="note" id="pressureSignalNote"></div></div>
+            <div class="metric"><div class="label">PPOR impact</div><div class="value" id="impactVal">-</div><div class="note" id="impactNote"></div></div>
+          </div>
         </div>
-        <div class="section-note" style="margin-top:10px;">Funding progress</div>
-        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="small" id="progressText" style="margin-top:8px;"></div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h2>Wandina Decision Engine</h2>
-        <div class="grid-2">
-          <label><span>Build stage</span>
-            <select id="stage">
-              <option value="0.10">Slab down</option>
-              <option value="0.25" selected>Plate Height</option>
-              <option value="0.45">Roof Cover</option>
-              <option value="0.65">Lockup</option>
-              <option value="0.82">Tiling</option>
-              <option value="0.97">Practical Completion</option>
-              <option value="1.00">Rented / Complete</option>
-            </select>
-          </label>
-          <label><span>Fence paid?</span>
-            <select id="fence">
-              <option value="0" selected>No</option>
-              <option value="1">Yes</option>
-            </select>
-          </label>
-          <label><span>Equity loan</span><input id="equityLoan" value="215000"></label>
-          <label><span>Build lending</span><input id="buildLoan" value="373000"></label>
-          <label><span>Rent / week</span><input id="rent" value="700"></label>
-          <label><span>IP interest rate %</span><input id="ipRate" value="6.39"></label>
-          <label><span>Sale price / value</span><input id="salePrice" value="800000"></label>
-          <label><span>Income mode</span>
-            <select id="incomeMode">
-              <option value="1">Full income year</option>
-              <option value="0.8">Reduced income year</option>
-            </select>
-          </label>
+      <details open>
+        <summary>Trigger Dashboard</summary>
+        <div class="detail-body">
+          <div class="pillbar" id="triggerPills" style="margin-top:12px;"></div>
+          <div class="grid-4" style="margin-top:12px;">
+            <div class="metric"><div class="label">Trigger verdict</div><div class="value" id="triggerVerdictVal">-</div></div>
+            <div class="metric"><div class="label">Weekly pressure</div><div class="value" id="triggerPressureVal">-</div></div>
+            <div class="metric"><div class="label">Final weekly position</div><div class="value" id="triggerFinalVal">-</div></div>
+            <div class="metric"><div class="label">8-week floor gap</div><div class="value" id="triggerFloorGapVal">-</div></div>
+          </div>
+          <div class="status-box status-info" style="margin-top:12px;" id="triggerReadout">-</div>
+          <table style="margin-top:12px;">
+            <thead><tr><th>Zone</th><th>Meaning</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill goodP">GREEN</span></td><td>System above floor with no urgent correction needed.</td><td>Maintain settings. Do not get sloppy.</td></tr>
+              <tr><td><span class="pill warnP">AMBER</span></td><td>System drifting or nearing a trigger line.</td><td>Tighten spend and prep decisions.</td></tr>
+              <tr><td><span class="pill badP">RED</span></td><td>System under pressure or execution window open.</td><td>Act now. Protect offset or execute timing.</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="grid-2" style="margin-top:12px;">
-          <div class="metric"><div class="label">Current active debt</div><div class="value" id="activeDebtVal">-</div><div class="note" id="activeDebtNote"></div></div>
-          <div class="metric"><div class="label">Final debt</div><div class="value" id="finalDebtVal">-</div></div>
-          <div class="metric"><div class="label">Weekly interest now</div><div class="value" id="interestNowVal">-</div></div>
-          <div class="metric"><div class="label">Weekly interest final</div><div class="value" id="interestFinalVal">-</div></div>
-          <div class="metric"><div class="label">WACHS unlock</div><div class="value" id="unlockVal">-</div><div class="note" id="unlockNote"></div></div>
-          <div class="metric"><div class="label">Rent vs interest</div><div class="value" id="rentVsInterestVal">-</div><div class="note" id="rentVsInterestNote"></div></div>
-          <div class="metric"><div class="label">Pressure signal</div><div class="value" id="pressureSignalVal">-</div><div class="note" id="pressureSignalNote"></div></div>
-          <div class="metric"><div class="label">PPOR impact</div><div class="value" id="impactVal">-</div><div class="note" id="impactNote"></div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Trigger Dashboard</h2>
-        <div class="pillbar" id="triggerPills"></div>
-        <div class="grid-4" style="margin-top:12px;">
-          <div class="metric"><div class="label">Trigger verdict</div><div class="value" id="triggerVerdictVal">-</div></div>
-          <div class="metric"><div class="label">Weekly pressure</div><div class="value" id="triggerPressureVal">-</div></div>
-          <div class="metric"><div class="label">Final weekly position</div><div class="value" id="triggerFinalVal">-</div></div>
-          <div class="metric"><div class="label">8-week floor gap</div><div class="value" id="triggerFloorGapVal">-</div></div>
-        </div>
-        <div class="status-box status-info" style="margin-top:12px;" id="triggerReadout">-</div>
-        <table style="margin-top:12px;">
-          <thead><tr><th>Zone</th><th>Meaning</th><th>Action</th></tr></thead>
-          <tbody>
-            <tr><td><span class="pill goodP">GREEN</span></td><td>System above floor with no urgent correction needed.</td><td>Maintain settings. Do not get sloppy.</td></tr>
-            <tr><td><span class="pill warnP">AMBER</span></td><td>System drifting or nearing a trigger line.</td><td>Tighten spend and prep decisions.</td></tr>
-            <tr><td><span class="pill badP">RED</span></td><td>System under pressure or execution window open.</td><td>Act now. Protect offset or execute timing.</td></tr>
-          </tbody>
-        </table>
-      </div>
+      </details>
 
       <details>
         <summary>Decision Intelligence Layer</summary>
@@ -264,78 +278,98 @@
         <div class="metric"><div class="label">Final position</div><div class="value" id="finalVal">-</div></div>
       </div>
 
-      <div class="status-box status-info" id="commandCard">
-        <h2>Weekly command</h2>
-        <div id="commandOutput">-</div>
-      </div>
-
-      <div class="status-box status-info">
-        <h2>What changes this week</h2>
-        <h3 id="nextTitle">-</h3>
-        <div id="nextBody">-</div>
-      </div>
-
-      <div class="card">
-        <h2>PPOR Kill Projection</h2>
-        <div class="grid-2">
-          <label><span>Selling costs %</span><input id="sellCostPct" value="2.5"></label>
-          <label><span>Estimated CGT % of gain</span><input id="cgtPct" value="25"></label>
+      <details open>
+        <summary>Weekly command</summary>
+        <div class="detail-body">
+          <div class="status-box status-info" id="commandCard" style="margin-top:12px;">
+            <div id="commandOutput">-</div>
+          </div>
         </div>
-        <div class="grid-2" style="margin-top:12px;">
-          <div class="metric"><div class="label">Net sale proceeds</div><div class="value" id="netProceedsVal">-</div></div>
-          <div class="metric"><div class="label">New PPOR balance</div><div class="value" id="newPporVal">-</div></div>
-          <div class="metric"><div class="label">New weekly repayment</div><div class="value" id="newWeeklyVal">-</div></div>
-          <div class="metric"><div class="label">Years remaining</div><div class="value" id="newYearsVal">-</div></div>
-          <div class="metric"><div class="label">Time saved</div><div class="value" id="timeSavedVal">-</div></div>
-          <div class="metric"><div class="label">Interest saved</div><div class="value" id="interestSavedVal">-</div></div>
+      </details>
+
+      <details>
+        <summary>What changes this week</summary>
+        <div class="detail-body">
+          <div class="status-box status-info" style="margin-top:12px;">
+            <h3 id="nextTitle">-</h3>
+            <div id="nextBody">-</div>
+          </div>
         </div>
-        <div class="row" id="pporSummary">-</div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h2>Strategy summary</h2>
-        <div class="status-box status-info" id="strategySummary">-</div>
-      </div>
-
-      <div class="card">
-        <h2>Suggested weekly transfers</h2>
-        <div class="grid-4">
-          <div class="metric"><div class="label">Living</div><div class="value" id="livingVal">-</div></div>
-          <div class="metric"><div class="label">Splurge</div><div class="value" id="splurgeVal">-</div></div>
-          <div class="metric"><div class="label">Bills bucket</div><div class="value" id="billsVal">-</div></div>
-          <div class="metric"><div class="label">Savings target</div><div class="value" id="saveTargetVal">-</div></div>
+      <details>
+        <summary>PPOR Kill Projection</summary>
+        <div class="detail-body">
+          <div class="grid-2" style="margin-top:12px;">
+            <label><span>Selling costs %</span><input id="sellCostPct" value="2.5"></label>
+            <label><span>Estimated CGT % of gain</span><input id="cgtPct" value="25"></label>
+          </div>
+          <div class="grid-2" style="margin-top:12px;">
+            <div class="metric"><div class="label">Net sale proceeds</div><div class="value" id="netProceedsVal">-</div></div>
+            <div class="metric"><div class="label">New PPOR balance</div><div class="value" id="newPporVal">-</div></div>
+            <div class="metric"><div class="label">New weekly repayment</div><div class="value" id="newWeeklyVal">-</div></div>
+            <div class="metric"><div class="label">Years remaining</div><div class="value" id="newYearsVal">-</div></div>
+            <div class="metric"><div class="label">Time saved</div><div class="value" id="timeSavedVal">-</div></div>
+            <div class="metric"><div class="label">Interest saved</div><div class="value" id="interestSavedVal">-</div></div>
+          </div>
+          <div class="row" id="pporSummary" style="margin-top:12px;">-</div>
         </div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h2>Decision signals</h2>
-        <div class="grid-4">
-          <div class="metric"><div class="label">Refinance readiness</div><div class="value" id="refinanceVal">-</div></div>
-          <div class="metric"><div class="label">Sell signal</div><div class="value" id="sellVal">-</div></div>
-          <div class="metric"><div class="label">Debt recycle readiness</div><div class="value" id="debtVal">-</div></div>
-          <div class="metric"><div class="label">2027 readiness</div><div class="value" id="futureReadyVal">-</div></div>
+      <details>
+        <summary>Strategy summary</summary>
+        <div class="detail-body">
+          <div class="status-box status-info" id="strategySummary" style="margin-top:12px;">-</div>
         </div>
-        <div class="status-box status-info" style="margin-top:12px;" id="equityAction">-</div>
-      </div>
+      </details>
 
-      <div class="card">
-        <h2>Pressure stack</h2>
-        <div class="row"><span>PPOR weekly repayment</span><strong id="stackPPOR">-</strong></div>
-        <div class="row"><span>Bills bucket</span><strong id="stackBills">-</strong></div>
-        <div class="row"><span>August savings target</span><strong id="stackSavings">-</strong></div>
-        <div class="row"><span>Upcoming bills</span><strong id="stackUpcoming">-</strong></div>
-        <div class="row"><span>IP current pressure</span><strong id="stackIP">-</strong></div>
-        <div class="row"><span>Total weekly pressure</span><strong id="stackTotal">-</strong></div>
-      </div>
-
-      <div class="card">
-        <h2>Offset trend</h2>
-        <div class="grid-3">
-          <div class="metric"><div class="label">Current offset</div><div class="value" id="offsetNowVal">-</div></div>
-          <div class="metric"><div class="label">4-week projection</div><div class="value" id="offset4Val">-</div></div>
-          <div class="metric"><div class="label">8-week projection</div><div class="value" id="offset8Val">-</div></div>
+      <details>
+        <summary>Suggested weekly transfers</summary>
+        <div class="detail-body">
+          <div class="grid-4" style="margin-top:12px;">
+            <div class="metric"><div class="label">Living</div><div class="value" id="livingVal">-</div></div>
+            <div class="metric"><div class="label">Splurge</div><div class="value" id="splurgeVal">-</div></div>
+            <div class="metric"><div class="label">Bills bucket</div><div class="value" id="billsVal">-</div></div>
+            <div class="metric"><div class="label">Savings target</div><div class="value" id="saveTargetVal">-</div></div>
+          </div>
         </div>
-      </div>
+      </details>
+
+      <details>
+        <summary>Decision signals</summary>
+        <div class="detail-body">
+          <div class="grid-4" style="margin-top:12px;">
+            <div class="metric"><div class="label">Refinance readiness</div><div class="value" id="refinanceVal">-</div></div>
+            <div class="metric"><div class="label">Sell signal</div><div class="value" id="sellVal">-</div></div>
+            <div class="metric"><div class="label">Debt recycle readiness</div><div class="value" id="debtVal">-</div></div>
+            <div class="metric"><div class="label">2027 readiness</div><div class="value" id="futureReadyVal">-</div></div>
+          </div>
+          <div class="status-box status-info" style="margin-top:12px;" id="equityAction">-</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Pressure stack</summary>
+        <div class="detail-body">
+          <div class="row" style="margin-top:12px;"><span>PPOR weekly repayment</span><strong id="stackPPOR">-</strong></div>
+          <div class="row"><span>Bills bucket</span><strong id="stackBills">-</strong></div>
+          <div class="row"><span>August savings target</span><strong id="stackSavings">-</strong></div>
+          <div class="row"><span>Upcoming bills</span><strong id="stackUpcoming">-</strong></div>
+          <div class="row"><span>IP current pressure</span><strong id="stackIP">-</strong></div>
+          <div class="row"><span>Total weekly pressure</span><strong id="stackTotal">-</strong></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Offset trend</summary>
+        <div class="detail-body">
+          <div class="grid-3" style="margin-top:12px;">
+            <div class="metric"><div class="label">Current offset</div><div class="value" id="offsetNowVal">-</div></div>
+            <div class="metric"><div class="label">4-week projection</div><div class="value" id="offset4Val">-</div></div>
+            <div class="metric"><div class="label">8-week projection</div><div class="value" id="offset8Val">-</div></div>
+          </div>
+        </div>
+      </details>
 
     </div>
   </div>
@@ -483,11 +517,6 @@
       if (rentVsInterest >= 100) { pressure = 'LOW'; pressureNote = 'Rent covers interest with room.'; }
       else if (rentVsInterest >= -50) { pressure = 'NEUTRAL'; pressureNote = 'Close to breakeven.'; }
 
-      let impact = 'HURTING', impactNote = 'Wandina is still slowing the PPOR plan.';
-      if (!fencePaid) { impact = 'BLOCKED'; impactNote = 'Fence payment is still gating WACHS income.'; }
-      else if (stage < 1) { impact = 'WAITING'; impactNote = 'Build not income-live yet.'; }
-      else if (rentVsInterest >= 0) { impact = 'HELPING'; impactNote = 'Income is no longer hurting the plan.'; }
-
       const pporBalance = num($('pporBalance').value);
       const pporRate = num($('pporRate').value);
       const pporYears = num($('pporYears').value);
@@ -496,7 +525,6 @@
       const sellCostPct = num($('sellCostPct').value)/100;
       const extraSaleCosts = num($('extraSaleCosts').value);
       const cgtPct = num($('cgtPct').value)/100;
-
       const grossSaleProceeds = salePrice - finalDebt - salePrice*sellCostPct - extraSaleCosts;
       const estimatedGain = Math.max(0, salePrice - finalDebt);
       const cgt = estimatedGain * cgtPct * incomeMode;
@@ -506,10 +534,9 @@
       const currentInterest = totalInterest(pporBalance, pporRate, pporYears);
       const newPpor = Math.max(0, pporBalance - netProceeds);
       const newWeekly = pmt(newPpor, pporRate, pporYears);
-      const newInterest = totalInterest(newPpor, pporRate, pporYears);
       const newYears = yearsForPayment(newPpor, pporRate, currentWeekly);
       const timeSaved = Number.isFinite(newYears) ? Math.max(0, pporYears - newYears) : 0;
-      const interestSaved = Math.max(0, currentInterest - newInterest);
+      const interestSaved = Math.max(0, currentInterest - totalInterest(newPpor, pporRate, pporYears));
 
       const billsWeekly = readBills().reduce((a,b)=>a+b.weekly,0);
       const weeklySavingsTarget = Math.max(0, (4644 + 11600 - savings) / weeks);
@@ -567,11 +594,10 @@
       const refinance = netProceeds >= 120000 ? 'POSSIBLE' : 'TOO EARLY';
       const debtReady = netProceeds >= 100000 ? 'READY' : 'NOT READY';
 
-      return {stageLabel, activeDebt, finalDebt, interestNow, interestFinal, rentUnlocked, rentVsInterest, pressure, pressureNote, impact, impactNote,
+      return {stageLabel, activeDebt, finalDebt, interestNow, interestFinal, rentUnlocked, rentVsInterest, pressure, pressureNote,
               decision, decisionNote, netProceeds, newPpor, newWeekly, newYears, timeSaved, interestSaved, currentWeekly, currentInterest, cgt,
               safeSpend, finalPos, floorStatus, floorGap, billsWeekly, weeklySavingsTarget, totalPressure, offset, savings, offset4, offset8,
-              valuationConfidence, bestNow, bestLaterYearsCut, decisionEdge, bestYear, nowLow, nowMid, nowHigh, refinance, debtReady, futureReady,
-              strategy, living, splurge};
+              valuationConfidence, bestNow, bestLaterYearsCut, decisionEdge, bestYear, refinance, debtReady, futureReady, strategy, living, splurge};
     }
 
     function render(){
@@ -633,7 +659,7 @@
       $('pressureSignalVal').textContent = m.pressure;
       $('pressureSignalNote').textContent = m.pressureNote;
       $('impactVal').textContent = m.timeSaved.toFixed(1) + ' yrs';
-      $('impactNote').textContent = m.impactNote;
+      $('impactNote').textContent = 'Current PPOR acceleration if sold now.';
 
       $('triggerVerdictVal').textContent = m.decision;
       $('triggerPressureVal').textContent = currency(m.totalPressure);
