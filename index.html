@@ -4,558 +4,460 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance Control V34 Mobile Polish</title>
+<title>Finance Control V38 Full Command Stack</title>
 <style>
 :root{
-  --bg:#0a1020;--card:#141c30;--card2:#1c2844;--text:#f7fbff;--muted:#b7c3d9;
-  --green:#4adea2;--amber:#f7c96a;--red:#ff7b7b;--blue:#86cfff;--border:#2d3b5c;
-  --good-bg:linear-gradient(180deg,rgba(24,61,52,.96),rgba(17,42,36,.98));
-  --warn-bg:linear-gradient(180deg,rgba(74,58,27,.96),rgba(49,38,18,.98));
-  --bad-bg:linear-gradient(180deg,rgba(76,35,43,.96),rgba(49,22,28,.98));
-  --info-bg:linear-gradient(180deg,rgba(26,49,82,.96),rgba(18,34,57,.98));
-  --neutral-bg:linear-gradient(180deg,rgba(31,40,66,.98),rgba(22,30,51,.98));
+  --bg:#0a1020;--card:#141c30;--text:#f7fbff;--muted:#b7c3d9;--border:#2d3b5c;
+  --green:#4adea2;--amber:#f7c96a;--red:#ff7b7b;--blue:#86cfff;--violet:#b39cff;
+  --good:linear-gradient(180deg,rgba(24,61,52,.96),rgba(17,42,36,.98));
+  --warn:linear-gradient(180deg,rgba(74,58,27,.96),rgba(49,38,18,.98));
+  --bad:linear-gradient(180deg,rgba(76,35,43,.96),rgba(49,22,28,.98));
+  --info:linear-gradient(180deg,rgba(26,49,82,.96),rgba(18,34,57,.98));
+  --neutral:linear-gradient(180deg,rgba(31,40,66,.98),rgba(22,30,51,.98));
+  --purple:linear-gradient(180deg,rgba(54,45,92,.96),rgba(35,28,62,.98));
 }
 *{box-sizing:border-box}
-body{margin:0;padding:10px;font-family:Arial,Helvetica,sans-serif;background:
-radial-gradient(circle at top left,rgba(122,165,255,.20),transparent 24%),
-radial-gradient(circle at top right,rgba(141,120,255,.14),transparent 20%),
+body{margin:0;padding:9px;font-family:Arial,Helvetica,sans-serif;background:
+radial-gradient(circle at top left,rgba(122,165,255,.22),transparent 24%),
+radial-gradient(circle at top right,rgba(179,156,255,.13),transparent 22%),
 linear-gradient(180deg,#0d1528,#0a1020);color:var(--text)}
-.wrap{max-width:1180px;margin:0 auto}
-.card,details,.metric,.mini,.transfer-card,.trigger-card,.signal-card{background:rgba(20,28,48,.92);border:1px solid var(--border);border-radius:20px;box-shadow:0 14px 34px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
-.card{padding:16px;margin-bottom:13px}
-h1,h2,h3{margin:0 0 10px}
-.small,.note{color:var(--muted);font-size:12px;line-height:1.4}
-.kicker{font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-bottom:7px}
-.grid,.grid2,.grid3,.grid4,.transfer-grid,.trigger-grid,.signal-grid{display:grid;gap:10px;grid-template-columns:1fr}
-.action-strip{padding:16px;border-radius:18px;border:1px solid rgba(134,207,255,.35);background:linear-gradient(135deg,rgba(26,49,82,.96),rgba(18,34,57,.98));margin-bottom:12px;box-shadow:0 14px 34px rgba(0,0,0,.24)}
-.account-merge{border:1px solid rgba(247,201,106,.38);background:linear-gradient(135deg,rgba(74,58,27,.30),rgba(20,28,48,.95))}
-.dropdown-trigger summary{background:linear-gradient(135deg,rgba(255,123,123,.16),rgba(76,35,43,.34))}
-.dropdown-pressure summary{background:linear-gradient(135deg,rgba(134,207,255,.14),rgba(26,49,82,.34))}
-.dropdown-wandina summary{background:linear-gradient(135deg,rgba(141,120,255,.16),rgba(45,36,88,.34))}
-.dropdown-ppor summary{background:linear-gradient(135deg,rgba(74,222,162,.14),rgba(24,61,52,.34))}
-.dropdown-recs summary{background:linear-gradient(135deg,rgba(247,201,106,.16),rgba(74,58,27,.34))}
-.section-icon{display:inline-block;margin-right:6px}
-.rule-grid{display:grid;gap:10px;grid-template-columns:1fr}
-.rule-card{padding:13px 15px;border-radius:15px;border:1px solid var(--border);background:var(--neutral-bg);line-height:1.35}
-.rule-card strong{display:block;margin-bottom:4px}
-.ppor-mode-card{border:1px solid rgba(134,207,255,.34);background:
-radial-gradient(circle at top right,rgba(134,207,255,.16),transparent 28%),
-linear-gradient(135deg,rgba(26,49,82,.28),rgba(20,28,48,.96));box-shadow:0 18px 42px rgba(0,0,0,.28)}
-.ppor-mode-header{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
-.mode-badge{display:inline-block;padding:9px 13px;border-radius:999px;font-size:12px;font-weight:900;width:max-content}
-.mode-badge.max{background:#7f1d1d;color:#fecaca}
-.mode-badge.balanced{background:#064e3b;color:#bbf7d0}
-.mode-badge.auto{background:#312e81;color:#c7d2fe}
-.ppor-toggle-wrap{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0}
-.ppor-toggle{border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));color:#fff;padding:13px;border-radius:16px;font-weight:900;box-shadow:0 8px 18px rgba(0,0,0,.16)}
-.ppor-toggle.active{background:linear-gradient(135deg,#2563eb,#7c3aed);border-color:#93c5fd}
-.ppor-results{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
-.ppor-result-card{padding:14px;border-radius:17px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.13)}
-.ppor-result-card span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
-.ppor-result-card strong{font-size:22px;letter-spacing:-.025em}
-.ppor-rules{margin-top:12px;padding:14px;border-radius:17px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08)}
-.ppor-rules ul{margin:8px 0 0;padding-left:20px;color:var(--muted);line-height:1.45}
-@media(min-width:760px){.ppor-mode-header{grid-template-columns:1fr auto}.ppor-toggle-wrap{grid-template-columns:repeat(3,1fr)}.ppor-results{grid-template-columns:repeat(3,1fr)}}
-
-@media(max-width:759px){
-  body{padding:9px}
-  .card{padding:14px}
-  h1{font-size:28px;line-height:1.05}
-  h2{font-size:20px}
-  .kicker{font-size:10px}
-  .mode-grid{grid-template-columns:repeat(2,1fr)}
-  .mode-btn{font-size:14px;padding:12px 8px}
-  .grid2,.grid3,.grid4{grid-template-columns:1fr}
-  .top-compact{grid-template-columns:repeat(3,1fr)}
-  .top-pill{padding:10px 7px}
-  .top-pill .value{font-size:16px}
-  .transfer-grid{grid-template-columns:repeat(2,1fr)}
-  .transfer-card{padding:13px}
-  .transfer-card .value{font-size:25px}
-  .trigger-grid,.signal-grid{grid-template-columns:1fr}
-  summary{padding:14px}
-  .ppor-mode-header{gap:10px}
-  .ppor-toggle-wrap{grid-template-columns:1fr}
-  .ppor-toggle{padding:13px}
-  .ppor-results{grid-template-columns:1fr}
-  .ppor-result-card strong{font-size:21px}
-  .rate-box{grid-template-columns:68px 1fr 68px}
-  input,select,button{font-size:16px;min-height:44px}
-}
-
-@media(min-width:760px){.rule-grid{grid-template-columns:repeat(2,1fr)}}
-.action-strip .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:900}
-.action-strip .value{font-size:28px;font-weight:950;letter-spacing:-.04em;margin-top:6px}
-.action-strip .note{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.35}
-.top-compact{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.top-pill{padding:12px;border-radius:16px;border:1px solid var(--border);background:var(--neutral-bg);text-align:center}
-.top-pill .label{font-size:10px}
-.top-pill .value{font-size:18px}
-.hero-transfer{border:1px solid rgba(134,207,255,.35);background:linear-gradient(135deg,rgba(112,160,255,.18),rgba(20,28,48,.95))}
-@media(max-width:759px){.card{padding:14px}.welcome h1{font-size:28px}.transfer-grid{grid-template-columns:repeat(2,1fr)}.transfer-card .value{font-size:27px}.top-pill{padding:10px 8px}.top-pill .value{font-size:16px}.action-strip .value{font-size:24px}.mode-grid{grid-template-columns:repeat(2,1fr)}}
-label span{display:block;color:var(--muted);font-size:13px;margin-bottom:5px;font-weight:700}
-input,select,button{width:100%;padding:12px;border:0;border-radius:12px;background:#f2f6ff;color:#0f172a;font-size:16px}
-button{font-weight:800;cursor:pointer}
-.metric,.transfer-card,.trigger-card,.signal-card{padding:14px;background:var(--neutral-bg)}
-.label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
-.value{font-size:28px;font-weight:900;margin-top:6px;letter-spacing:-.035em}
-.status-good,.good{background:var(--good-bg)!important;border-color:rgba(74,222,162,.44)!important}
-.status-warn,.warn{background:var(--warn-bg)!important;border-color:rgba(247,201,106,.44)!important}
-.status-bad,.bad{background:var(--bad-bg)!important;border-color:rgba(255,123,123,.44)!important}
-.status-info,.info{background:var(--info-bg)!important;border-color:rgba(134,207,255,.44)!important}
-.welcome{background:linear-gradient(135deg,rgba(112,160,255,.24),rgba(138,112,255,.18) 62%,rgba(104,226,255,.12));border-color:rgba(134,207,255,.32)}
-.mode-grid{display:grid;gap:8px;grid-template-columns:repeat(2,1fr)}
-.mode-btn.active{background:linear-gradient(135deg,var(--green),#22c38e)}
-.mode-btn.alt-active{background:linear-gradient(135deg,#7aa5ff,#8d78ff);color:white}
-.mode-btn.warn-active{background:linear-gradient(135deg,#ffd67a,#ffbf47)}
-details{margin-bottom:12px;overflow:hidden}
-summary{padding:15px;font-weight:900;cursor:pointer;list-style:none;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01))}
+.wrap{max-width:1120px;margin:0 auto}
+.card,details,.metric,.transfer-card,.goal-card,.mini{background:rgba(20,28,48,.93);border:1px solid var(--border);border-radius:20px;box-shadow:0 14px 34px rgba(0,0,0,.25);backdrop-filter:blur(8px)}
+.card{padding:15px;margin-bottom:12px}
+h1,h2,h3{margin:0 0 10px;letter-spacing:-.03em}
+h1{font-size:30px}
+h2{font-size:21px}
+.small,.note{color:var(--muted);font-size:12px;line-height:1.42}
+.kicker{font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.12em;font-weight:900;margin-bottom:7px}
+label span{display:block;color:var(--muted);font-size:13px;margin-bottom:5px;font-weight:800}
+input,select,button{width:100%;padding:13px;border:0;border-radius:14px;background:#f3f7ff;color:#111827;font-size:16px;min-height:46px}
+button{font-weight:900;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+.grid2,.grid4,.transfer-grid,.goal-grid,.signal-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.welcome{background:linear-gradient(135deg,rgba(112,160,255,.25),rgba(138,112,255,.18) 62%,rgba(104,226,255,.12));border-color:rgba(134,207,255,.34)}
+.hero{border-color:rgba(134,207,255,.38);background:radial-gradient(circle at top right,rgba(134,207,255,.16),transparent 28%),linear-gradient(135deg,rgba(26,49,82,.30),rgba(20,28,48,.96))}
+.action{padding:18px;border-radius:22px;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 42px rgba(0,0,0,.28);margin-bottom:12px}
+.action .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:900}
+.action .title{font-size:27px;font-weight:950;margin-top:7px;letter-spacing:-.045em}
+.action .copy{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.38}
+.good{background:var(--good)!important;border-color:rgba(74,222,162,.44)!important}
+.warn{background:var(--warn)!important;border-color:rgba(247,201,106,.44)!important}
+.bad{background:var(--bad)!important;border-color:rgba(255,123,123,.44)!important}
+.info{background:var(--info)!important;border-color:rgba(134,207,255,.44)!important}
+.purple{background:var(--purple)!important;border-color:rgba(179,156,255,.44)!important}
+.metric,.transfer-card,.goal-card,.mini{padding:14px}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900}
+.value{font-size:27px;font-weight:950;margin-top:6px;letter-spacing:-.04em}
+.pills{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.pill{padding:11px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);text-align:center}
+.pill strong{display:block;font-size:18px}
+.pill span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.goal-card .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:10px}
+.goal-card .fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--blue))}
+.stack-row{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.stack-row span{font-weight:900}
+details{margin-bottom:11px;overflow:hidden}
+summary{padding:15px;font-weight:950;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01))}
 summary::-webkit-details-marker{display:none}
-summary:after{content:"▾";float:right;color:var(--muted)}
-details[open] summary:after{transform:rotate(180deg)}
-.body{padding:0 14px 14px;border-top:1px solid rgba(183,195,217,.14)}
-.stack-row{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:13px;background:rgba(255,255,255,.05);margin-bottom:8px}
-.rate-box{display:grid;grid-template-columns:72px 1fr 72px;gap:8px}
-.mini{padding:10px;margin-bottom:8px}
+summary:before{content:"";width:6px;height:28px;border-radius:999px;background:var(--blue);display:inline-block;flex:0 0 auto}
+details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
+.body{padding:0 13px 13px}
+.tab-goals summary:before{background:var(--amber)}
+.tab-ppor summary:before{background:var(--green)}
+.tab-wandina summary:before{background:var(--violet)}
+.tab-rules summary:before{background:var(--red)}
+.explain{padding:13px 14px;border-radius:16px;background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.08);line-height:1.45;color:var(--muted)}
 @media(min-width:760px){
-  body{padding:12px}
+  body{padding:14px}
   .grid2{grid-template-columns:repeat(2,1fr)}
-  .grid3{grid-template-columns:repeat(3,1fr)}
-  .grid4,.transfer-grid,.trigger-grid,.signal-grid{grid-template-columns:repeat(4,1fr)}
-  .mode-grid{grid-template-columns:repeat(5,1fr)}
+  .grid4,.transfer-grid,.goal-grid,.signal-grid{grid-template-columns:repeat(4,1fr)}
+  .pills{grid-template-columns:repeat(4,1fr)}
 }
-@media(max-width:759px){
-  .grid4,.hero{grid-template-columns:repeat(2,1fr)}
-  .value{font-size:24px}
-  .transfer-grid{grid-template-columns:repeat(2,1fr)}
+
+.mode-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.mode-btn{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));color:white;border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 18px rgba(0,0,0,.16)}
+.mode-btn.active{background:linear-gradient(135deg,#2563eb,#7c3aed);border-color:#93c5fd}
+.mode-btn.warn-active{background:linear-gradient(135deg,#f59e0b,#b45309);border-color:#fcd34d}
+.engine-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.engine-card{padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04))}
+.engine-card strong{font-size:22px;display:block;margin-top:6px;letter-spacing:-.03em}
+.rate-box{display:grid;grid-template-columns:70px 1fr 70px;gap:8px}
+.signal-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.signal-card{padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:var(--neutral)}
+.ppor-mode-toggle{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0}
+.ppor-mode-toggle button.active{background:linear-gradient(135deg,#2563eb,#7c3aed);color:white}
+.badge{display:inline-block;padding:8px 11px;border-radius:999px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.badge.max{background:#7f1d1d;color:#fecaca}
+.badge.balanced{background:#064e3b;color:#bbf7d0}
+.badge.auto{background:#312e81;color:#c7d2fe}
+@media(min-width:760px){
+  .mode-grid{grid-template-columns:repeat(5,1fr)}
+  .engine-grid{grid-template-columns:repeat(4,1fr)}
+  .signal-grid{grid-template-columns:repeat(4,1fr)}
+  .ppor-mode-toggle{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-
-<div class="card welcome">
-  <div class="kicker">Mobile command</div>
-  <h1>Finance Control</h1>
-  <div class="small">Mobile-polished command dashboard. Check Bills/Savings, follow the action strip, then use PPOR Mode Switch only when deciding attack intensity.</div>
-</div>
-
-<div class="card">
-  <div class="kicker">Mode controls</div>
-  <h2>Phase + mode options</h2>
-  <div class="mode-grid">
-    <button id="phaseCurrentBtn" class="mode-btn active">Current phase</button>
-    <button id="phase2027Btn" class="mode-btn">2027 0.8 mode</button>
-    <button id="modeAutoBtn" class="mode-btn alt-active">Auto mode</button>
-    <button id="modeSurvivalBtn" class="mode-btn">Survival mode</button>
-    <button id="modeAttackBtn" class="mode-btn">Attack mode</button>
+  <div class="card welcome">
+    <div class="kicker">V37 simple weekly control</div>
+    <h1>Finance Control</h1>
+    <div class="small">Enter Offset + Bills/Savings once per week. Full command stack restored: modes, Wandina, PPOR Mode Switch, PPOR Kill Projection and decision signals.</div>
   </div>
-  <div class="small" id="modeControlNote" style="margin-top:8px">Choose phase and transfer intensity.</div>
-</div>
 
-<div class="card hero-transfer">
-  <div class="kicker">Weekly execution</div>
-  <h2>Suggested weekly transfers</h2>
-  <div class="transfer-grid">
-    <div id="weeklyLivingCard" class="transfer-card"><div class="label">Living</div><div id="weeklyLivingVal" class="value">-</div><div id="weeklyLivingNote" class="note"></div></div>
-    <div id="weeklySplurgeCard" class="transfer-card"><div class="label">Splurge</div><div id="weeklySplurgeVal" class="value">-</div><div id="weeklySplurgeNote" class="note"></div></div>
-    <div id="weeklyBillsCard" class="transfer-card account-merge"><div class="label">Bills/Savings</div><div id="weeklyBillsVal" class="value">-</div><div id="weeklyBillsNote" class="note"></div></div>
-    <div id="weeklySavingsCard" class="transfer-card"><div class="label">Target gap</div><div id="weeklySavingsVal" class="value">-</div><div id="weeklySavingsNote" class="note"></div></div>
+  <div class="card hero">
+    <div class="kicker">Weekly check-in</div>
+    <h2>Only enter these two balances</h2>
+    <div class="grid4">
+      <label><span>Offset balance today</span><input id="offset" value="31699"></label>
+      <label><span>Bills/Savings balance today</span><input id="savings" value="4380"></label>
+      <label><span>Last week total cash</span><input id="lastCashTotal" value="36079"></label>
+      <label><span>Weekly income</span><input id="income" value="3253"></label>
+    </div>
   </div>
-</div>
 
-<div class="card">
-  <div class="kicker">Start here</div>
-  <h2>Control panel</h2>
-  <div class="grid2">
-    <label><span>Current offset</span><input id="offset" value="26585"></label>
-    <label><span>Current savings balance</span><input id="savings" value="4380"></label>
-    <label><span>Offset floor / danger line</span><input id="floor" value="30000"></label>
-    <label><span>Weeks remaining to 24 July</span><input id="weeksToTarget" value="13"></label>
-    <label><span>Current weekly household income</span><input id="income" value="3250"></label>
-    <label><span>2027 weekly household income</span><input id="reducedIncome" value="2600"></label>
-    <label><span>Actual weekly spend</span><input id="spend" value="600"></label>
-    <label><span>Actual Bills/Savings transfer</span><input id="actualSavingsTransfer" value="400"></label>
+  <div id="actionCard" class="action info">
+    <div class="eyebrow">This week’s command</div>
+    <div id="actionTitle" class="title">Calculating…</div>
+    <div id="actionCopy" class="copy">Enter balances to get the command.</div>
   </div>
-</div>
 
-<div class="card">
-  <div class="kicker">Snapshot</div>
-  <h2>Command Centre</h2>
-  <div class="top-compact">
-    <div id="modeCard" class="top-pill"><div class="label">Mode</div><div id="modeVal" class="value">-</div><div id="modeNote" class="note"></div></div>
-    <div id="verdictCard" class="top-pill"><div class="label">Verdict</div><div id="verdictVal" class="value">-</div><div id="verdictNote" class="note"></div></div>
-    <div id="floorCard" class="top-pill"><div class="label">Floor</div><div id="floorStatusVal" class="value">-</div><div id="floorStatusNote" class="note"></div></div>
+  <div class="card">
+    <div class="kicker">System result</div>
+    <h2>Cash position</h2>
+    <div class="pills">
+      <div class="pill"><span>Total cash</span><strong id="totalCashVal">-</strong></div>
+      <div class="pill"><span>Expected cash</span><strong id="expectedCashVal">-</strong></div>
+      <div class="pill"><span>Weekly drift</span><strong id="driftVal">-</strong></div>
+      <div class="pill"><span>Offset floor</span><strong id="floorMiniVal">-</strong></div>
+    </div>
   </div>
-  <div class="grid2" style="margin-top:10px">
-    <div id="targetStatusCard" class="metric"><div class="label">Targets</div><div id="targetStatusVal" class="value">-</div><div id="targetStatusNote" class="note"></div></div>
-    <div id="finalCard" class="metric"><div class="label">Final position</div><div id="finalVal" class="value">-</div><div class="note">After weekly spend</div></div>
-    <div id="spendGapCard" class="metric"><div class="label">Spend vs plan</div><div id="spendGapVal" class="value">-</div><div id="spendGapNote" class="note"></div></div>
-    <div id="safeSpendCard" class="metric"><div class="label">Spending limit</div><div id="safeSpendVal" class="value">-</div><div class="note">Income less fixed pressure</div></div>
+
+  <div class="card">
+    <div class="kicker">Weekly execution</div>
+    <h2>Transfer command</h2>
+    <div class="transfer-grid">
+      <div id="livingCard" class="transfer-card"><div class="label">Living</div><div id="livingVal" class="value">$550</div><div class="note">Planned transfer, not detected spend</div></div>
+      <div id="splurgeCard" class="transfer-card"><div class="label">Splurge</div><div id="splurgeVal" class="value">$50</div><div class="note">Drops to $0 in Control Mode</div></div>
+      <div id="billsCard" class="transfer-card"><div class="label">Bills/Savings</div><div id="billsVal" class="value">-</div><div class="note">Physical transfer to Bills/Savings</div></div>
+      <div id="offsetAttackCard" class="transfer-card"><div class="label">Extra offset attack</div><div id="offsetAttackVal" class="value">-</div><div id="offsetAttackNote" class="note"></div></div>
+    </div>
   </div>
-</div>
 
-
-
-<div class="action-strip" id="commandCard">
-  <div class="label">This week’s action</div>
-  <div id="commandTitle" class="value">-</div>
-  <div id="commandOutput" class="note">-</div>
-</div>
-
-<div class="card">
-  <div class="kicker">Decision guardrails</div>
-  <h2>Trigger Dashboard</h2>
-  <div class="trigger-grid">
-    <div id="triggerOffsetCard" class="trigger-card"><div class="label">Offset floor</div><div id="triggerOffsetVal" class="value">-</div><div id="triggerOffsetNote" class="note"></div></div>
-    <div id="triggerSavingsCard" class="trigger-card"><div class="label">Bills/Savings funding</div><div id="triggerSavingsVal" class="value">-</div><div id="triggerSavingsNote" class="note"></div></div>
-    <div id="triggerWandinaCard" class="trigger-card"><div class="label">Wandina gate</div><div id="triggerWandinaVal" class="value">-</div><div id="triggerWandinaNote" class="note"></div></div>
-    <div id="triggerActionCard" class="trigger-card"><div class="label">Action</div><div id="triggerActionVal" class="value">-</div><div id="triggerActionNote" class="note"></div></div>
+  <div class="card">
+    <div class="kicker">Virtual goals inside Bills/Savings</div>
+    <h2>Goals tracker</h2>
+    <div class="small">No new bank account needed. Cruise, fence and buffer live virtually inside the same Bills/Savings account.</div>
+    <div class="goal-grid" style="margin-top:12px">
+      <div class="goal-card"><div class="label">Cruise</div><div id="cruiseVal" class="value">-</div><div id="cruiseNote" class="note"></div><div class="bar"><div id="cruiseFill" class="fill"></div></div></div>
+      <div class="goal-card"><div class="label">Fence</div><div id="fenceVal" class="value">-</div><div id="fenceNote" class="note"></div><div class="bar"><div id="fenceFill" class="fill"></div></div></div>
+      <div class="goal-card"><div class="label">Buffer</div><div id="bufferVal" class="value">-</div><div id="bufferNote" class="note"></div><div class="bar"><div id="bufferFill" class="fill"></div></div></div>
+      <div class="goal-card"><div class="label">Combined gap</div><div id="combinedGapVal" class="value">-</div><div id="combinedGapNote" class="note"></div><div class="bar"><div id="combinedFill" class="fill"></div></div></div>
+    </div>
   </div>
-</div>
 
-<div class="card dropdown-recs">
-  <div class="kicker">Active rules</div>
-  <h2>Wandina rules now driving the app</h2>
-  <div class="rule-grid">
-    <div id="ruleFloorCard" class="rule-card bad"><strong>Floor rule</strong><span id="ruleFloorText">-</span></div>
-    <div id="ruleFundingCard" class="rule-card warn"><strong>Bills/Savings rule</strong><span id="ruleFundingText">-</span></div>
-    <div id="ruleWandinaCard" class="rule-card info"><strong>Wandina gate rule</strong><span id="ruleWandinaText">-</span></div>
-    <div id="ruleSaleCard" class="rule-card info"><strong>Sale-pack rule</strong><span id="ruleSaleText">-</span></div>
-  </div>
-</div>
+  <details class="tab-goals" open>
+    <summary>🧾 How the simple weekly system works</summary>
+    <div class="body"><div class="explain" style="margin-top:12px">
+      With only two weekly inputs, the app detects <strong>whole-system drift</strong>, not exact category overspend. If Offset + Bills/Savings is lower than expected, it flags a leak and tightens next week. It does not falsely claim “Living overspent” unless you enter transaction detail.
+    </div></div>
+  </details>
 
-<div class="card">
-  <div class="kicker">Strategy readout</div>
-  <h2>Decision signals</h2>
-  <div class="signal-grid">
-    <div id="signalRefinanceCard" class="signal-card"><div class="label">Refinance readiness</div><div id="signalRefinanceVal" class="value">-</div><div id="signalRefinanceNote" class="note"></div></div>
-    <div id="signalSellCard" class="signal-card"><div class="label">Sell signal</div><div id="signalSellVal" class="value">-</div><div id="signalSellNote" class="note"></div></div>
-    <div id="signalRecycleCard" class="signal-card"><div class="label">Debt recycle readiness</div><div id="signalRecycleVal" class="value">-</div><div id="signalRecycleNote" class="note"></div></div>
-    <div id="signal2027Card" class="signal-card"><div class="label">2027 readiness</div><div id="signal2027Val" class="value">-</div><div id="signal2027Note" class="note"></div></div>
-  </div>
-  <div class="mini info" id="decisionSignalSummary" style="margin-top:12px">-</div>
-</div>
+  
 
-<div class="card">
-  <div class="kicker">Weekly load</div>
-  <h2>Pressure Stack</h2>
-  <div class="stack-row"><strong>PPOR weekly repayment</strong><span id="stackPporVal">-</span></div>
-  <div class="stack-row"><strong>Bills/Savings account need</strong><span id="stackBillsBucketVal">-</span></div>
-  <div class="stack-row"><strong>Target gap remaining</strong><span id="stackSavingsTargetVal">-</span></div>
-  <div class="stack-row"><strong>Upcoming bills</strong><span id="stackUpcomingBillsVal">-</span></div>
-  <div class="stack-row"><strong>IP current pressure</strong><span id="stackIpPressureVal">-</span></div>
-  <div class="stack-row"><strong>Offset floor</strong><span id="stackOffsetFloorVal">-</span></div>
-  <div class="stack-row"><strong>Total weekly pressure</strong><span id="stackTotalPressureVal">-</span></div>
-</div>
-
-<details class="dropdown-wandina">
-<summary><span class="section-icon">🏗️</span>Wandina Decision Engine</summary>
-<div class="body">
-  <div class="grid3" style="margin-top:12px">
-    <label><span>Wandina total debt</span><input id="wandinaDebt" value="588000"></label>
-    <label><span>Other annual IP cash costs</span><input id="ipCashCosts" value="7500"></label>
-    <label><span>Annual depreciation estimate</span><input id="depreciation" value="12000"></label>
-    <label><span>Marginal tax rate %</span><input id="taxRate" value="39"></label>
-    <label><span>Target sale price / value</span><input id="salePrice" value="780000"></label>
-    <label><span>Selling costs %</span><input id="sellingCosts" value="3"></label>
-    <label><span>Tax cost base</span><input id="costBase" value="608000"></label>
-    <label><span>Capital works already claimed</span><input id="capitalWorks" value="0"></label>
-    <label><span>Sale cash to offset %</span><input id="saleCashPct" value="100"></label>
-    <label><span>IP rate %</span><div class="rate-box"><button id="ipDown">-0.25</button><input id="ipRate" value="6.39"><button id="ipUp">+0.25</button></div></label>
-  </div>
-  <div class="grid4" style="margin-top:12px">
-    <div class="metric"><div class="label">IP interest / week</div><div id="ipInterestVal" class="value">-</div><div class="note">Interest-only at current rate</div></div>
-    <div class="metric"><div class="label">Pre-tax hold / week</div><div id="preTaxHoldVal" class="value">-</div><div class="note">Rent less interest and cash costs</div></div>
-    <div class="metric"><div class="label">After-tax hold / week</div><div id="afterTaxHoldVal" class="value">-</div><div class="note">Approx with depreciation</div></div>
-    <div class="metric"><div class="label">PAYG variation / week</div><div id="paygVal" class="value">-</div><div class="note">Approx smoothing benefit</div></div>
-    <div class="metric"><div class="label">Approx CGT</div><div id="cgtVal" class="value">-</div><div class="note">Simplified estimate</div></div>
-    <div class="metric"><div class="label">Net cash after debt + tax</div><div id="netCashVal" class="value">-</div><div class="note">Before split allocation</div></div>
-    <div class="metric"><div class="label">Interest saved / year</div><div id="interestSavedYearVal" class="value">-</div><div class="note">If sale cash goes to offset</div></div>
-    <div class="metric"><div class="label">Years cut</div><div id="yearsCutVal" class="value">-</div><div class="note">Approx PPOR acceleration</div></div>
-  </div>
-</div>
-</details>
-
-
-<details class="dropdown-ppor" open>
-<summary><span class="section-icon">🚀</span>PPOR Mode Switch Engine</summary>
-<div class="body">
-  <div class="card ppor-mode-card" style="margin-top:12px">
-    <div class="ppor-mode-header">
-      <div>
-        <div class="kicker">PPOR Payoff Engine</div>
-        <h2>Mode Switch</h2>
-        <div class="small">Use this when deciding whether spare cash should go 100% to PPOR, or 80% PPOR / 20% buffer.</div>
+  <details class="tab-ppor">
+    <summary>🏠 PPOR kill mission</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="grid4">
+        <label><span>PPOR weekly repayment</span><input id="pporWeekly" value="763"></label>
+        <label><span>Offset floor</span><input id="offsetFloor" value="30000"></label>
+        <label><span>Living plan</span><input id="livingPlan" value="550"></label>
+        <label><span>Bills/Savings plan</span><input id="billsPlan" value="825"></label>
       </div>
-      <div id="pporModeBadge" class="mode-badge balanced">BALANCED</div>
+      <div class="mini info" style="margin-top:10px">PPOR attack only happens when weekly drift is positive and the offset is above floor. Otherwise, protect liquidity first.</div>
     </div>
+  </details>
 
-    <div class="ppor-toggle-wrap" role="group" aria-label="PPOR mode selector">
-      <button id="pporMaxAttackBtn" class="ppor-toggle" type="button">🔥 Max Attack</button>
-      <button id="pporBalancedBtn" class="ppor-toggle active" type="button">⚖️ Balanced</button>
-      <button id="pporAutoModeBtn" class="ppor-toggle" type="button">🧠 Auto</button>
+  <details class="tab-wandina">
+    <summary>🏗️ Wandina / IP guardrail</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="grid2">
+        <label><span>IP weekly pressure estimate</span><input id="ipPressure" value="106"></label>
+        <label><span>Future guaranteed rent</span><input id="rent" value="700"></label>
+      </div>
+      <div class="mini purple" style="margin-top:10px">Until rent is active, the IP pressure stays in the weekly plan. When rent starts, this section should be updated.</div>
     </div>
+  </details>
 
-    <div class="grid2">
-      <label><span>PPOR Balance</span><input id="pporModeBalanceInput" type="number" value="560000" min="0" step="1000"></label>
-      <label><span>PPOR Interest Rate (%)</span><input id="pporModeRateInput" type="number" value="5.92" min="0" step="0.01"></label>
-      <label><span>Current Offset Balance</span><input id="pporModeOffsetInput" type="number" value="40000" min="0" step="500"></label>
-      <label><span>Weekly Rent When Active</span><input id="pporModeRentInput" type="number" value="700" min="0" step="10"></label>
-      <label><span>Weekly Surplus</span><input id="pporModeSurplusInput" type="number" value="400" min="0" step="10"></label>
-      <label><span>Minimum Offset Buffer</span><input id="pporModeBufferInput" type="number" value="40000" min="0" step="500"></label>
-      <label><span>Rent Start Date</span><input id="pporModeRentStartInput" type="date" value="2026-09-01"></label>
-      <label><span>Quarterly Sweep Frequency</span>
-        <select id="pporModeSweepFrequencyInput">
-          <option value="13" selected>Every 13 weeks</option>
-          <option value="26">Every 26 weeks</option>
-          <option value="52">Once per year</option>
-        </select>
-      </label>
+  <div class="card">
+    <div class="kicker">Command Centre</div>
+    <h2>Mode options</h2>
+    <div class="mode-grid">
+      <button id="modeAuto" class="mode-btn active" type="button">🧠 Auto</button>
+      <button id="modeControl" class="mode-btn" type="button">🟠 Control</button>
+      <button id="modeAttack" class="mode-btn" type="button">🚀 Attack</button>
+      <button id="phaseCurrent" class="mode-btn active" type="button">Current Phase</button>
+      <button id="phase2027" class="mode-btn" type="button">2027 Mode</button>
     </div>
-
-    <div class="mini info" id="pporModeRecommendationPanel" style="margin-top:12px">
-      <strong>Mode recommendation:</strong><br><span id="pporModeRecommendationText">Balanced mode active.</span>
-    </div>
-
-    <div class="ppor-results">
-      <div class="ppor-result-card"><span>Current Mode</span><strong id="pporModeCurrentOutput">Balanced</strong></div>
-      <div class="ppor-result-card"><span>Weekly PPOR Attack</span><strong id="pporModeWeeklyPporOutput">$880</strong></div>
-      <div class="ppor-result-card"><span>Weekly Invest / Lifestyle Buffer</span><strong id="pporModeWeeklySecondaryOutput">$220</strong></div>
-      <div class="ppor-result-card"><span>Estimated Payoff</span><strong id="pporModePayoffOutput">Calculating...</strong></div>
-      <div class="ppor-result-card"><span>Projected Interest</span><strong id="pporModeInterestOutput">Calculating...</strong></div>
-      <div class="ppor-result-card"><span>Next Sweep Amount</span><strong id="pporModeSweepOutput">Calculating...</strong></div>
-    </div>
-
-    <div class="ppor-rules">
-      <h3>Mode Logic</h3>
-      <ul id="pporModeRulesList"></ul>
+    <div class="engine-grid" style="margin-top:12px">
+      <div id="modeReadCard" class="engine-card info"><div class="label">Active mode</div><strong id="modeReadVal">-</strong><div id="modeReadNote" class="note"></div></div>
+      <div id="floorReadCard" class="engine-card"><div class="label">Offset floor</div><strong id="floorReadVal">-</strong><div id="floorReadNote" class="note"></div></div>
+      <div id="driftReadCard" class="engine-card"><div class="label">Drift signal</div><strong id="driftReadVal">-</strong><div id="driftReadNote" class="note"></div></div>
+      <div id="readinessCard" class="engine-card"><div class="label">2027 readiness</div><strong id="readinessVal">-</strong><div id="readinessNote" class="note"></div></div>
     </div>
   </div>
-</div>
-</details>
 
-<details class="dropdown-ppor">
-<summary><span class="section-icon">🏠</span>PPOR Kill Projection</summary>
-<div class="body">
-  <div class="grid2" style="margin-top:12px">
-    <label><span>PPOR balance</span><input id="pporBalance" value="560540"></label>
-    <label><span>PPOR rate %</span><div class="rate-box"><button id="pporDown">-0.25</button><input id="pporRate" value="5.92"><button id="pporUp">+0.25</button></div></label>
-  </div>
-  <div class="grid4" style="margin-top:12px">
-    <div class="metric"><div class="label">PPOR weekly repayment</div><div id="pporWeeklyVal" class="value">-</div></div>
-    <div class="metric"><div class="label">New balance after sale cash</div><div id="newPporBalanceVal" class="value">-</div></div>
-    <div class="metric"><div class="label">Approx annual interest saved</div><div id="pporInterestSavedVal" class="value">-</div></div>
-    <div class="metric"><div class="label">Offset trend 8 weeks</div><div id="offsetTrendVal" class="value">-</div></div>
-  </div>
-</div>
-</details>
+  <details class="tab-wandina" open>
+    <summary>🏗️ Wandina Decision Engine</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="grid4">
+        <label><span>Wandina total debt</span><input id="wandinaDebt" value="588000"></label>
+        <label><span>Target sale price / value</span><input id="salePrice" value="780000"></label>
+        <label><span>IP rate %</span><div class="rate-box"><button id="ipRateDown" type="button">-0.25</button><input id="ipRate" value="6.39"><button id="ipRateUp" type="button">+0.25</button></div></label>
+        <label><span>Selling costs %</span><input id="sellingCostPct" value="3"></label>
+        <label><span>Tax cost base</span><input id="costBase" value="608000"></label>
+        <label><span>Marginal tax rate %</span><input id="taxRate" value="39"></label>
+        <label><span>Depreciation estimate / year</span><input id="depreciation" value="12000"></label>
+        <label><span>Sale cash to offset %</span><input id="saleCashPct" value="100"></label>
+      </div>
+      <div class="engine-grid" style="margin-top:12px">
+        <div class="engine-card"><div class="label">IP interest/week</div><strong id="ipInterestVal">-</strong></div>
+        <div class="engine-card"><div class="label">After-tax hold/week</div><strong id="afterTaxHoldVal">-</strong></div>
+        <div class="engine-card"><div class="label">Approx CGT</div><strong id="cgtVal">-</strong></div>
+        <div class="engine-card"><div class="label">Net cash after debt</div><strong id="netCashVal">-</strong></div>
+      </div>
+      <div id="wandinaDecisionBox" class="mini purple" style="margin-top:12px">-</div>
+    </div>
+  </details>
 
-<details class="dropdown-recs">
-<summary><span class="section-icon">🧭</span>Wandina IP Progress Update Recommendations</summary>
-<div class="body">
-  <div class="mini bad"><strong>1. Protect offset floor first.</strong><br>When floor is below or near danger, optional cash flow protects offset before lifestyle upgrades.</div>
-  <div class="mini warn"><strong>2. Treat the fence as an income gate.</strong><br>If WACHS rent depends on conditions, fence funding unlocks the income path.</div>
-  <div class="mini info"><strong>3. Prepare sale pack early.</strong><br>Track value, agent appraisal, CGT date, selling costs, and net-to-offset outcome before the window opens.</div>
-  <div class="mini good"><strong>4. Route surplus and sale cash to PPOR offset.</strong><br>Do not scatter surplus into vague buckets.</div>
-  <div class="mini info"><strong>5. Keep CGT and tax-year timing visible.</strong><br>Contract date matters. Lower-income year modelling matters.</div>
-</div>
-</details>
+  <details class="tab-ppor" open>
+    <summary>🚀 PPOR Mode Switch Engine</summary>
+    <div class="body" style="padding-top:12px">
+      <div><span id="pporModeBadge" class="badge balanced">Balanced</span></div>
+      <div class="ppor-mode-toggle">
+        <button id="pporMaxAttack" type="button">🔥 Max Attack</button>
+        <button id="pporBalanced" class="active" type="button">⚖️ Balanced</button>
+        <button id="pporAuto" type="button">🧠 Auto</button>
+      </div>
+      <div class="grid4">
+        <label><span>PPOR balance</span><input id="pporBalance" value="560540"></label>
+        <label><span>PPOR rate %</span><div class="rate-box"><button id="pporRateDown" type="button">-0.25</button><input id="pporRate" value="5.67"><button id="pporRateUp" type="button">+0.25</button></div></label>
+        <label><span>Minimum offset buffer</span><input id="minOffsetBuffer" value="30000"></label>
+        <label><span>Weekly rent when active</span><input id="futureRent" value="700"></label>
+      </div>
+      <div class="engine-grid" style="margin-top:12px">
+        <div class="engine-card"><div class="label">Current PPOR mode</div><strong id="pporModeVal">-</strong></div>
+        <div class="engine-card"><div class="label">Weekly PPOR attack</div><strong id="weeklyPporAttackVal">-</strong></div>
+        <div class="engine-card"><div class="label">Weekly secondary buffer</div><strong id="secondaryBufferVal">-</strong></div>
+        <div class="engine-card"><div class="label">Mode recommendation</div><strong id="pporModeRecommendationVal">-</strong></div>
+      </div>
+    </div>
+  </details>
 
-<details class="dropdown-pressure">
-<summary><span class="section-icon">🛠️</span>Debug</summary>
-<div class="body"><pre id="debugPanel">Booting…</pre></div>
-</details>
+  <details class="tab-ppor">
+    <summary>🏠 PPOR Kill Projection</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="engine-grid">
+        <div class="engine-card"><div class="label">Current weekly repayment</div><strong id="pporRepaymentVal">-</strong></div>
+        <div class="engine-card"><div class="label">Approx interest/week</div><strong id="pporInterestWeekVal">-</strong></div>
+        <div class="engine-card"><div class="label">Approx principal/week</div><strong id="pporPrincipalWeekVal">-</strong></div>
+        <div class="engine-card"><div class="label">Principal > interest?</div><strong id="principalFlipVal">-</strong></div>
+      </div>
+      <div class="mini info" id="pporProjectionNote" style="margin-top:12px">-</div>
+    </div>
+  </details>
+
+  <details class="tab-goals">
+    <summary>📈 Sell Timing Engine</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="grid2">
+        <label><span>Growth rate %</span><input id="growthRate" value="5"></label>
+        <label><span>Years to test</span><input id="yearsToTest" value="5"></label>
+      </div>
+      <div class="mini purple" id="sellTimingSummary" style="margin-top:12px">-</div>
+      <div id="sellTimingRows" style="margin-top:10px"></div>
+    </div>
+  </details>
+
+  
+
+
+  <details class="tab-rules" open>
+    <summary>🎨 Colour Legend / Control Rules</summary>
+    <div class="body" style="padding-top:12px">
+      <div style="display:grid;gap:10px">
+        <div class="mini good"><strong>🟢 Green — Hold Course</strong><br>System on track. Maintain normal transfers.</div>
+        <div class="mini warn"><strong>🟠 Amber — Watch / Control</strong><br>Drift detected. Reduce Splurge, monitor spending.</div>
+        <div class="mini bad"><strong>🔴 Red — Protect Floor</strong><br>Offset below threshold. Survival mode.</div>
+        <div class="mini info"><strong>🔵 Blue — Attack Mode</strong><br>Surplus available. Accelerate offset.</div>
+        <div class="mini purple"><strong>🟣 Purple — Strategic / Wandina</strong><br>Long-term decisions: sell, hold, timing.</div>
+      </div>
+    </div>
+  </details>
 
 </div>
+
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const n=id=>{const el=$(id);const v=el?parseFloat(String(el.value).replace(/[^0-9.-]/g,'')):0;return isFinite(v)?v:0}
-const money=x=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(isFinite(x)?x:0);
-const text=(id,v)=>{const el=$(id);if(el)el.textContent=v}
-const cls=(id,c)=>{const el=$(id);if(el)el.className=c}
-let phase='current', modeOverride='auto';
+const n=id=>{const el=$(id); if(!el) return 0; const v=parseFloat(String(el.value ?? el.textContent).replace(/[^0-9.-]/g,'')); return Number.isFinite(v)?v:0}
+const money=x=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(x)?x:0);
+const set=(id,v)=>{const el=$(id); if(el) el.textContent=v}
+const klass=(id,c)=>{const el=$(id); if(el) el.className=c}
+const fill=(id,p)=>{const el=$(id); if(el) el.style.width=Math.max(0,Math.min(100,p))+'%'}
+let systemMode='auto', phase='current', pporMode='balanced', pporModeAuto=false;
 
-function mode(offset){
- if(modeOverride==='survival')return {name:'SURVIVAL',living:500,splurge:0,buffer:1050,note:'Manual survival mode'};
- if(modeOverride==='attack')return {name:'ATTACK',living:500,splurge:50,buffer:900,note:'Manual attack mode'};
- if(offset<30000)return {name:'DEFENSIVE',living:500,splurge:0,buffer:1050,note:'Protect floor first'};
- if(offset<60000)return {name:'BALANCED',living:550,splurge:60,buffer:850,note:'Stable control zone'};
- if(offset<100000)return {name:'ACCELERATION',living:520,splurge:50,buffer:700,note:'Attack PPOR harder'};
- return {name:'AGGRESSIVE',living:500,splurge:50,buffer:900,note:'Strong offset'};
+function repayment(balance,rate,years=28.5){
+  const r=rate/100/52, N=years*52;
+  return balance*r/(1-Math.pow(1+r,-N));
 }
-function repayment(balance,rate,years=28.5){const r=rate/100/52,N=years*52;return balance*r/(1-Math.pow(1+r,-N))}
-function setStatus(id,type){const el=$(id); if(!el)return; const base=el.className.includes('top-pill')?'top-pill':'metric'; cls(id,base+' status-'+type)}
-function setCard(id,type,base='transfer-card'){cls(id,base+' '+(type==='good'?'good':type==='warn'?'warn':type==='bad'?'bad':'info'))}
-function refreshButtons(){
- ['phaseCurrentBtn','phase2027Btn','modeAutoBtn','modeSurvivalBtn','modeAttackBtn'].forEach(id=>$(id).className='mode-btn');
- $('phaseCurrentBtn').classList.toggle('active',phase==='current');
- $('phase2027Btn').classList.toggle('active',phase==='2027');
- $('modeAutoBtn').classList.toggle('alt-active',modeOverride==='auto');
- $('modeSurvivalBtn').classList.toggle('warn-active',modeOverride==='survival');
- $('modeAttackBtn').classList.toggle('active',modeOverride==='attack');
+function setModeButtons(){
+  ['modeAuto','modeControl','modeAttack','phaseCurrent','phase2027'].forEach(id=>$(id)?.classList.remove('active','warn-active'));
+  $('modeAuto')?.classList.toggle('active',systemMode==='auto');
+  $('modeControl')?.classList.toggle('warn-active',systemMode==='control');
+  $('modeAttack')?.classList.toggle('active',systemMode==='attack');
+  $('phaseCurrent')?.classList.toggle('active',phase==='current');
+  $('phase2027')?.classList.toggle('active',phase==='2027');
 }
 function render(){
-try{
- refreshButtons();
- const offset=n('offset'), savings=n('savings'), floor=n('floor'), income=phase==='current'?n('income'):n('reducedIncome'), spend=n('spend');
- const weeks=Math.max(1,n('weeksToTarget')), m=mode(offset);
- const pporBal=n('pporBalance'), pporRate=n('pporRate'), pporWeekly=repayment(pporBal,pporRate);
- const wandinaDebt=n('wandinaDebt'), ipRate=n('ipRate'), salePrice=n('salePrice'), sellingCosts=n('sellingCosts')/100, costBase=n('costBase'), capWorks=n('capitalWorks');
- const ipInterest=wandinaDebt*ipRate/100/52, annualCosts=n('ipCashCosts'), rent=700;
- const preTax=rent-ipInterest-annualCosts/52, payg=n('depreciation')*n('taxRate')/100/52, afterTax=preTax+payg;
- const gain=Math.max(0,salePrice-costBase-capWorks), cgt=gain*0.5*n('taxRate')/100;
- const netCash=Math.max(0,salePrice-wandinaDebt-salePrice*sellingCosts-cgt), saleToOffset=netCash*n('saleCashPct')/100;
- const interestSavedYear=saleToOffset*pporRate/100, yearsCut=interestSavedYear>0?saleToOffset/13000:0;
- const cruiseRemaining=13088-savings, savingsTarget=Math.max(0,cruiseRemaining/weeks);
- const billsBucket=150, upcomingBills=478, ipPressure=Math.max(0,ipInterest-rent);
- const billsSavingsNeed=billsBucket+savingsTarget+upcomingBills;
- const actualBillsSavings=n('actualSavingsTransfer');
- const totalPressure=pporWeekly+billsSavingsNeed+ipPressure;
- const safeSpend=income-totalPressure, finalPos=safeSpend-spend, floorGap8=offset+savings+finalPos*8-floor;
- const floorStatus=floorGap8<0?'BELOW':floorGap8<3000?'NEAR':'SAFE';
- const targetStatus=actualBillsSavings+1>=billsSavingsNeed?'ON TRACK':'UNDERFUNDED';
- const spendGap=safeSpend-spend;
- const decision=netCash>120000?'EXECUTE ZONE':netCash>80000?'WATCH':'HOLD';
+  setModeButtons();
+  const offset=n('offset'), savings=n('savings'), income=(phase==='current'?n('income'):2600)||3253;
+  const lastCash=n('lastCashTotal') || (offset+savings);
+  const ppor=n('pporWeekly')||763, floor=n('offsetFloor')||30000, livingPlan=n('livingPlan')||550, billsPlan=n('billsPlan')||825, ipPressure=n('ipPressure')||106;
+  const totalCash=offset+savings;
+  const splurgeNormal=50;
+  const plannedOutflow=ppor+livingPlan+billsPlan+splurgeNormal+ipPressure;
+  const expectedCash=lastCash+income-plannedOutflow;
+  const drift=totalCash-expectedCash;
 
- text('modeVal',m.name); text('modeNote',m.note);
- text('verdictVal',finalPos<0?'OFF TRACK':'ON TRACK'); text('verdictNote','Current phase');
- text('floorStatusVal',floorStatus); text('floorStatusNote','8-week gap: '+money(floorGap8));
- text('targetStatusVal',targetStatus); text('targetStatusNote','Savings vs target');
- text('safeSpendVal',money(safeSpend)); text('finalVal',money(finalPos)); text('spendGapVal',money(spendGap)); text('spendGapNote',spendGap<0?'Actual spend is above limit':'Actual spend is inside limit');
- setStatus('modeCard',m.name==='DEFENSIVE'||m.name==='SURVIVAL'?'bad':m.name==='BALANCED'?'warn':'good');
- setStatus('verdictCard',finalPos<0?'bad':'good'); setStatus('floorCard',floorStatus==='BELOW'?'bad':floorStatus==='NEAR'?'warn':'good');
- setStatus('targetStatusCard',targetStatus==='UNDERFUNDED'?'bad':'good'); setStatus('safeSpendCard',safeSpend<0?'bad':safeSpend<250?'warn':'info'); setStatus('finalCard',finalPos<0?'bad':'good'); setStatus('spendGapCard',spendGap<0?'bad':spendGap<200?'warn':'good');
+  let mode='HOLD COURSE', copy='Keep Living at plan, Splurge at $50, and fund Bills/Savings. No extra attack unless the week finishes ahead.', status='good';
+  let splurge=splurgeNormal, bills=billsPlan, extraAttack=0;
 
- text('weeklyLivingVal',money(m.living)); text('weeklySplurgeVal',money(m.splurge)); text('weeklyBillsVal',money(billsSavingsNeed)); text('weeklySavingsVal',money(Math.max(0,billsSavingsNeed-actualBillsSavings)));
- text('weeklyLivingNote','Everyday card spending rail'); text('weeklySplurgeNote',m.splurge===0?'Keep tight':'Controlled freedom'); text('weeklyBillsNote','Bills + savings in one account'); text('weeklySavingsNote','Remaining weekly gap against need');
- setCard('weeklyLivingCard','good'); setCard('weeklySplurgeCard',m.splurge===0?'warn':'good'); setCard('weeklyBillsCard',targetStatus==='UNDERFUNDED'?'bad':'info'); setCard('weeklySavingsCard',targetStatus==='UNDERFUNDED'?'bad':'good');
+  const forcedControl = systemMode==='control';
+  const forcedAttack = systemMode==='attack';
 
- let actionTitle='HOLD COURSE';
-let actionNote='Maintain settings and keep surplus aimed at PPOR offset / Bills-Savings.';
-if(floorStatus==='BELOW'){actionTitle='PROTECT FLOOR'; actionNote='Offset floor is below target. Survival logic overrides attack mode.'}
-else if(targetStatus==='UNDERFUNDED'){actionTitle='BOOST BILLS/SAVINGS'; actionNote='Combined Bills/Savings transfer is below weekly need. Increase transfer or cut spend.'}
-else if(finalPos<0){actionTitle='CUT SPEND'; actionNote='Actual spend is above the safe spending limit.'}
-else if(decision==='EXECUTE ZONE'){actionTitle='PREPARE SALE PACK'; actionNote='Wandina is in execute zone. Check agent value, CGT, and net-to-offset before acting.'}
-text('commandTitle',actionTitle); text('commandOutput',actionNote);
+  if(offset<floor){
+    mode='PROTECT OFFSET FLOOR';
+    copy='Offset is below the floor. Splurge = $0. Keep Living tight. Bills/Savings capped until the floor is repaired.';
+    status='bad'; splurge=0; bills=Math.min(750,billsPlan);
+  } else if(forcedControl || drift < -500){
+    mode='CONTROL MODE';
+    copy='Leak detected or Control mode selected. Splurge = $0. Check one-offs before adding any extra transfers.';
+    status='warn'; splurge=0; bills=Math.min(750,billsPlan);
+  } else if(drift < -150){
+    mode='WATCH MODE';
+    copy='Small drift detected. Keep Living at plan, Splurge $0-$25, and avoid extra top-ups.';
+    status='warn'; splurge=25; bills=Math.min(800,billsPlan);
+  } else if(forcedAttack || (drift > 500 && offset>=floor)){
+    mode='ATTACK MODE';
+    copy='Cash is ahead of expected. Keep normal transfers and sweep some surplus to offset.';
+    status='info'; extraAttack=Math.min(300,Math.round(Math.max(0,drift)/100)*100);
+  }
 
- text('triggerOffsetVal',floorStatus); text('triggerOffsetNote','8-week floor projection'); setCard('triggerOffsetCard',floorStatus==='BELOW'?'bad':floorStatus==='NEAR'?'warn':'good','trigger-card');
- text('triggerSavingsVal',targetStatus); text('triggerSavingsNote','Actual Bills/Savings transfer vs combined weekly need'); setCard('triggerSavingsCard',targetStatus==='UNDERFUNDED'?'bad':'good','trigger-card');
- text('triggerWandinaVal',afterTax<0?'RED':'WATCH'); text('triggerWandinaNote','After-tax hold pressure'); setCard('triggerWandinaCard',afterTax<0?'bad':'warn','trigger-card');
- text('triggerActionVal',floorStatus==='BELOW'?'CUT SPEND':targetStatus==='UNDERFUNDED'?'BOOST SAVINGS':decision); text('triggerActionNote','Primary action'); setCard('triggerActionCard',floorStatus==='BELOW'||targetStatus==='UNDERFUNDED'?'bad':'info','trigger-card');
- text('ruleFloorText',floorStatus==='BELOW'?'Active: protect floor before acceleration.':'Clear: floor not currently forcing survival.');
- text('ruleFundingText',targetStatus==='UNDERFUNDED'?'Active: combined Bills/Savings is underfunded.':'Clear: Bills/Savings transfer meets the weekly need.');
- text('ruleWandinaText',afterTax<0?'Watch: Wandina is still creating holding pressure.':'Okay: after-tax hold pressure is manageable.');
- text('ruleSaleText',decision==='EXECUTE ZONE'?'Active: sale-pack modelling should be prepared now.':'Prepare: keep value, CGT, selling costs and net-to-offset visible.');
- cls('ruleFloorCard','rule-card '+(floorStatus==='BELOW'?'bad':'good'));
- cls('ruleFundingCard','rule-card '+(targetStatus==='UNDERFUNDED'?'bad':'good'));
- cls('ruleWandinaCard','rule-card '+(afterTax<0?'warn':'good'));
- cls('ruleSaleCard','rule-card '+(decision==='EXECUTE ZONE'?'warn':'info'));
+  set('actionTitle',mode); set('actionCopy',copy); klass('actionCard','action '+status);
+  set('totalCashVal',money(totalCash)); set('expectedCashVal',money(expectedCash)); set('driftVal',(drift>=0?'+':'')+money(drift)); set('floorMiniVal',offset<floor?'Below':'Safe');
+  set('livingVal',money(livingPlan)); set('splurgeVal',money(splurge)); set('billsVal',money(bills)); set('offsetAttackVal',money(extraAttack)); set('offsetAttackNote',extraAttack>0?'Optional surplus sweep':'Hold until drift improves');
+  klass('livingCard','transfer-card '+(livingPlan<=600?'good':'warn'));
+  klass('splurgeCard','transfer-card '+(splurge===0?'warn':'good'));
+  klass('billsCard','transfer-card '+(bills<800?'warn':'info'));
+  klass('offsetAttackCard','transfer-card '+(extraAttack>0?'info':'good'));
 
- text('signalRefinanceVal',floorStatus==='SAFE'?'Strong':'Not ready'); text('signalRefinanceNote','Floor and surplus check'); setCard('signalRefinanceCard',floorStatus==='SAFE'?'good':'info','signal-card');
- text('signalSellVal',decision); text('signalSellNote','Based on net cash'); setCard('signalSellCard',decision==='EXECUTE ZONE'?'good':'warn','signal-card');
- text('signalRecycleVal',floorStatus==='SAFE'&&targetStatus==='ON TRACK'?'Ready':'Wait'); text('signalRecycleNote','Do not recycle while floor or Bills/Savings is weak'); setCard('signalRecycleCard',floorStatus==='SAFE'?'good':'warn','signal-card');
- text('signal2027Val',finalPos>0&&floorStatus==='SAFE'?'Ready':'Not ready'); text('signal2027Note','Transition readiness'); setCard('signal2027Card',finalPos>0&&floorStatus==='SAFE'?'good':'info','signal-card');
- text('decisionSignalSummary',`Wandina net cash after debt + tax is ${money(netCash)} and may cut about ${yearsCut.toFixed(1)} years from PPOR.`);
+  const cruiseTarget=13088, fenceTarget=4644, bufferTarget=3000;
+  const virtual=savings;
+  const cruise=Math.min(cruiseTarget,1488+virtual*.55);
+  const fence=Math.min(fenceTarget,virtual*.25);
+  const buffer=Math.min(bufferTarget,virtual*.20);
+  const gap=Math.max(0,(cruiseTarget-cruise)+(fenceTarget-fence)+(bufferTarget-buffer));
+  const totalTarget=cruiseTarget+fenceTarget+bufferTarget;
+  set('cruiseVal',money(cruise)); set('cruiseNote',money(cruiseTarget-cruise)+' remaining'); fill('cruiseFill',cruise/cruiseTarget*100);
+  set('fenceVal',money(fence)); set('fenceNote',money(fenceTarget-fence)+' remaining'); fill('fenceFill',fence/fenceTarget*100);
+  set('bufferVal',money(buffer)); set('bufferNote',money(bufferTarget-buffer)+' remaining'); fill('bufferFill',buffer/bufferTarget*100);
+  set('combinedGapVal',money(gap)); set('combinedGapNote','Virtual target gap inside Bills/Savings'); fill('combinedFill',(1-gap/totalTarget)*100);
 
- text('stackPporVal',money(pporWeekly)); text('stackBillsBucketVal',money(billsSavingsNeed)); text('stackSavingsTargetVal',money(Math.max(0,billsSavingsNeed-actualBillsSavings))); text('stackUpcomingBillsVal',money(upcomingBills)); text('stackIpPressureVal',money(ipPressure)); text('stackOffsetFloorVal',money(floor)); text('stackTotalPressureVal',money(totalPressure));
+  set('modeReadVal',mode); set('modeReadNote',systemMode==='auto'?'Auto selected from drift/floor':'Manual override active'); klass('modeReadCard','engine-card '+status);
+  set('floorReadVal',offset<floor?'Below':'Safe'); set('floorReadNote',money(offset-floor)+' vs floor'); klass('floorReadCard','engine-card '+(offset<floor?'bad':'good'));
+  set('driftReadVal',(drift>=0?'+':'')+money(drift)); set('driftReadNote','Actual cash minus expected cash'); klass('driftReadCard','engine-card '+(drift<-500?'bad':drift<0?'warn':'good'));
+  const ready2027 = offset>=floor && drift>=0 && gap<10000;
+  set('readinessVal',ready2027?'Improving':'Not ready'); set('readinessNote',ready2027?'Floor and drift are stable':'Stabilise floor, goals and drift first'); klass('readinessCard','engine-card '+(ready2027?'good':'warn'));
 
- text('ipInterestVal',money(ipInterest)); text('preTaxHoldVal',money(preTax)); text('afterTaxHoldVal',money(afterTax)); text('paygVal',money(payg)); text('cgtVal',money(cgt)); text('netCashVal',money(netCash)); text('interestSavedYearVal',money(interestSavedYear)); text('yearsCutVal',yearsCut.toFixed(1));
- text('pporWeeklyVal',money(pporWeekly)); text('newPporBalanceVal',money(Math.max(0,pporBal-saleToOffset))); text('pporInterestSavedVal',money(interestSavedYear)); text('offsetTrendVal',money(offset+savings+finalPos*8));
- pporModeRender();
- text('debugPanel','Render completed successfully');
-}catch(e){text('debugPanel','ERROR: '+e.message+'\n'+e.stack)}
-}
+  // Wandina
+  const debt=n('wandinaDebt'), sale=n('salePrice'), ipRate=n('ipRate'), sellingPct=n('sellingCostPct')/100, costBase=n('costBase'), taxRate=n('taxRate')/100, dep=n('depreciation'), saleCashPct=n('saleCashPct')/100;
+  const ipInterest=debt*ipRate/100/52;
+  const rent=n('rent')||700;
+  const afterTaxHold=(rent-ipInterest)+(dep*taxRate/52);
+  const gain=Math.max(0,sale-costBase);
+  const cgt=gain*.5*taxRate;
+  const netCash=Math.max(0,sale-debt-sale*sellingPct-cgt)*saleCashPct;
+  set('ipInterestVal',money(ipInterest));
+  set('afterTaxHoldVal',money(afterTaxHold));
+  set('cgtVal',money(cgt));
+  set('netCashVal',money(netCash));
+  const sellDecision = netCash>120000?'SELL WINDOW OPEN':netCash>80000?'WATCH':'HOLD';
+  set('wandinaDecisionBox',sellDecision==='SELL WINDOW OPEN'?`Sell window open: estimated net-to-offset is ${money(netCash)}.`:`${sellDecision}: estimated net-to-offset is ${money(netCash)}.`);
 
-function pporModeMoney(x){return new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(isFinite(x)?x:0)}
-let pporModeState={selectedMode:'balanced',autoMode:false};
-function pporModeInputs(){
- const get=id=>{const el=$(id);const v=el?Number(el.value||0):0;return isFinite(v)?v:0};
- return {
-  balance:get('pporModeBalanceInput'),
-  rate:get('pporModeRateInput')/100,
-  offset:get('pporModeOffsetInput'),
-  rent:get('pporModeRentInput'),
-  surplus:get('pporModeSurplusInput'),
-  buffer:get('pporModeBufferInput'),
-  rentStart:new Date(($('pporModeRentStartInput')?.value||'2026-09-01')+'T00:00:00'),
-  sweepWeeks:get('pporModeSweepFrequencyInput')||13
- };
-}
-function pporModeWeeksUntilRent(rentStart){
- const now=new Date();
- const diff=rentStart.getTime()-now.getTime();
- return Math.max(0,Math.ceil(diff/(1000*60*60*24*7)));
-}
-function pporModeChooseAuto(inputs){
- if(inputs.offset<30000)return 'max';
- if(inputs.offset<inputs.buffer)return 'max';
- if(pporModeWeeksUntilRent(inputs.rentStart)>0 && inputs.offset<40000)return 'max';
- if(inputs.offset>=50000 && inputs.surplus>=350)return 'balanced';
- return 'max';
-}
-function pporModeAllocation(mode,inputs){
- const totalWeekly=inputs.rent+inputs.surplus;
- if(mode==='max')return {pporWeekly:totalWeekly,secondaryWeekly:0};
- return {pporWeekly:totalWeekly*.8,secondaryWeekly:totalWeekly*.2};
-}
-function pporModeSimulate(inputs,allocation){
- let balance=Math.max(0,inputs.balance-Math.max(0,inputs.offset-inputs.buffer));
- const weeklyRate=inputs.rate/52, weeklyPayment=allocation.pporWeekly;
- let weeks=0,interestPaid=0,maxWeeks=52*40;
- if(weeklyPayment<=0)return {weeks:Infinity,interestPaid:Infinity};
- while(balance>0 && weeks<maxWeeks){const interest=balance*weeklyRate;interestPaid+=interest;balance+=interest-weeklyPayment;weeks++}
- return {weeks,interestPaid};
-}
-function pporModePayoffLabel(weeks){
- if(!isFinite(weeks))return 'Not enough data';
- const years=Math.floor(weeks/52),months=Math.round((weeks%52)/4.345),today=new Date(),payoffDate=new Date(today);
- payoffDate.setDate(today.getDate()+weeks*7);
- return `${years}y ${months}m • ${payoffDate.toLocaleDateString('en-AU',{month:'short',year:'numeric'})}`;
-}
-function pporModeSet(mode,auto=false){pporModeState.selectedMode=mode;pporModeState.autoMode=auto;render();}
-function pporModeUpdateButtons(activeMode,auto){
- $('pporMaxAttackBtn')?.classList.toggle('active',activeMode==='max'&&!auto);
- $('pporBalancedBtn')?.classList.toggle('active',activeMode==='balanced'&&!auto);
- $('pporAutoModeBtn')?.classList.toggle('active',auto);
-}
-function pporModeRenderRules(mode){
- const rules=mode==='max'
-  ? ['100% of rent and surplus goes to PPOR offset/loan.','No investing allocation while Max Attack is active.','Windfalls go 100% to PPOR unless buffer is below minimum.','Use Max Attack when offset is weak, rates rise, income falls, or spending creeps.']
-  : ['80% of rent and surplus goes to PPOR offset/loan.','20% becomes investing or lifestyle buffer only after minimum offset is protected.','If offset falls below buffer, Balanced mode should shut off.','Use Balanced when offset is strong and cashflow has been stable for 8+ weeks.'];
- const list=$('pporModeRulesList'); if(list)list.innerHTML=rules.map(r=>`<li>${r}</li>`).join('');
-}
-function pporModeRender(){
- const inputs=pporModeInputs(), activeMode=pporModeState.autoMode?pporModeChooseAuto(inputs):pporModeState.selectedMode;
- const allocation=pporModeAllocation(activeMode,inputs), sim=pporModeSimulate(inputs,allocation), excessOffset=Math.max(0,inputs.offset-inputs.buffer);
- const badge=$('pporModeBadge');
- if(badge){badge.className='mode-badge '+(pporModeState.autoMode?'auto':activeMode==='max'?'max':'balanced');badge.textContent=pporModeState.autoMode?`AUTO → ${activeMode==='max'?'MAX ATTACK':'BALANCED'}`:activeMode==='max'?'MAX ATTACK':'BALANCED'}
- text('pporModeCurrentOutput',activeMode==='max'?'Max Attack':'Balanced');
- text('pporModeWeeklyPporOutput',pporModeMoney(allocation.pporWeekly));
- text('pporModeWeeklySecondaryOutput',pporModeMoney(allocation.secondaryWeekly));
- text('pporModePayoffOutput',pporModePayoffLabel(sim.weeks));
- text('pporModeInterestOutput',isFinite(sim.interestPaid)?pporModeMoney(sim.interestPaid):'Not enough data');
- text('pporModeSweepOutput',excessOffset>0?pporModeMoney(excessOffset):'No sweep yet');
- let recommendation='';
- if(inputs.offset<30000)recommendation='MAX ATTACK recommended. Offset is below $30k. Protect the system before splitting money.';
- else if(inputs.offset<inputs.buffer)recommendation='MAX ATTACK recommended. Offset is below your nominated buffer.';
- else if(activeMode==='balanced')recommendation='BALANCED mode is acceptable. PPOR still dominates while 20% remains available for investing or lifestyle buffer.';
- else recommendation='MAX ATTACK active. Fastest PPOR kill path. Keep this until buffer and weekly surplus are clearly stable.';
- text('pporModeRecommendationText',recommendation);
- pporModeUpdateButtons(activeMode,pporModeState.autoMode);
- pporModeRenderRules(activeMode);
-}
+  // PPOR mode switch
+  let activePporMode = pporModeAuto ? (offset<floor || drift<0 ? 'max' : 'balanced') : pporMode;
+  const totalAvailable = Math.max(0, extraAttack + (n('futureRent')||0));
+  const pporAttack = activePporMode==='max' ? totalAvailable : totalAvailable*.8;
+  const secondary = activePporMode==='max' ? 0 : totalAvailable*.2;
+  const badge=$('pporModeBadge');
+  if(badge){badge.className='badge '+(pporModeAuto?'auto':activePporMode==='max'?'max':'balanced'); badge.textContent=pporModeAuto?`AUTO → ${activePporMode==='max'?'MAX':'BALANCED'}`:activePporMode==='max'?'MAX ATTACK':'BALANCED'}
+  set('pporModeVal',activePporMode==='max'?'Max Attack':'Balanced');
+  set('weeklyPporAttackVal',money(pporAttack));
+  set('secondaryBufferVal',money(secondary));
+  set('pporModeRecommendationVal',activePporMode==='max'?'Attack debt':'Balanced split');
+  ['pporMaxAttack','pporBalanced','pporAuto'].forEach(id=>$(id)?.classList.remove('active'));
+  if(pporModeAuto) $('pporAuto')?.classList.add('active'); else (activePporMode==='max'?$('pporMaxAttack'):$('pporBalanced'))?.classList.add('active');
 
-function adj(id,d){$(id).value=(Math.max(0,n(id)+d)).toFixed(2);render()}
+  // PPOR projection
+  const pporBal=n('pporBalance'), pporRate=n('pporRate'), actualPpor=n('pporWeekly')||763;
+  const interestWeek=pporBal*pporRate/100/52;
+  const principalWeek=actualPpor-interestWeek;
+  set('pporRepaymentVal',money(actualPpor));
+  set('pporInterestWeekVal',money(interestWeek));
+  set('pporPrincipalWeekVal',money(principalWeek));
+  set('principalFlipVal',principalWeek>interestWeek?'Yes':'No');
+  const flipBalance=(actualPpor/2)*52/(pporRate/100);
+  set('pporProjectionNote',`Principal becomes greater than interest when balance is roughly below ${money(flipBalance)} at this repayment/rate. Current balance is ${money(pporBal)}.`);
+
+  // Sell timing
+  const gr=n('growthRate')/100, yrs=Math.max(1,Math.round(n('yearsToTest')||5));
+  let bestYear=1,bestScore=-Infinity,rows=[];
+  for(let y=1;y<=yrs;y++){
+    const futureSale=sale*Math.pow(1+gr,y);
+    const futureGain=Math.max(0,futureSale-costBase);
+    const futureCgt=futureGain*.5*taxRate;
+    const futureNet=Math.max(0,futureSale-debt-futureSale*sellingPct-futureCgt);
+    const annualInterestSaved=futureNet*pporRate/100;
+    const score=futureNet/20+annualInterestSaved;
+    if(score>bestScore){bestScore=score;bestYear=y}
+    rows.push({y,futureSale,futureNet,annualInterestSaved});
+  }
+  set('sellTimingSummary',bestYear===1?'Earlier sale has the strongest PPOR effect on these assumptions.':`Year ${bestYear} gives the strongest PPOR effect on these assumptions.`);
+  const rowBox=$('sellTimingRows'); if(rowBox) rowBox.innerHTML=rows.map(r=>`<div class="mini purple" style="margin-bottom:8px"><strong>Year ${r.y}</strong><br>Value: ${money(r.futureSale)}<br>Net cash: ${money(r.futureNet)}<br>Annual PPOR interest saved: ${money(r.annualInterestSaved)}</div>`).join('');
+
+  // Signals
+  const refinanceReady=offset>=floor && drift>=0;
+  const recycleReady=offset>=floor && drift>=0 && gap<8000;
+  set('refinanceSignalVal',refinanceReady?'Strong':'Not yet'); set('refinanceSignalNote',refinanceReady?'Cash position supports review':'Stabilise floor/drift first'); klass('refinanceSignal','signal-card '+(refinanceReady?'good':'warn'));
+  set('sellSignalVal',sellDecision); set('sellSignalNote',`Net-to-offset estimate: ${money(netCash)}`); klass('sellSignal','signal-card '+(sellDecision==='SELL WINDOW OPEN'?'info':sellDecision==='WATCH'?'warn':'good'));
+  set('recycleSignalVal',recycleReady?'Ready':'Wait'); set('recycleSignalNote',recycleReady?'Review only after goals/floor stable':'Do not recycle while cash drift or goals are under pressure'); klass('recycleSignal','signal-card '+(recycleReady?'good':'warn'));
+  set('transitionSignalVal',ready2027?'Improving':'Not ready'); set('transitionSignalNote',ready2027?'Better transition footing':'Needs stronger cash position first'); klass('transitionSignal','signal-card '+(ready2027?'good':'warn'));
+}
 document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',render));
-$('phaseCurrentBtn').onclick=()=>{phase='current';render()}; $('phase2027Btn').onclick=()=>{phase='2027';render()};
-$('modeAutoBtn').onclick=()=>{modeOverride='auto';render()}; $('modeSurvivalBtn').onclick=()=>{modeOverride='survival';render()}; $('modeAttackBtn').onclick=()=>{modeOverride='attack';render()};
-$('pporMaxAttackBtn').onclick=()=>pporModeSet('max',false);
-$('pporBalancedBtn').onclick=()=>pporModeSet('balanced',false);
-$('pporAutoModeBtn').onclick=()=>pporModeSet(pporModeState.selectedMode,true);
-['pporModeBalanceInput','pporModeRateInput','pporModeOffsetInput','pporModeRentInput','pporModeSurplusInput','pporModeBufferInput','pporModeRentStartInput','pporModeSweepFrequencyInput'].forEach(id=>$(id)?.addEventListener('input',render));
-$('ipDown').onclick=()=>adj('ipRate',-0.25); $('ipUp').onclick=()=>adj('ipRate',0.25); $('pporDown').onclick=()=>adj('pporRate',-0.25); $('pporUp').onclick=()=>adj('pporRate',0.25);
+$('modeAuto')?.addEventListener('click',()=>{systemMode='auto';render()});
+$('modeControl')?.addEventListener('click',()=>{systemMode='control';render()});
+$('modeAttack')?.addEventListener('click',()=>{systemMode='attack';render()});
+$('phaseCurrent')?.addEventListener('click',()=>{phase='current';render()});
+$('phase2027')?.addEventListener('click',()=>{phase='2027';render()});
+$('pporMaxAttack')?.addEventListener('click',()=>{pporMode='max';pporModeAuto=false;render()});
+$('pporBalanced')?.addEventListener('click',()=>{pporMode='balanced';pporModeAuto=false;render()});
+$('pporAuto')?.addEventListener('click',()=>{pporModeAuto=true;render()});
+$('ipRateDown')?.addEventListener('click',()=>{$('ipRate').value=(n('ipRate')-.25).toFixed(2);render()});
+$('ipRateUp')?.addEventListener('click',()=>{$('ipRate').value=(n('ipRate')+.25).toFixed(2);render()});
+$('pporRateDown')?.addEventListener('click',()=>{$('pporRate').value=(n('pporRate')-.25).toFixed(2);render()});
+$('pporRateUp')?.addEventListener('click',()=>{$('pporRate').value=(n('pporRate')+.25).toFixed(2);render()});
 render();
 })();
 </script>
