@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance Control V38 Full Command Stack</title>
+<title>Finance Control V46 Weekly Review</title>
 <style>
 :root{
   --bg:#0a1020;--card:#141c30;--text:#f7fbff;--muted:#b7c3d9;--border:#2d3b5c;
@@ -96,14 +96,70 @@ details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
   .signal-grid{grid-template-columns:repeat(4,1fr)}
   .ppor-mode-toggle{grid-template-columns:repeat(3,1fr)}
 }
+
+.bill-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.bill-row{display:grid;grid-template-columns:1fr;gap:8px;padding:12px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);margin-bottom:9px}
+.bill-row button{background:linear-gradient(135deg,rgba(255,123,123,.92),rgba(180,50,65,.92));color:white}
+.bill-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.bill-summary .pill{background:rgba(255,255,255,.065)}
+@media(min-width:760px){
+  .bill-row{grid-template-columns:1.3fr 1fr 1fr auto;align-items:end}
+  .bill-summary{grid-template-columns:repeat(4,1fr)}
+}
+
+.tab-bills summary:before{background:#22c55e}
+
+.tab-bills.alert summary{
+  box-shadow:0 0 0 2px rgba(34,197,94,.35), 0 10px 25px rgba(34,197,94,.25);
+  background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(34,197,94,.06));
+}
+
+.tab-ppor.alert summary{
+  box-shadow:0 0 0 2px rgba(74,222,162,.35), 0 10px 25px rgba(74,222,162,.22);
+  background:linear-gradient(135deg,rgba(74,222,162,.18),rgba(74,222,162,.06));
+}
+.tab-wandina.alert summary{
+  box-shadow:0 0 0 2px rgba(179,156,255,.40), 0 10px 25px rgba(179,156,255,.24);
+  background:linear-gradient(135deg,rgba(179,156,255,.18),rgba(179,156,255,.06));
+}
+.tab-rules.alert summary{
+  box-shadow:0 0 0 2px rgba(247,201,106,.38), 0 10px 25px rgba(247,201,106,.22);
+  background:linear-gradient(135deg,rgba(247,201,106,.18),rgba(247,201,106,.06));
+}
+.recommendation-list{display:grid;gap:10px}
+.recommendation-list .mini strong{font-size:15px}
+
+.history-table{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:10px}
+.history-table th{font-size:11px;color:var(--muted);text-align:left;text-transform:uppercase;letter-spacing:.08em}
+.history-table td{background:rgba(255,255,255,.055);padding:10px;font-size:12px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.history-table td:first-child{border-radius:12px 0 0 12px;border-left:1px solid rgba(255,255,255,.08)}
+.history-table td:last-child{border-radius:0 12px 12px 0;border-right:1px solid rgba(255,255,255,.08)}
+.priority-row{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:760px){.priority-row{grid-template-columns:1.2fr 1fr 1fr}}
+
+.score-ring{display:grid;place-items:center;width:118px;height:118px;border-radius:999px;background:conic-gradient(var(--green) 0deg, rgba(255,255,255,.10) 0deg);margin:8px auto 12px;border:1px solid rgba(255,255,255,.14)}
+.score-ring-inner{display:grid;place-items:center;width:86px;height:86px;border-radius:999px;background:#121b30}
+.score-ring strong{font-size:28px;letter-spacing:-.05em}
+.export-row{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+@media(min-width:760px){.export-row{grid-template-columns:1fr 1fr}}
+
+.checklist{display:grid;gap:9px;margin-top:12px}
+.check-item{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:12px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10)}
+.check-item input{width:22px;min-height:22px;margin-top:2px;accent-color:#4adea2}
+.check-item strong{display:block;font-size:14px}
+.check-item span{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:3px}
+.check-progress{height:10px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden;margin-top:10px}
+.check-progress div{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:999px}
 </style>
+
+
 </head>
 <body>
 <div class="wrap">
   <div class="card welcome">
     <div class="kicker">V37 simple weekly control</div>
     <h1>Finance Control</h1>
-    <div class="small">Enter Offset + Bills/Savings once per week. Full command stack restored: modes, Wandina, PPOR Mode Switch, PPOR Kill Projection and decision signals.</div>
+    <div class="small">Enter Offset + Bills/Savings once per week. Weekly Review Checklist now turns the app into a repeatable finance ritual.</div>
   </div>
 
   <div class="card hero">
@@ -123,6 +179,25 @@ details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
     <div id="actionCopy" class="copy">Enter balances to get the command.</div>
   </div>
 
+
+  <details class="tab-goals" open>
+    <summary>✅ Weekly Review Checklist</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="small">Do this once a week. Same order, no improvising. This keeps the system honest.</div>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" class="review-check"><div><strong>1. Enter balances</strong><span>Update Offset and Bills/Savings balances.</span></div></label>
+        <label class="check-item"><input type="checkbox" class="review-check"><div><strong>2. Check Upcoming Bills</strong><span>Add any known bills due in the next 30 days.</span></div></label>
+        <label class="check-item"><input type="checkbox" class="review-check"><div><strong>3. Read this week’s command</strong><span>Hold, Watch, Control, Protect Floor, or Attack.</span></div></label>
+        <label class="check-item"><input type="checkbox" class="review-check"><div><strong>4. Confirm transfers</strong><span>Living, Splurge, Bills/Savings, and Extra Offset Attack.</span></div></label>
+        <label class="check-item"><input type="checkbox" class="review-check"><div><strong>5. Select drift reason</strong><span>If there is drift, choose the most likely reason before saving.</span></div></label>
+        <label class="check-item"><input type="checkbox" class="review-check"><div><strong>6. Save weekly snapshot</strong><span>Use “Save this week” so the app learns your trend.</span></div></label>
+      </div>
+      <div class="check-progress"><div id="reviewProgressFill"></div></div>
+      <div id="reviewProgressText" class="mini info" style="margin-top:10px">0/6 complete</div>
+      <button id="resetReviewChecklist" type="button" style="margin-top:10px">Reset checklist</button>
+    </div>
+  </details>
+
   <div class="card">
     <div class="kicker">System result</div>
     <h2>Cash position</h2>
@@ -132,6 +207,67 @@ details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
       <div class="pill"><span>Weekly drift</span><strong id="driftVal">-</strong></div>
       <div class="pill"><span>Offset floor</span><strong id="floorMiniVal">-</strong></div>
     </div>
+  </div>
+
+
+  <div class="card">
+    <div class="kicker">Learning layer</div>
+    <h2>Weekly snapshot history</h2>
+    <div class="priority-row">
+      <label><span>Drift reason this week</span>
+        <select id="driftReason">
+          <option value="Unknown">Unknown</option>
+          <option value="Bill timing">Bill timing</option>
+          <option value="One-off family expense">One-off family expense</option>
+          <option value="Overspend">Overspend</option>
+          <option value="Income timing">Income timing</option>
+          <option value="Goal funding">Goal funding</option>
+        </select>
+      </label>
+      <label><span>Next dollar priority</span>
+        <select id="goalPriority">
+          <option value="Bills/Savings">Bills/Savings</option>
+          <option value="Cruise">Cruise</option>
+          <option value="Fence">Fence</option>
+          <option value="Buffer">Buffer</option>
+          <option value="PPOR Attack">PPOR Attack</option>
+        </select>
+      </label>
+      <button id="saveSnapshot" type="button">Save this week</button>
+    </div>
+    <div class="pills" style="margin-top:10px">
+      <div class="pill"><span>4-week trend</span><strong id="trend4Val">-</strong></div>
+      <div class="pill"><span>Average drift</span><strong id="avgDriftVal">-</strong></div>
+      <div class="pill"><span>Best reason</span><strong id="topReasonVal">-</strong></div>
+      <div class="pill"><span>Next dollar</span><strong id="nextDollarVal">-</strong></div>
+    </div>
+    <div id="historyAdvice" class="mini info" style="margin-top:10px">Save weekly snapshots to build trend intelligence.</div>
+    <div style="overflow-x:auto">
+      <table class="history-table">
+        <thead><tr><th>Date</th><th>Total</th><th>Drift</th><th>Reason</th></tr></thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+    <div class="export-row"><button id="exportHistory" type="button">Export history CSV</button><button id="clearHistory" type="button">Clear history</button></div>
+  </div>
+
+
+  <div class="card">
+    <div class="kicker">Strategy automation</div>
+    <h2>Next-dollar engine</h2>
+    <div class="engine-grid">
+      <div class="engine-card info"><div class="label">Recommended priority</div><strong id="autoPriorityVal">-</strong><div id="autoPriorityNote" class="note"></div></div>
+      <div class="engine-card"><div class="label">Cruise urgency</div><strong id="cruiseUrgencyVal">-</strong><div id="cruiseUrgencyNote" class="note"></div></div>
+      <div class="engine-card"><div class="label">Fence urgency</div><strong id="fenceUrgencyVal">-</strong><div id="fenceUrgencyNote" class="note"></div></div>
+      <div class="engine-card"><div class="label">Buffer strength</div><strong id="bufferStrengthVal">-</strong><div id="bufferStrengthNote" class="note"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">2027 readiness</div>
+    <h2>Transition score</h2>
+    <div id="readinessScoreRing" class="score-ring"><div class="score-ring-inner"><strong id="readinessScoreVal">-</strong></div></div>
+    <div id="readinessScoreNote" class="mini info">-</div>
   </div>
 
   <div class="card">
@@ -155,6 +291,27 @@ details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
       <div class="goal-card"><div class="label">Buffer</div><div id="bufferVal" class="value">-</div><div id="bufferNote" class="note"></div><div class="bar"><div id="bufferFill" class="fill"></div></div></div>
       <div class="goal-card"><div class="label">Combined gap</div><div id="combinedGapVal" class="value">-</div><div id="combinedGapNote" class="note"></div><div class="bar"><div id="combinedFill" class="fill"></div></div></div>
     </div>
+  </div>
+
+
+  
+<details class="tab-bills" open>
+  <summary>💸 Upcoming Bills</summary>
+  <div class="body" style="padding-top:12px">
+    <div class="small">Use this for known bills due soon. These explain expected cash drops so the app does not confuse a planned bill with a spending leak.</div>
+    <div id="upcomingBillsList" style="margin-top:12px"></div>
+    <button id="addUpcomingBill" type="button">Add upcoming bill</button>
+    <div class="bill-summary">
+      <div class="pill"><span>Next 7 days</span><strong id="bills7Val">-</strong></div>
+      <div class="pill"><span>Next 30 days</span><strong id="bills30Val">-</strong></div>
+      <div class="pill"><span>Weekly equivalent</span><strong id="billsWeeklyVal">-</strong></div>
+      <div class="pill"><span>Timing signal</span><strong id="billsSignalVal">-</strong></div>
+    </div>
+    <div id="billTimingNote" class="mini info" style="margin-top:12px">-</div>
+  </div>
+</details>
+
+    <div id="billTimingNote" class="mini info" style="margin-top:12px">-</div>
   </div>
 
   <details class="tab-goals" open>
@@ -220,6 +377,7 @@ details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
         <label><span>Marginal tax rate %</span><input id="taxRate" value="39"></label>
         <label><span>Depreciation estimate / year</span><input id="depreciation" value="12000"></label>
         <label><span>Sale cash to offset %</span><input id="saleCashPct" value="100"></label>
+        <label><span>Minimum net-to-offset trigger</span><input id="minNetOffset" value="120000"></label>
       </div>
       <div class="engine-grid" style="margin-top:12px">
         <div class="engine-card"><div class="label">IP interest/week</div><strong id="ipInterestVal">-</strong></div>
@@ -283,6 +441,20 @@ details[open] summary{border-bottom:1px solid rgba(255,255,255,.09)}
   
 
 
+  
+  <details class="tab-rules" open>
+    <summary>🧠 Next Best Upgrades</summary>
+    <div class="body" style="padding-top:12px">
+      <div class="recommendation-list">
+        <div class="mini info"><strong>1. Weekly snapshot history</strong><br>Store each week’s Offset + Bills/Savings total so drift becomes a trend, not a one-week panic.</div>
+        <div class="mini warn"><strong>2. Drift reason selector</strong><br>When drift appears, choose: bill, one-off, overspend, income timing, or unknown. This makes the app learn without bank feeds.</div>
+        <div class="mini good"><strong>3. Goal priority switch</strong><br>Choose whether the next dollar goes to Cruise, Fence, Buffer, or PPOR attack.</div>
+        <div class="mini purple"><strong>4. Wandina sale trigger refinement</strong><br>Add “minimum acceptable net-to-offset” so sell/hold decisions are based on your actual target, not a generic threshold.</div>
+        <div class="mini info"><strong>5. 2027 readiness meter</strong><br>Track whether 2027 0.8 / LSL mode is genuinely affordable before you step down income.</div>
+      </div>
+    </div>
+  </details>
+
   <details class="tab-rules" open>
     <summary>🎨 Colour Legend / Control Rules</summary>
     <div class="body" style="padding-top:12px">
@@ -305,7 +477,21 @@ const n=id=>{const el=$(id); if(!el) return 0; const v=parseFloat(String(el.valu
 const money=x=>new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(Number.isFinite(x)?x:0);
 const set=(id,v)=>{const el=$(id); if(el) el.textContent=v}
 const klass=(id,c)=>{const el=$(id); if(el) el.className=c}
+const sectionAlert=(selector,on)=>{const el=document.querySelector(selector); if(!el)return; el.classList.toggle('alert',!!on); if(on) el.open=true;}
 const fill=(id,p)=>{const el=$(id); if(el) el.style.width=Math.max(0,Math.min(100,p))+'%'}
+const STORE_KEY='financeControlWeeklyHistoryV44';
+function loadHistory(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'[]')}catch(e){return []}}
+function saveHistory(rows){localStorage.setItem(STORE_KEY,JSON.stringify(rows.slice(-26)))}
+function exportHistoryCsv(){
+  const rows=loadHistory();
+  const csv=['Date,Total Cash,Drift,Reason'].concat(rows.map(r=>`${r.date},${r.total},${r.drift},"${String(r.reason).replace(/"/g,'""')}"`)).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='finance-control-weekly-history.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+function mostCommon(arr){const m={}; arr.forEach(x=>m[x]=(m[x]||0)+1); return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]?.[0]||'-'}
 let systemMode='auto', phase='current', pporMode='balanced', pporModeAuto=false;
 
 function repayment(balance,rate,years=28.5){
@@ -320,6 +506,66 @@ function setModeButtons(){
   $('phaseCurrent')?.classList.toggle('active',phase==='current');
   $('phase2027')?.classList.toggle('active',phase==='2027');
 }
+
+function addUpcomingBill(name='Electricity / rates', amount='0', dueDate=''){
+  const box=$('upcomingBillsList'); if(!box) return;
+  const row=document.createElement('div');
+  row.className='bill-row';
+  row.innerHTML=`<label><span>Bill name</span><input class="bill-name" value="${name}"></label>
+  <label><span>Amount</span><input class="bill-amount" value="${amount}"></label>
+  <label><span>Due date</span><input class="bill-date" type="date" value="${dueDate}"></label>
+  <button type="button" class="remove-bill">Remove</button>`;
+  box.appendChild(row);
+  row.querySelectorAll('input').forEach(el=>el.addEventListener('input',render));
+  row.querySelector('.remove-bill').addEventListener('click',()=>{row.remove();render()});
+}
+function billStats(){
+  const rows=Array.from(document.querySelectorAll('.bill-row'));
+  const now=new Date();
+  let total7=0,total30=0,weekly=0;
+  rows.forEach(row=>{
+    const amount=parseFloat(row.querySelector('.bill-amount')?.value||0)||0;
+    const due=row.querySelector('.bill-date')?.value;
+    if(!amount || !due) return;
+    const d=new Date(due+'T00:00:00');
+    const days=Math.ceil((d-now)/(1000*60*60*24));
+    if(days>=0 && days<=7) total7+=amount;
+    if(days>=0 && days<=30) total30+=amount;
+    const weeks=Math.max(1,Math.ceil(days/7));
+    if(days>=0 && days<=30) weekly += amount/weeks;
+  });
+  return {total7,total30,weekly};
+}
+
+function renderHistory(currentTotal,currentDrift){
+  const rows=loadHistory();
+  const last4=rows.slice(-4);
+  const avg=last4.length?last4.reduce((s,r)=>s+r.drift,0)/last4.length:0;
+  const trend=last4.length>=2?last4[last4.length-1].total-last4[0].total:0;
+  set('trend4Val',last4.length>=2?(trend>=0?'+':'')+money(trend):'-');
+  set('avgDriftVal',last4.length?((avg>=0?'+':'')+money(avg)):'-');
+  set('topReasonVal',last4.length?mostCommon(last4.map(r=>r.reason)):'-');
+  set('nextDollarVal',$('goalPriority')?.value||'Bills/Savings');
+  let advice='Save weekly snapshots to build trend intelligence.';
+  let cls='mini info';
+  if(last4.length>=3 && avg< -250){advice='Trend warning: average drift is negative. Use Control Mode until the next two snapshots improve.'; cls='mini warn'}
+  if(last4.length>=3 && avg>250){advice='Trend improving: consider a small PPOR attack only after Bills/Savings goals remain funded.'; cls='mini good'}
+  const adv=$('historyAdvice'); if(adv){adv.textContent=advice; adv.className=cls}
+  const body=$('historyRows'); if(body) body.innerHTML=rows.slice(-8).reverse().map(r=>`<tr><td>${r.date}</td><td>${money(r.total)}</td><td>${r.drift>=0?'+':''}${money(r.drift)}</td><td>${r.reason}</td></tr>`).join('');
+}
+
+function renderChecklist(){
+  const checks=Array.from(document.querySelectorAll('.review-check'));
+  const done=checks.filter(c=>c.checked).length;
+  const total=checks.length || 6;
+  const pct=total ? done/total*100 : 0;
+  const fill=$('reviewProgressFill'); if(fill) fill.style.width=pct+'%';
+  const txt=$('reviewProgressText');
+  if(txt){
+    txt.textContent=`${done}/${total} complete`;
+    txt.className='mini '+(done===total?'good':done>=3?'warn':'info');
+  }
+}
 function render(){
   setModeButtons();
   const offset=n('offset'), savings=n('savings'), income=(phase==='current'?n('income'):2600)||3253;
@@ -330,6 +576,8 @@ function render(){
   const plannedOutflow=ppor+livingPlan+billsPlan+splurgeNormal+ipPressure;
   const expectedCash=lastCash+income-plannedOutflow;
   const drift=totalCash-expectedCash;
+  const billsDue=billStats();
+  const explainedDrift = drift + billsDue.total7;
 
   let mode='HOLD COURSE', copy='Keep Living at plan, Splurge at $50, and fund Bills/Savings. No extra attack unless the week finishes ahead.', status='good';
   let splurge=splurgeNormal, bills=billsPlan, extraAttack=0;
@@ -341,13 +589,13 @@ function render(){
     mode='PROTECT OFFSET FLOOR';
     copy='Offset is below the floor. Splurge = $0. Keep Living tight. Bills/Savings capped until the floor is repaired.';
     status='bad'; splurge=0; bills=Math.min(750,billsPlan);
-  } else if(forcedControl || drift < -500){
+  } else if(forcedControl || explainedDrift < -500){
     mode='CONTROL MODE';
-    copy='Leak detected or Control mode selected. Splurge = $0. Check one-offs before adding any extra transfers.';
+    copy='Leak detected after allowing for bills due this week. Splurge = $0. Check one-offs before adding any extra transfers.';
     status='warn'; splurge=0; bills=Math.min(750,billsPlan);
-  } else if(drift < -150){
+  } else if(explainedDrift < -150){
     mode='WATCH MODE';
-    copy='Small drift detected. Keep Living at plan, Splurge $0-$25, and avoid extra top-ups.';
+    copy='Small unexplained drift detected. Keep Living at plan, Splurge $0-$25, and avoid extra top-ups.';
     status='warn'; splurge=25; bills=Math.min(800,billsPlan);
   } else if(forcedAttack || (drift > 500 && offset>=floor)){
     mode='ATTACK MODE';
@@ -357,6 +605,16 @@ function render(){
 
   set('actionTitle',mode); set('actionCopy',copy); klass('actionCard','action '+status);
   set('totalCashVal',money(totalCash)); set('expectedCashVal',money(expectedCash)); set('driftVal',(drift>=0?'+':'')+money(drift)); set('floorMiniVal',offset<floor?'Below':'Safe');
+  renderHistory(totalCash,drift);
+  set('bills7Val',money(billsDue.total7)); set('bills30Val',money(billsDue.total30)); set('billsWeeklyVal',money(billsDue.weekly));
+  const billSignal=billsDue.total7>500?'High':billsDue.total30>1000?'Watch':'Normal';
+  set('billsSignalVal',billSignal); set('billTimingNote', billsDue.total7>0 ? `Upcoming bills explain up to ${money(billsDue.total7)} of this week’s cash drop.` : 'No major bill timing pressure entered for the next 7 days.');
+  (function(){
+    const det=document.querySelector('details.tab-bills');
+    if(!det) return;
+    if(billsDue && billsDue.total7>500){ det.open=true; det.classList.add('alert'); }
+    else { det.classList.remove('alert'); }
+  })();
   set('livingVal',money(livingPlan)); set('splurgeVal',money(splurge)); set('billsVal',money(bills)); set('offsetAttackVal',money(extraAttack)); set('offsetAttackNote',extraAttack>0?'Optional surplus sweep':'Hold until drift improves');
   klass('livingCard','transfer-card '+(livingPlan<=600?'good':'warn'));
   klass('splurgeCard','transfer-card '+(splurge===0?'warn':'good'));
@@ -370,15 +628,40 @@ function render(){
   const buffer=Math.min(bufferTarget,virtual*.20);
   const gap=Math.max(0,(cruiseTarget-cruise)+(fenceTarget-fence)+(bufferTarget-buffer));
   const totalTarget=cruiseTarget+fenceTarget+bufferTarget;
+  const cruiseGap=Math.max(0,cruiseTarget-cruise), fenceGap=Math.max(0,fenceTarget-fence), bufferGap=Math.max(0,bufferTarget-buffer);
+  let autoPriority='Bills/Savings', autoNote='Default: keep the Bills/Savings account funded first.';
+  if(offset<floor){autoPriority='Buffer'; autoNote='Offset floor is under pressure. Liquidity beats every other goal.'}
+  else if(bufferGap>1500){autoPriority='Buffer'; autoNote='Emergency buffer is still thin.'}
+  else if(cruiseGap>fenceGap && cruiseGap>2500){autoPriority='Cruise'; autoNote='Cruise gap is currently the largest active goal.'}
+  else if(fenceGap>2000){autoPriority='Fence'; autoNote='Fence remains a live property/income gate.'}
+  else if(drift>500){autoPriority='PPOR Attack'; autoNote='Goals are controlled and weekly drift is positive.'}
+
   set('cruiseVal',money(cruise)); set('cruiseNote',money(cruiseTarget-cruise)+' remaining'); fill('cruiseFill',cruise/cruiseTarget*100);
   set('fenceVal',money(fence)); set('fenceNote',money(fenceTarget-fence)+' remaining'); fill('fenceFill',fence/fenceTarget*100);
   set('bufferVal',money(buffer)); set('bufferNote',money(bufferTarget-buffer)+' remaining'); fill('bufferFill',buffer/bufferTarget*100);
   set('combinedGapVal',money(gap)); set('combinedGapNote','Virtual target gap inside Bills/Savings'); fill('combinedFill',(1-gap/totalTarget)*100);
+  set('autoPriorityVal',autoPriority); set('autoPriorityNote',autoNote);
+  set('cruiseUrgencyVal',cruiseGap>3000?'High':cruiseGap>1000?'Medium':'Low'); set('cruiseUrgencyNote',money(cruiseGap)+' remaining');
+  set('fenceUrgencyVal',fenceGap>2500?'High':fenceGap>1000?'Medium':'Low'); set('fenceUrgencyNote',money(fenceGap)+' remaining');
+  set('bufferStrengthVal',bufferGap>1500?'Thin':bufferGap>500?'Building':'Strong'); set('bufferStrengthNote',money(bufferGap)+' remaining');
+  const gp=$('goalPriority'); if(gp) gp.value=autoPriority;
+
 
   set('modeReadVal',mode); set('modeReadNote',systemMode==='auto'?'Auto selected from drift/floor':'Manual override active'); klass('modeReadCard','engine-card '+status);
   set('floorReadVal',offset<floor?'Below':'Safe'); set('floorReadNote',money(offset-floor)+' vs floor'); klass('floorReadCard','engine-card '+(offset<floor?'bad':'good'));
   set('driftReadVal',(drift>=0?'+':'')+money(drift)); set('driftReadNote','Actual cash minus expected cash'); klass('driftReadCard','engine-card '+(drift<-500?'bad':drift<0?'warn':'good'));
   const ready2027 = offset>=floor && drift>=0 && gap<10000;
+  let score2027=0;
+  score2027 += Math.min(30, Math.max(0,(offset-floor)/1000));
+  score2027 += drift>=0 ? 25 : Math.max(0,25 + drift/100);
+  score2027 += gap<10000 ? 25 : Math.max(0,25-(gap-10000)/400);
+  score2027 += savings>5000 ? 20 : Math.max(0,savings/250);
+  score2027=Math.max(0,Math.min(100,Math.round(score2027)));
+  set('readinessScoreVal',score2027);
+  const ring=$('readinessScoreRing'); if(ring) ring.style.background=`conic-gradient(${score2027>=75?'var(--green)':score2027>=50?'var(--amber)':'var(--red)'} ${score2027*3.6}deg, rgba(255,255,255,.10) 0deg)`;
+  const scoreNote=score2027>=75?'2027 transition is becoming viable. Keep proving it with weekly history.':score2027>=50?'2027 is plausible but not yet robust. Keep liquidity and drift stable.':'2027 is not ready. Stabilise cash drift, goals and offset floor first.';
+  const scoreBox=$('readinessScoreNote'); if(scoreBox){scoreBox.textContent=scoreNote; scoreBox.className='mini '+(score2027>=75?'good':score2027>=50?'warn':'bad')}
+
   set('readinessVal',ready2027?'Improving':'Not ready'); set('readinessNote',ready2027?'Floor and drift are stable':'Stabilise floor, goals and drift first'); klass('readinessCard','engine-card '+(ready2027?'good':'warn'));
 
   // Wandina
@@ -393,8 +676,9 @@ function render(){
   set('afterTaxHoldVal',money(afterTaxHold));
   set('cgtVal',money(cgt));
   set('netCashVal',money(netCash));
-  const sellDecision = netCash>120000?'SELL WINDOW OPEN':netCash>80000?'WATCH':'HOLD';
-  set('wandinaDecisionBox',sellDecision==='SELL WINDOW OPEN'?`Sell window open: estimated net-to-offset is ${money(netCash)}.`:`${sellDecision}: estimated net-to-offset is ${money(netCash)}.`);
+  const minNet=n('minNetOffset')||120000;
+  const sellDecision = netCash>=minNet?'SELL WINDOW OPEN':netCash>=minNet*.67?'WATCH':'HOLD';
+  set('wandinaDecisionBox',sellDecision==='SELL WINDOW OPEN'?`Sell window open: estimated net-to-offset is ${money(netCash)}, above your trigger of ${money(minNet)}.`:`${sellDecision}: estimated net-to-offset is ${money(netCash)} vs trigger ${money(minNet)}.`);
 
   // PPOR mode switch
   let activePporMode = pporModeAuto ? (offset<floor || drift<0 ? 'max' : 'balanced') : pporMode;
@@ -444,6 +728,14 @@ function render(){
   set('sellSignalVal',sellDecision); set('sellSignalNote',`Net-to-offset estimate: ${money(netCash)}`); klass('sellSignal','signal-card '+(sellDecision==='SELL WINDOW OPEN'?'info':sellDecision==='WATCH'?'warn':'good'));
   set('recycleSignalVal',recycleReady?'Ready':'Wait'); set('recycleSignalNote',recycleReady?'Review only after goals/floor stable':'Do not recycle while cash drift or goals are under pressure'); klass('recycleSignal','signal-card '+(recycleReady?'good':'warn'));
   set('transitionSignalVal',ready2027?'Improving':'Not ready'); set('transitionSignalNote',ready2027?'Better transition footing':'Needs stronger cash position first'); klass('transitionSignal','signal-card '+(ready2027?'good':'warn'));
+
+  // Smart section attention: auto-open/glow only when action is useful.
+  const pporAttackWindow = extraAttack > 0 || (activePporMode === 'max' && offset >= floor);
+  const wandinaWindow = sellDecision === 'SELL WINDOW OPEN' || netCash > 100000;
+  const transitionNeedsAttention = ready2027 || (phase === '2027' && !ready2027);
+  sectionAlert('details.tab-ppor', pporAttackWindow);
+  sectionAlert('details.tab-wandina', wandinaWindow);
+  sectionAlert('details.tab-rules', transitionNeedsAttention);
 }
 document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',render));
 $('modeAuto')?.addEventListener('click',()=>{systemMode='auto';render()});
@@ -458,6 +750,44 @@ $('ipRateDown')?.addEventListener('click',()=>{$('ipRate').value=(n('ipRate')-.2
 $('ipRateUp')?.addEventListener('click',()=>{$('ipRate').value=(n('ipRate')+.25).toFixed(2);render()});
 $('pporRateDown')?.addEventListener('click',()=>{$('pporRate').value=(n('pporRate')-.25).toFixed(2);render()});
 $('pporRateUp')?.addEventListener('click',()=>{$('pporRate').value=(n('pporRate')+.25).toFixed(2);render()});
+
+if($('addUpcomingBill')){
+  $('addUpcomingBill').addEventListener('click',()=>{
+    const d=new Date(); d.setDate(d.getDate()+14);
+    const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    addUpcomingBill('', '', ds);
+    render();
+  });
+  const d1=new Date(); d1.setDate(d1.getDate()+14);
+  const d2=new Date(); d2.setDate(d2.getDate()+28);
+  const ds1=`${d1.getFullYear()}-${String(d1.getMonth()+1).padStart(2,'0')}-${String(d1.getDate()).padStart(2,'0')}`;
+  const ds2=`${d2.getFullYear()}-${String(d2.getMonth()+1).padStart(2,'0')}-${String(d2.getDate()).padStart(2,'0')}`;
+  addUpcomingBill('Electricity / rates', '0', ds1);
+  addUpcomingBill('Rego / school / annual bill', '0', ds2);
+}
+
+$('saveSnapshot')?.addEventListener('click',()=>{
+  const offset=n('offset'), savings=n('savings'), income=n('income')||3253;
+  const total=offset+savings;
+  const expectedText=$('expectedCashVal')?.textContent||'$0';
+  const expected=parseFloat(expectedText.replace(/[^0-9.-]/g,''))||total;
+  const drift=total-expected;
+  const rows=loadHistory();
+  rows.push({date:new Date().toLocaleDateString('en-AU'), total, drift, reason:$('driftReason')?.value||'Unknown'});
+  saveHistory(rows);
+  render();
+});
+$('exportHistory')?.addEventListener('click',exportHistoryCsv);
+$('clearHistory')?.addEventListener('click',()=>{localStorage.removeItem(STORE_KEY);render()});
+$('goalPriority')?.addEventListener('input',render);
+$('driftReason')?.addEventListener('input',render);
+
+document.querySelectorAll('.review-check').forEach(c=>c.addEventListener('change',renderChecklist));
+$('resetReviewChecklist')?.addEventListener('click',()=>{
+  document.querySelectorAll('.review-check').forEach(c=>c.checked=false);
+  renderChecklist();
+});
+renderChecklist();
 render();
 })();
 </script>
